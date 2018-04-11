@@ -44,6 +44,10 @@ Route::group(['middleware' => 'controleur'], function () {
   Route::get('/controleur', 'ControleurController@home')->name('controleur.dashboard');
 });
 
+Route::group(['middleware' => 'ouvrier'], function () {
+  Route::get('/controleur', 'OuvrierController@home')->name('ouvrier.dashboard');
+});
+
 
 
 //Authentification
