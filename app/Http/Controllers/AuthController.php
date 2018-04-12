@@ -61,11 +61,11 @@ class AuthController extends Controller
   //redirect to proper dashboard ******************************************************
   private static function redirectToSpace(){
     if( Sentinel::inRole('admin') ){
-      return redirect()->route('admin.dashboard');
+      return redirect()->route('admin');
     }elseif( Sentinel::inRole('controleur') ){
-      return redirect()->route('controleur.dashbard');
+      return redirect()->route('controleur');
     }elseif( Sentinel::inRole('ouvrier') ){
-      return redirect()->route('ouvrier.dashbard');
+      return redirect()->route('ouvrier');
     }else{
       return redirect()->route('errorPage')->with("alert_danger","Le rôle de l'utilisateur authentifié n'est pas répertorié, veuillez contacter l'administrateur de l'application.");
     }

@@ -1,85 +1,55 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
 
-        <title>Laravel</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Favicon icon -->
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+  <title>Ela - Bootstrap Admin Dashboard Template</title>
+  <!-- Bootstrap Core CSS -->
+  <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/helper.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+<body class="fix-header fix-sidebar">
+  <!-- Preloader - style you can find in spinners.css -->
+  <div class="preloader">
+    <svg class="circular" viewBox="25 25 50 50">
+      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+    </div>
+    <!-- Main wrapper  -->
+    <div class="error-page" id="wrapper">
+      <div class="error-box">
+        <div class="error-body text-center">
+          <h1>Bienvenue</h1>
+          <h3 class="text-uppercase">Gestion d'inventaire</h3>
+          <p class="text-muted m-t-30 m-b-30"></p>
+          <a class="btn btn-info btn-rounded waves-effect waves-light m-b-40" href="{{ route('login') }}">Commencer</a>
         </div>
-    </body>
-</html>
+      </div>
+    </div>
+    <!-- End Wrapper -->
+    <!-- All Jquery -->
+    <script src="js/lib/jquery/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="js/lib/bootstrap/js/popper.min.js"></script>
+    <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="js/jquery.slimscroll.js"></script>
+    <!--Menu sidebar -->
+    <script src="js/sidebarmenu.js"></script>
+    <!--stickey kit -->
+    <script src="js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <!--Custom JavaScript -->
+    <script src="js/custom.min.js"></script>
+
+  </body>
+
+  </html>

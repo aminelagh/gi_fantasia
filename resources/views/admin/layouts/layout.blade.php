@@ -1,80 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <!--IE Compatibility modes-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- Tell the browser to be responsive to screen width -->
+  <!--Mobile first-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <!-- Favicon icon -->
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>{{ $title or 'Inventaire' }}</title>
-  <!-- Bootstrap Core CSS -->
-  <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom CSS -->
-  <link href="css/helper.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
+
+  <meta name="description" content="Free Admin Template Based On Twitter Bootstrap 3.x">
+  <meta name="author" content="">
+
+  <meta name="msapplication-TileColor" content="#5bc0de" />
+  <meta name="msapplication-TileImage" content="assets/img/metis-tile.png" />
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+  <!-- Metis core stylesheet -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <!-- metisMenu stylesheet -->
+  <link rel="stylesheet" href="assets/lib/metismenu/metisMenu.css">
+  <!-- onoffcanvas stylesheet -->
+  <link rel="stylesheet" href="assets/lib/onoffcanvas/onoffcanvas.css">
+  <!-- animate.css stylesheet -->
+  <link rel="stylesheet" href="assets/lib/animate.css/animate.css">
+
+  <!--For Development Only. Not required -->
+  <script>
+  less = {
+    env: "development",
+    relativeUrls: false,
+    rootpath: "/assets/"
+  };
+  </script>
+  <link rel="stylesheet" href="assets/css/style-switcher.css">
+  <link rel="stylesheet/less" type="text/css" href="assets/less/theme.less">
+  <script src="assets/less/less.js"></script>
   <!-- Toastr -->
   <link href="css/lib/toastr/toastr.min.css" rel="stylesheet">
-
   @yield('styles')
 
 </head>
 
-<body class="fix-header fix-sidebar">
-  <!-- Preloader - style you can find in spinners.css -->
-  <div class="preloader">
-    <svg class="circular" viewBox="25 25 50 50">
-      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
-    </svg>
-  </div>
+<body class="">
+  <div class="bg-dark dk" id="wrap">
 
-  <!-- Main wrapper  -->
-  <div id="main-wrapper">
+    <div id="top">
 
-    @include("admin.layouts.menu_1")
+      <!-- .navbar -->
+      <nav class="navbar navbar-inverse navbar-static-top">
 
-    @include("admin.layouts.menu_2")
+        <!-- top menu -->
+        <div class="container-fluid">
 
-    <!-- Page wrapper  -->
-    <div class="page-wrapper">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <header class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="{{ route('admin') }}" class="navbar-brand"><img src="assets/img/logo.png" alt="Admin"></a>
+          </header>
 
-      <!-- Bread crumb -->
-      <div class="row page-titles">
-        @yield('content-head')
-      </div>
-      <!-- End Bread crumb -->
 
-      <!-- Container fluid  -->
-      <div class="container-fluid">
-        @yield('content')
-      </div>
-      <!-- End Container fluid  -->
+          <!--  top right menu  -->
+          @include('admin.layouts.top_right_menu')
+          <!--  end top right menu -->
 
-      <!-- footer -->
-      <footer class="footer"> © 2018 All rights reserved. Template designed by <a href="https://colorlib.com">Colorlib</a></footer>
-      <!-- End footer -->
+          <!--  top left menu  -->
+          @include('admin.layouts.top_left_menu')
+          <!--  end top left menu -->
+
+        </div>
+        <!-- end top menu -->
+      </nav>
+      <!-- /.navbar -->
+
+      <!-- /.head -->
+
     </div>
-    <!-- End Page wrapper  -->
+    <!-- /#top -->
+
+    <!--  menu left -->
+    {{-- @include('admin.layouts.menu_2') --}}
+    <!-- end menu left -->
+
+
+
+
+    <!-- content -->
+    <div id="content">
+      <!-- outer -->
+      <div class="outer">
+        <!-- inner -->
+        <div class="inner bg-light lter">
+
+          @yield('content')
+
+        </div>
+        <!-- end inner -->
+      </div>
+      <!-- end outer -->
+    </div>
+    <!-- /#content -->
+
+
+
+
+
+    <!--  right well menu -->
+    <div id="right_well_menu" class="onoffcanvas is-right is-fixed bg-light" aria-expanded=false>
+      <a class="onoffcanvas-toggler" href="#right" data-toggle=onoffcanvas aria-expanded=false></a>
+      <br>
+      <br>
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Warning!</strong> Best check yo self, you're not looking too good.
+      </div>
+      <!-- .well well-small -->
+      <div class="well well-small dark">
+        <ul class="list-unstyled">
+          <li>Visitor <span class="inlinesparkline pull-right">1,4,4,7,5,9,10</span></li>
+          <li>Online Visitor <span class="dynamicsparkline pull-right">Loading..</span></li>
+          <li>Popularity <span class="dynamicbar pull-right">Loading..</span></li>
+          <li>New Users <span class="inlinebar pull-right">1,3,4,5,3,5</span></li>
+        </ul>
+      </div>
+    </div>
+    <!-- /. right well menu -->
+
   </div>
-  <!-- End Wrapper -->
+
+  @yield('modals')
+
+  <!-- /#footer -->
+  <footer class="Footer bg-dark dker"><p>2018 &copy; <a href="mailto: amine.laghlabi@gmail.com">Amine Laghlabi</a> v1</p></footer>
+  <!-- /#footer -->
 
 
-  <!-- All Jquery -->
-  <script src="js/lib/jquery/jquery.min.js"></script>
-  <!-- Bootstrap tether Core JavaScript -->
-  <script src="js/lib/bootstrap/js/popper.min.js"></script>
-  <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
-  <!-- slimscrollbar scrollbar JavaScript -->
-  <script src="js/jquery.slimscroll.js"></script>
-  <!--Menu sidebar -->
-  <script src="js/sidebarmenu.js"></script>
-  <!--stickey kit -->
-  <script src="js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
-  <!--Custom JavaScript -->
-  <script src="js/custom.min.js"></script>
+  <!--jQuery -->
+  <script src="assets/lib/jquery/jquery.js"></script>
+  <!--Bootstrap -->
+  <script src="assets/lib/bootstrap/js/bootstrap.js"></script>
+  <!-- MetisMenu -->
+  <script src="assets/lib/metismenu/metisMenu.js"></script>
+  <!-- onoffcanvas -->
+  <script src="assets/lib/onoffcanvas/onoffcanvas.js"></script>
+  <!-- Screenfull -->
+  <script src="assets/lib/screenfull/screenfull.js"></script>
+  <!-- Metis core scripts -->
+  <script src="assets/js/core.js"></script>
+  <!-- Metis demo scripts -->
+  <script src="assets/js/app.js"></script>
+  <!-- switcher -->
+  <script src="assets/js/style-switcher.js"></script>
   <!--Toastr -->
   <script src="js/lib/toastr/toastr.min.js"></script>
   <script src="js/lib/toastr/toastr.init.js"></script>
@@ -121,8 +206,6 @@
 </script>
 
 @yield('scripts')
-
-
 </body>
 
 </html>

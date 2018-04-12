@@ -2,30 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Closure;
+use \Exception;
+use Session;
 use Sentinel;
+use Illuminate\Http\Request;
+use \App\Models\Role;
+use \App\Models\User;
+use \App\Models\Role_user;
+use \App\Models\Famille;
+use \App\Models\Categorie;
+use \DB;
 
 class AdminController extends Controller
 {
   public function home(){
-    return view('admin.dashboard');
+    //dd(Role_user::all());
+    try{
+      //$role_user = Role_user::where('user_id', 4)->delete();
+    }  catch(Exception $e) {dd($e->getMessage()); }
+
+    $users = collect(DB::select("select u.id as id_user,u.nom, u.prenom,r.slug,r.name,u.last_login,u.created_at,u.login from users u LEFT JOIN role_users ru on ru.user_id = u.id LEFT JOIN roles r on r.id = ru.role_id;"));
+    $roles = Role::all();
+    $familles = Famille::all();
+    //$categories = Categorie::all();
+    $categories = collect(DB::select("select c.id_categorie, c.id_famille, c.created_at, c.libelle as libelle, f.libelle as libelle_f from categories c LEFT JOIN familles f on c.id_famille = f.id_famille;"));
+    return view('admin.dashboard')->with(['users'=>$users, 'roles'=>$roles,'familles'=>$familles, 'categories'=>$categories]);
+    //  return view('admin.dashboard')->withUsers($users)->withRoles($roles);//->with('alert_info',"Hola");
   }
 
-  //add User *******************************************************************
-  public function addUser(Request $request){
-    //ajouter et activer le compte de l'utilisateur
-    try{
-      $user = Sentinel::registerAndActivate($request->all());
-    }catch(Exception $e){
-      return redirect()->back()->with('alert_danger',"Erreur de création de l'utilisateur. Message d'erreur: ".$e->getMessage()." ");
-    }
-    //chercher le role pour l'utilisateur
-    $role = Sentinel::findRoleBySlug($request->slug);
-    //associer le role a l'utilisateur
-    $role->users()->attach($user);
-    return redirect()->back()->with('alert_success',"Création du l'utilisateur réussie");
-  }
+
 
 
 

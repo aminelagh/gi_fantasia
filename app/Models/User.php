@@ -10,7 +10,7 @@ class User extends Model
 
 	protected $primaryKey = 'id';
 
-	protected $fillable = ['id', 'login', 'password', 'last_login',
+	protected $fillable = ['id','id_zone', 'login', 'password', 'last_login',
 	'nom', 'prenom',
 	'created_at', 'updated_at'];
 
