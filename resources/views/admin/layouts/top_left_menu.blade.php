@@ -1,7 +1,8 @@
 <div class="collapse navbar-collapse navbar-ex1-collapse">
   <ul class="nav navbar-nav">
     <li><a href="{{ route('admin') }}">Accueil</a></li>
-    <li><a href="#">Inventaire</a></li>
+    <li><a href="{{ route('articles') }}">Articles</a></li>
+    <li><a href="{{ route('more') }}">more</a></li>
     <li class='dropdown'>
       <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu <b class="caret"></b></a>
       <ul class="dropdown-menu">

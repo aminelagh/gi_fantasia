@@ -28,6 +28,13 @@
   <link rel="stylesheet" href="assets/lib/onoffcanvas/onoffcanvas.css">
   <!-- animate.css stylesheet -->
   <link rel="stylesheet" href="assets/lib/animate.css/animate.css">
+  <!-- Switcher -->
+  <link rel="stylesheet" href="assets/css/style-switcher.css">
+  <link rel="stylesheet/less" type="text/css" href="assets/less/theme.less">
+  <script src="assets/less/less.js"></script>
+  <!-- Toastr -->
+  <link href="css/lib/toastr/toastr.min.css" rel="stylesheet">
+  @yield('styles')
 
   <!--For Development Only. Not required -->
   <script>
@@ -37,13 +44,6 @@
     rootpath: "/assets/"
   };
   </script>
-  <link rel="stylesheet" href="assets/css/style-switcher.css">
-  <link rel="stylesheet/less" type="text/css" href="assets/less/theme.less">
-  <script src="assets/less/less.js"></script>
-  <!-- Toastr -->
-  <link href="css/lib/toastr/toastr.min.css" rel="stylesheet">
-  @yield('styles')
-
 </head>
 
 <body class="">
@@ -98,6 +98,7 @@
     <div id="content">
       <!-- outer -->
       <div class="outer">
+        @yield('content-head')
         <!-- inner -->
         <div class="inner bg-light lter">
 

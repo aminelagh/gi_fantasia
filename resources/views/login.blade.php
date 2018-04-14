@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +23,6 @@
   <link rel="stylesheet" href="assets/lib/animate.css/animate.css">
   <!-- Toastr -->
   <link href="css/lib/toastr/toastr.min.css" rel="stylesheet">
-
 </head>
 
 <body class="login">

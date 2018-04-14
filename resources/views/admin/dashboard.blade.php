@@ -1,18 +1,154 @@
 @extends('admin.layouts.layout')
 
 @section('content-head')
-  <div class="col-md-5 align-self-center">
-    <h3 class="text-primary">Dashboard</h3>
+  <div class="main-bar">
+    <div class="col-md-5 align-self-center">
+      <h3></h3>
+    </div>
+    <div class="col-md-7 align-self-center">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active"><a href="{{ route('admin') }}">Dashboard</a></li>
+        <!--li class="breadcrumb-item active">Dashboard</li-->
+      </ol>
+    </div>
   </div>
-  <div class="col-md-7 align-self-center">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-      <li class="breadcrumb-item active">Dashboard</li>
-    </ol>
-  </div>
+
 @endsection
 
 @section('content')
+
+  <div class="row">
+    <div class="col-md-4">
+      {{-- *********************************** Societes ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Sociétés <span class="badge badge-info badge-pill" title="Nombre de sociétés"> {{ $societes->count() }}</span></h5>
+          <!-- .toolbar -->
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddSociete">Ajouter une nouvelle société</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="societesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Societe</th><th>Date de création</th><th>Outils</th></tr></thead>
+            <tbody>
+              @foreach($societes as $item)
+                <tr>
+                  <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->created_at }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSociete" onclick='updateSocieteFunction({{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteSocieteFunction({{ $item->id_societe }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Societes ************************************* --}}
+    </div>
+    <div class="col-md-4">
+      {{-- *********************************** Sites ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Sites <span class="badge badge-info badge-pill" title="Nombre de sites"> {{ $sites->count() }}</span></h5>
+          <!-- .toolbar -->
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddSite">Ajouter un nouveau site</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="sitesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Site</th><th>Societe</th><th>Date de creation</th><th>Outils</th></tr></thead>
+            <tbody>
+              @foreach($sites as $item)
+                <tr>
+                  <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->libelle_so }}</td>
+                  <td>{{ $item->created_at }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSite" onclick='updateSiteFunction({{ $item->id_site }},{{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteSiteFunction({{ $item->id_site }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Sites ************************************* --}}
+    </div>
+    <div class="col-md-4">
+      {{-- *********************************** Zones ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Zones <span class="badge badge-info badge-pill" title="Nombre de zones"> {{ $zones->count() }}</span></h5>
+          <!-- .toolbar -->
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddZone">Ajouter une nouvelle zone</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="zonesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Zone</th><th>Site</th><th>Date de creation</th><th>Outils</th></tr></thead>
+            <tbody>
+              @foreach($zones as $item)
+                <tr>
+                  <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->libelle_s }}</td>
+                  <td>{{ $item->created_at }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateZone" onclick='updateZoneFunction({{ $item->id_zone }},{{ $item->id_site }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteZoneFunction({{ $item->id_zone }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Zones ************************************* --}}
+    </div>
+  </div>
+
+  <hr>
 
   <div class="row">
     <div class="col-md-8">
@@ -20,7 +156,7 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Utilisateurs <span class="badge badge-info badge-pill" title="Nomrbe d'utilisateurs"> {{ $users->count() }}</span></h5>
+          <h5>Utilisateurs <span class="badge badge-info badge-pill" title="Nombre d'utilisateurs"> {{ $users->count() }}</span></h5>
           <!-- .toolbar -->
           <div class="toolbar">
             <nav style="padding: 8px;">
@@ -70,7 +206,7 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Categories <span class="badge badge-info badge-pill" title="Nomrbe de categories"> {{ $categories->count() }}</span></h5>
+          <h5>Categories <span class="badge badge-info badge-pill" title="Nombre de categories"> {{ $categories->count() }}</span></h5>
           <!-- .toolbar -->
           <div class="toolbar">
             <nav style="padding: 8px;">
@@ -114,7 +250,7 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Familles <span class="badge badge-info badge-pill" title="Nomrbe de familles"> {{ $familles->count() }}</span></h5>
+          <h5>Familles <span class="badge badge-info badge-pill" title="Nombre de familles"> {{ $familles->count() }}</span></h5>
           <!-- .toolbar -->
           <div class="toolbar">
             <nav style="padding: 8px;">
@@ -138,7 +274,7 @@
               @foreach($familles as $item)
                 <tr>
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }} {{ $item->prenom }}</td>
+                  <td>{{ $item->created_at }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteFamilleFunction({{ $item->id_famille }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -311,11 +447,11 @@
       </form>
     </div>
   </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       User       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Users       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Famille      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Familles">
     <form id="formDeleteFamille" method="POST" action="{{ route('deleteFamille') }}">
       @csrf
@@ -404,11 +540,11 @@
       </form>
     </div>
   </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categorie      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Categories">
     <form id="formDeleteCategorie" method="POST" action="{{ route('deleteCategorie') }}">
       @csrf
@@ -520,7 +656,320 @@
       </form>
     </div>
   </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  <div class="CRUD Societes">
+    <form id="formDeleteSociete" method="POST" action="{{ route('deleteSociete') }}">
+      @csrf
+      <input type="hidden" id="delete_id_societe" name="id_societe" />
+    </form>
+    <script>
+    function deleteSocieteFunction(id_societe, libelle){
+      var go = confirm('Vos êtes sur le point d\'effacer la société: "'+libelle+'".\n voulez-vous continuer?');
+      if(go){
+        document.getElementById("delete_id_societe").value = id_societe;
+        document.getElementById("formDeleteSociete").submit();
+      }
+    }
+    function updateSocieteFunction(id_societe, libelle){
+      document.getElementById("update_id_societe").value = id_societe;
+      document.getElementById("update_libelle_societe").value = libelle;
+    }
+    </script>
+
+    {{-- *****************************    Add Societe    ********************************************** --}}
+    <div class="modal fade" id="modalAddSociete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add Societe --}}
+      <form method="POST" action="{{ route('addSociete') }}">
+        @csrf
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Création d'une nouvelle société</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-7">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    {{-- *****************************    update Societe    ************************************************* --}}
+    <div class="modal fade" id="modalUpdateSociete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form update Categorie --}}
+      <form method="POST" action="{{ route('updateSociete') }}">
+        @csrf
+        <input type="hidden" name="id_societe" id="update_id_societe">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Modification de la société</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-7">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_societe" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  <div class="CRUD Sites">
+    <form id="formDeleteSite" method="POST" action="{{ route('deleteSite') }}">
+      @csrf
+      <input type="hidden" id="delete_id_site" name="id_site" />
+    </form>
+    <script>
+    function deleteSiteFunction(id_site, libelle){
+      var go = confirm('Vos êtes sur le point d\'effacer le site: "'+libelle+'".\n voulez-vous continuer?');
+      if(go){
+        document.getElementById("delete_id_site").value = id_site;
+        document.getElementById("formDeleteSite").submit();
+      }
+    }
+    function updateSiteFunction(id_site,id_societe, libelle){
+      document.getElementById("update_id_site").value = id_site;
+      document.getElementById("update_id_societe_site").value = id_societe;
+      document.getElementById("update_libelle_site").value = libelle;
+    }
+    </script>
+
+    {{-- *****************************    Add Site    ********************************************** --}}
+    <div class="modal fade" id="modalAddSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add Site --}}
+      <form method="POST" action="{{ route('addSite') }}">
+        @csrf
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Création d'un nouveau site</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  {{-- Societe --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <select  class="form-control" name="id_societe">
+                      @foreach ($societes as $item)
+                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Site</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    {{-- *****************************    update Site    ************************************************* --}}
+    <div class="modal fade" id="modalUpdateSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form update Site --}}
+      <form method="POST" action="{{ route('updateSite') }}">
+        @csrf
+        <input type="hidden" name="id_site" id="update_id_site">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Modification du site</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  {{-- Societe --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <select  class="form-control" name="id_societe" id="update_id_societe_site">
+                      @foreach ($societes as $item)
+                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Site</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_site" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  <div class="CRUD Zones">
+    <form id="formDeleteZone" method="POST" action="{{ route('deleteZone') }}">
+      @csrf
+      <input type="hidden" id="delete_id_zone" name="id_zone" />
+    </form>
+    <script>
+    function deleteZoneFunction(id_zone, libelle){
+      var go = confirm('Vos êtes sur le point d\'effacer la zone: "'+libelle+'".\n voulez-vous continuer?');
+      if(go){
+        document.getElementById("delete_id_zone").value = id_zone;
+        document.getElementById("formDeleteZone").submit();
+      }
+    }
+    function updateZoneFunction(id_zone,id_site, libelle){
+      document.getElementById("update_id_zone").value = id_zone;
+      document.getElementById("update_id_site_zone").value = id_site;
+      document.getElementById("update_libelle_zone").value = libelle;
+    }
+    </script>
+
+    {{-- *****************************    Add Zone    ********************************************** --}}
+    <div class="modal fade" id="modalAddZone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add Zone --}}
+      <form method="POST" action="{{ route('addZone') }}">
+        @csrf
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Création d'une nouvelle zone</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  {{-- Site --}}
+                  <div class="form-group has-feedback">
+                    <label>Site</label>
+                    <select  class="form-control" name="id_site">
+                      @foreach ($sites as $item)
+                        <option value="{{ $item->id_site }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Zone</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    {{-- *****************************    update Zone    ************************************************* --}}
+    <div class="modal fade" id="modalUpdateZone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form update Zone --}}
+      <form method="POST" action="{{ route('updateZone') }}">
+        @csrf
+        <input type="hidden" name="id_zone" id="update_id_zone">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Modification de la zone</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  {{-- Site --}}
+                  <div class="form-group has-feedback">
+                    <label>Site</label>
+                    <select  class="form-control" name="id_site" id="update_id_site_zone">
+                      @foreach ($sites as $item)
+                        <option value="{{ $item->id_site }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Zone</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_zone" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
@@ -605,8 +1054,57 @@ $('#categoriesTable').DataTable({
     [ '5', '10', '25', '50', 'Tout' ]
   ],
   columnDefs: [
-    { targets:-1, visible: true, orderable: true},
-    { targets: 0, visible: true},
+    { targets:-1, visible: true, orderable: true, searchable: false},
+    { targets: 0, visible: true, type: "string"},
+    { targets: 1, visible: true},
+  ],
+  //order: [[ 0, "asc" ]],
+});
+
+$('#societesTable').DataTable({
+  dom: '<lf<Bt>ip>',
+  buttons: [
+    'copy', 'csv', 'excel', 'pdf', 'print',
+  ],
+  lengthMenu: [
+    [ 5, 10, 25, 50, -1 ],
+    [ '5', '10', '25', '50', 'Tout' ]
+  ],
+  columnDefs: [
+    { targets:-1, visible: true, orderable: true, searchable: false},
+    { targets: 0, visible: true, type: "string"},
+    { targets: 1, visible: true},
+  ],
+  //order: [[ 0, "asc" ]],
+});
+$('#sitesTable').DataTable({
+  dom: '<lf<Bt>ip>',
+  buttons: [
+    'copy', 'csv', 'excel', 'pdf', 'print',
+  ],
+  lengthMenu: [
+    [ 5, 10, 25, 50, -1 ],
+    [ '5', '10', '25', '50', 'Tout' ]
+  ],
+  columnDefs: [
+    { targets:-1, visible: true, orderable: true, searchable: false},
+    { targets: 0, visible: true, type: "string"},
+    { targets: 1, visible: true},
+  ],
+  //order: [[ 0, "asc" ]],
+});
+$('#zonesTable').DataTable({
+  dom: '<lf<Bt>ip>',
+  buttons: [
+    'copy', 'csv', 'excel', 'pdf', 'print',
+  ],
+  lengthMenu: [
+    [ 5, 10, 25, 50, -1 ],
+    [ '5', '10', '25', '50', 'Tout' ]
+  ],
+  columnDefs: [
+    { targets:-1, visible: true, orderable: true, searchable: false},
+    { targets: 0, visible: true, type: "string"},
     { targets: 1, visible: true},
   ],
   //order: [[ 0, "asc" ]],

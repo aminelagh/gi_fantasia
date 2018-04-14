@@ -31,13 +31,18 @@ Route::get('/b',function(){
   return view('admin.layouts.layout');
 });
 
-
+Route::get('/data', 'AdminController@data')->name('data');
+Route::post('/data', 'AdminController@moredata')->name('moredata');
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@   Administrateur-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 Route::group(['middleware' => 'admin'], function () {
+
   Route::get('/admin', 'AdminController@home')->name('admin');
+
+  Route::get('/articles', 'AdminController@articles')->name('articles');
+  Route::get('/more', 'AdminController@more')->name('more');
 
   //Users ----------------------------------------------------------------------
   Route::post('/addUser', 'AdminUsersController@addUser')->name('addUser');
@@ -53,6 +58,21 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addCategorie', 'AdminCategoriesController@addCategorie')->name('addCategorie');
   Route::post('/updateCategorie', 'AdminCategoriesController@updateCategorie')->name('updateCategorie');
   Route::post('/deleteCategorie', 'AdminCategoriesController@deleteCategorie')->name('deleteCategorie');
+
+  //Societe --------------------------------------------------------------------
+  Route::post('/addSociete', 'AdminSocietesController@addSociete')->name('addSociete');
+  Route::post('/updateSociete', 'AdminSocietesController@updateSociete')->name('updateSociete');
+  Route::post('/deleteSociete', 'AdminSocietesController@deleteSociete')->name('deleteSociete');
+
+  //Site -----------------------------------------------------------------------
+  Route::post('/addSite', 'AdminSitesController@addSite')->name('addSite');
+  Route::post('/updateSite', 'AdminSitesController@updateSite')->name('updateSite');
+  Route::post('/deleteSite', 'AdminSitesController@deleteSite')->name('deleteSite');
+
+  //Zone -----------------------------------------------------------------------
+  Route::post('/addZone', 'AdminZonesController@addZone')->name('addZone');
+  Route::post('/updateZone', 'AdminZonesController@updateZone')->name('updateZone');
+  Route::post('/deleteZone', 'AdminZonesController@deleteZone')->name('deleteZone');
 });
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
