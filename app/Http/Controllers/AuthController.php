@@ -6,6 +6,7 @@ use \Exception;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Session;
 use Sentinel;
+use DB;
 use Illuminate\Http\Request;
 use \App\Models\Role;
 use \App\Models\Role_user;
@@ -14,6 +15,12 @@ class AuthController extends Controller
 {
   //login *****************************************************************************
   public function login(){
+    try {
+      DB::connection()->getPdo();
+    } catch (Exception $e) {
+      return view('login')->with('alert_danger',"Problème de connexion avec la base de données. Veuillez réessayer plus tard.");
+    }
+
     if( Sentinel::check() ){
       return self::redirectToSpace();
     }
@@ -41,7 +48,7 @@ class AuthController extends Controller
       return redirect()->back()->withInput()->with("alert_warning", "<b>Une activité suspecte s'est produite sur votre adresse IP, l'accès vous est refusé pour " . $e->getDelay() . " seconde (s)</b>")->withTimerDanger($e->getDelay() * 1000);
     }
     catch (Exception $e) {
-      return redirect()->route('login')->withInput()->with("alert_danger", "Erreur !<br>Message d'erreur:  ".$e->getMessage()." ");
+      return redirect()->route('login')->withInput()->with("alert_danger", "Erreur !<br>Code de l'erreur:  ".$e->getCode()." ");
     }
   }
 

@@ -141,7 +141,7 @@
   @yield('modals')
 
   <!-- /#footer -->
-  <footer class="Footer bg-dark dker"><p>2018 &copy; <a href="mailto: amine.laghlabi@gmail.com">Amine Laghlabi</a> v1</p></footer>
+  <footer class="Footer bg-dark dker"><p>2018 &copy; <a href="mailto: amine.laghlabi@gmail.com">Amine Laghlabi</a> <i>version 1.0</i></p></footer>
   <!-- /#footer -->
 
 

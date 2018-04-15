@@ -31,8 +31,9 @@ Route::get('/b',function(){
   return view('admin.layouts.layout');
 });
 
-Route::get('/data', 'AdminController@data')->name('data');
-Route::post('/data', 'AdminController@moredata')->name('moredata');
+Route::get('/ajaxForm', 'AdminController@ajaxForm')->name('ajaxForm');
+Route::post('/ajaxForm', 'AdminController@ajaxForm')->name('postAjaxForm');
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@   Administrateur-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -41,8 +42,14 @@ Route::group(['middleware' => 'admin'], function () {
 
   Route::get('/admin', 'AdminController@home')->name('admin');
 
-  Route::get('/articles', 'AdminController@articles')->name('articles');
+
   Route::get('/more', 'AdminController@more')->name('more');
+
+  //Unite ----------------------------------------------------------------------
+  Route::get('/articles', 'AdminArticlesController@articles')->name('articles');
+  Route::post('/addArticle', 'AdminArticlesController@addArticle')->name('addArticle');
+  Route::post('/updateArticle', 'AdminArticlesController@updateArticle')->name('updateArticle');
+  Route::post('/deleteArticle', 'AdminArticlesController@deleteArticle')->name('deleteArticle');
 
   //Users ----------------------------------------------------------------------
   Route::post('/addUser', 'AdminUsersController@addUser')->name('addUser');
@@ -73,6 +80,11 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addZone', 'AdminZonesController@addZone')->name('addZone');
   Route::post('/updateZone', 'AdminZonesController@updateZone')->name('updateZone');
   Route::post('/deleteZone', 'AdminZonesController@deleteZone')->name('deleteZone');
+
+  //Unite ----------------------------------------------------------------------
+  Route::post('/addUnite', 'AdminUnitesController@addUnite')->name('addUnite');
+  Route::post('/updateUnite', 'AdminUnitesController@updateUnite')->name('updateUnite');
+  Route::post('/deleteUnite', 'AdminUnitesController@deleteUnite')->name('deleteUnite');
 });
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

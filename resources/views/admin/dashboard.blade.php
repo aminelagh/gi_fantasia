@@ -195,7 +195,47 @@
       </div>
       {{-- *********************************** Users ************************************* --}}
     </div>
-
+    <div class="col-md-4">
+      {{-- *********************************** Unites ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Unités <span class="badge badge-info badge-pill" title="Nombre d'unités"> {{ $unites->count() }}</span></h5>
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddUnite">Ajouter une nouvelle Unité</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="societesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Unité</th><th>Date de création</th><th>Outils</th></tr></thead>
+            <tbody>
+              @foreach($unites as $item)
+                <tr>
+                  <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->created_at }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUnite" onclick='updateUniteFunction({{ $item->id_unite }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteUniteFunction({{ $item->id_unite }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Unites ************************************* --}}
+    </div>
   </div>
 
   <hr>
@@ -971,6 +1011,96 @@
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Unites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  <div class="CRUD Unites">
+    <form id="formDeleteUnite" method="POST" action="{{ route('deleteUnite') }}">
+      @csrf
+      <input type="hidden" id="delete_id_unite" name="id_unite" />
+    </form>
+    <script>
+    function deleteUniteFunction(id_unite, libelle){
+      var go = confirm('Vos êtes sur le point d\'effacer l\'unité: "'+libelle+'".\n voulez-vous continuer?');
+      if(go){
+        document.getElementById("delete_id_unite").value = id_unite;
+        document.getElementById("formDeleteUnite").submit();
+      }
+    }
+    function updateUniteFunction(id_unite, libelle){
+      document.getElementById("update_id_unite").value = id_unite;
+      document.getElementById("update_libelle_unite").value = libelle;
+    }
+    </script>
+
+    {{-- *****************************    Add Unite    ********************************************** --}}
+    <div class="modal fade" id="modalAddUnite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add Unite --}}
+      <form method="POST" action="{{ route('addUnite') }}">
+        @csrf
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Création d'une nouvelle Unité</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-7">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Unité</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    {{-- *****************************    update Unite    ************************************************* --}}
+    <div class="modal fade" id="modalUpdateUnite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form update Categorie --}}
+      <form method="POST" action="{{ route('updateUnite') }}">
+        @csrf
+        <input type="hidden" name="id_unite" id="update_id_unite">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Modification de l'unité</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-7">
+                  {{-- Libelle --}}
+                  <div class="form-group has-feedback">
+                    <label>Unité</label>
+                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_unite" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Unites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
 @endsection
 
 @section('styles')
@@ -1077,6 +1207,7 @@ $('#societesTable').DataTable({
   ],
   //order: [[ 0, "asc" ]],
 });
+
 $('#sitesTable').DataTable({
   dom: '<lf<Bt>ip>',
   buttons: [
@@ -1093,6 +1224,7 @@ $('#sitesTable').DataTable({
   ],
   //order: [[ 0, "asc" ]],
 });
+
 $('#zonesTable').DataTable({
   dom: '<lf<Bt>ip>',
   buttons: [
@@ -1122,6 +1254,9 @@ $(document).ready(function() {
     }
   } );
 } );
+
+
+
 </script>
 
 
