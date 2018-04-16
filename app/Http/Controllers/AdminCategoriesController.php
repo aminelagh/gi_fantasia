@@ -31,7 +31,6 @@ class AdminCategoriesController extends Controller
   public function addCategorie(Request $request){
     try{
       $item = new Categorie();
-      $item->id_famille = $request->id_famille;
       $item->libelle = $request->libelle;
       $item->save();
     }catch(Exception $e){
@@ -43,7 +42,6 @@ class AdminCategoriesController extends Controller
   public function updateCategorie(Request $request){
     try{
       $item = Categorie::find($request->id_categorie);
-      $item->id_famille = $request->id_famille;
       $item->libelle = $request->libelle;
       $item->save();
     }catch(Exception $e){

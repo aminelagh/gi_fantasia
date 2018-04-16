@@ -10,6 +10,6 @@ class Famille extends Model
 
   protected $primaryKey = 'id_famille';
 
-  protected $fillable = ['id_famille', 'libelle',
+  protected $fillable = ['id_famille', 'id_categorie', 'libelle',
   'created_at', 'updated_at'];
 }

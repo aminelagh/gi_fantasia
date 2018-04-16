@@ -42,7 +42,6 @@ Route::group(['middleware' => 'admin'], function () {
 
   Route::get('/admin', 'AdminController@home')->name('admin');
 
-
   Route::get('/more', 'AdminController@more')->name('more');
 
   //Unite ----------------------------------------------------------------------

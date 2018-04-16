@@ -15,6 +15,7 @@ use \App\Models\Categorie;
 use \App\Models\Societe;
 use \App\Models\Site;
 use \App\Models\Zone;
+use \App\Models\Article_site;
 use \App\Models\Article;
 use \App\Models\Unite;
 use \DB;
@@ -23,14 +24,18 @@ class AdminArticlesController extends Controller
 {
   public function articles(Request $request){
 
-    $zones = collect(DB::select("select z.id_zone, z.libelle, z.created_at, z.id_site, s.libelle as libelle_s from zones z LEFT JOIN sites s on z.id_site=s.id_site limit 2;"));
-    $categories = collect(DB::select("select c.id_categorie, c.id_famille, c.created_at, c.libelle as libelle, f.libelle as libelle_famille from categories c LEFT JOIN familles f on c.id_famille = f.id_famille;"));
+    $sites = collect(DB::select("SELECT s.id_site, s.libelle, s.created_at, so.libelle as libelle_societe FROM sites s LEFT JOIN societes so ON s.id_societe=so.id_societe"));
+    $familles = collect(DB::select("SELECT f.id_famille, f.libelle, c.libelle as libelle_famille FROM familles f LEFT JOIN categories c on c.id_categorie = f.id_categorie;"));
     $unites = Unite::all();
 
     $articles = collect(DB::select(
-      "SELECT a.id_article, a.id_categorie, a.id_zone, a.id_unite, a.code, a.designation, a.created_at, c.libelle as libelle_categorie, z.libelle as libelle_zone, u.libelle as libelle_unite
-      FROM articles a LEFT JOIN categories c on c.id_categorie=a.id_categorie LEFT JOIN zones z on z.id_zone=a.id_zone LEFT JOIN unites u on u.id_unite=a.id_unite;
-    "));
+      "SELECT a.id_article, a.id_famille, a.id_unite, a.code, a.designation, a.created_at, f.libelle as libelle_famille, u.libelle as libelle_unite, s.libelle as libelle_site
+      FROM articles a LEFT JOIN familles f on f.id_famille=a.id_famille
+      LEFT JOIN unites u on u.id_unite=a.id_unite
+      LEFT JOIN article_site on article_site.id_article=a.id_article
+      LEFT JOIN sites s on s.id_site=article_site.id_site;
+      ;"
+    ));
 
     //$articles = Throttle::paginate($this->posts_per_page);
 
@@ -40,11 +45,34 @@ class AdminArticlesController extends Controller
         'next_page' => $articles->nextPageUrl()
       ];
     }
-    return view('admin.articles')->with(compact('articles','zones','unites','categories'));
+    return view('admin.articles')->with(compact('articles','sites','unites','familles'));
   }
 
 
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //add Article ****************************************************************
+  public function addArticle(Request $request){
+    try{
+      $id_article = Article::getNextID();
+
+      $item = new Article();
+      $item->id_article = $id_article;
+      $item->id_famille = $request->id_famille;
+      $item->id_unite = $request->id_unite;
+      $item->code = $request->code;
+      $item->designation = $request->designation;
+      $item->save();
+
+      $article_site = new Article_site();
+      $article_site->id_article = $id_article;
+      $article_site->id_site = $request->id_site;
+      $article_site->save();
+
+    }catch(Exception $e){
+      return redirect()->back()->withInput()->with('alert_danger',"Erreur de création de l'article.<br>Message d'erreur: ".$e->getMessage().".");
+    }
+    return redirect()->back()->with('alert_success',"Article créé");
+  }
   //Delete Article *************************************************************
   public function deleteArticle(Request $request){
     try{
@@ -54,21 +82,6 @@ class AdminArticlesController extends Controller
       return redirect()->back()->with('alert_danger',"Erreur de suppression de l'article.<br>Message d'erreur: ".$e->getMessage().".");
     }
     return redirect()->back()->with('alert_success',"Article supprimé");
-  }
-  //add Article ****************************************************************
-  public function addArticle(Request $request){
-    try{
-      $item = new Article();
-      $item->id_categorie = $request->id_categorie;
-      $item->id_zone = $request->id_zone;
-      $item->id_unite = $request->id_unite;
-      $item->code = $request->code;
-      $item->designation = $request->designation;
-      $item->save();
-    }catch(Exception $e){
-      return redirect()->back()->withInput()->with('alert_danger',"Erreur de création de l'article.<br>Message d'erreur: ".$e->getMessage().".");
-    }
-    return redirect()->back()->with('alert_success',"Article créé");
   }
   //update Article *************************************************************
   public function updateArticle(Request $request){

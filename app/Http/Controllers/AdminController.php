@@ -27,11 +27,14 @@ class AdminController extends Controller
   public function home(){
     $users = collect(DB::select("select u.id as id_user,u.nom, u.prenom,r.slug,r.name,u.last_login,u.created_at,u.login from users u LEFT JOIN role_users ru on ru.user_id = u.id LEFT JOIN roles r on r.id = ru.role_id;"));
     $roles = Role::all();
-    $familles = Famille::all();
-    $categories = collect(DB::select("select c.id_categorie, c.id_famille, c.created_at, c.libelle as libelle, f.libelle as libelle_f from categories c LEFT JOIN familles f on c.id_famille = f.id_famille;"));
+    $categories = Categorie::all();
+    $familles = collect(DB::select(
+      "SELECT f.libelle, f.id_famille, f.id_categorie, f.created_at, c.libelle as libelle_categorie from familles f LEFT JOIN categories c on c.id_categorie = f.id_categorie;"));
+
     $societes = Societe::all();
     $sites = collect(DB::select("select s.id_site, s.id_societe,s.libelle,s.created_at, so.libelle as libelle_so from sites s LEFT JOIN societes so on s.id_societe = so.id_societe;"));
     $zones = collect(DB::select("select z.id_zone, z.libelle, z.created_at, z.id_site, s.libelle as libelle_s from zones z LEFT JOIN sites s on z.id_site=s.id_site;"));
+
     $unites = Unite::all();
     return view('admin.dashboard')->with(compact('users','roles','familles','categories','societes','sites','zones','unites'));
     //  return view('admin.dashboard')->withUsers($users)->withRoles($roles);//->with('alert_info',"Hola");
@@ -59,7 +62,8 @@ class AdminController extends Controller
     //return view('ajaxForm')->with('alert_info',"Doone");
     //dump($request->all());
   }
-  else return view('ajaxForm');
+  else
+  return view('ajaxForm');
 }
 
 

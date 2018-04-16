@@ -36,23 +36,23 @@
             <input type="hidden" name="id_article" id="id_article">
             <div class="row">
               <div class="col-lg-4">
-                {{-- Categorie --}}
+                {{-- Site --}}
                 <div class="form-group has-feedback">
-                  <label>Catégorie</label>
-                  <select  class="form-control" name="id_categorie" id="id_categorie">
-                    @foreach ($categories as $item)
-                      <option value="{{ $item->id_categorie }}">{{ $item->libelle }} ({{ $item->libelle_famille }})</option>
+                  <label>Site</label>
+                  <select  class="form-control" name="id_site" id="id_site">
+                    @foreach ($sites as $item)
+                      <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
                     @endforeach
                   </select>
                 </div>
               </div>
               <div class="col-lg-4">
-                {{-- Zone --}}
+                {{-- Famille --}}
                 <div class="form-group has-feedback">
-                  <label>Zone</label>
-                  <select  class="form-control" name="id_zone" id="id_zone">
-                    @foreach ($zones as $item)
-                      <option value="{{ $item->id_zone }}">{{ $item->libelle }}</option>
+                  <label>Famille</label>
+                  <select  class="form-control" name="id_famille" id="id_famille">
+                    @foreach ($familles as $item)
+                      <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -105,7 +105,7 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'utilisateurs"> {{ $articles->count() }}</span></h5>
+          <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $articles->count() }}</span></h5>
           <!-- .toolbar -->
           <div class="toolbar">
             <nav style="padding: 8px;">
@@ -124,17 +124,18 @@
         </header>
         <div id="collapse" class="body">
           <table id="articlesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Code</th><th>Catégorie</th><th>Zone</th><th>Designation</th><th>Unité</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($articles as $item)
                 <tr>
                   <td>{{ $item->code }}</td>
-                  <td>{{ $item->libelle_categorie }}</td>
-                  <td>{{ $item->libelle_zone }}</td>
+                  <td>{{ $item->libelle_famille }}</td>
+                  <td>{{ $item->libelle_site }}</td>
                   <td>{{ $item->designation }}</td>
                   <td>{{ $item->libelle_unite }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
+                  <td align="center">
+                    <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
+                    onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_famille }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
                     {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
                     <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},'{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                   </td>
@@ -186,61 +187,17 @@
         document.getElementById("formDeleteArticle").submit();
       }
     }
-    function updateArticleFunction(id_article,id_categorie, id_zone, id_unite, code, designation){
+    function updateArticleFunction(id_article,id_famille, id_unite, code, designation){
       document.getElementById("formAddArticle").action = "{{ route('updateArticle') }}";
       document.getElementById("id_article").value = id_article;
-      document.getElementById("id_categorie").value = id_categorie;
-      document.getElementById("id_zone").value = id_zone;
+      document.getElementById("id_famille").value = id_famille;
       document.getElementById("id_unite").value = id_unite;
       document.getElementById("code").value = code;
       document.getElementById("designation").value = designation;
     }
     </script>
 
-    {{-- *****************************    update Article    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateArticle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Article --}}
-      <form method="POST" action="{{ route('updateArticle') }}">
-        @csrf
-        <input type="hidden" name="id_zone" id="update_id_zone">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification de la zone</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Site --}}
-                  <div class="form-group has-feedback">
-                    <label>Site</label>
-                    <select  class="form-control" name="id_site" id="update_id_site_zone">
-                      @foreach ($zones as $item)
-                        <option value="{{ $item->id_zone }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Zone</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_zone" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
 
-          </div>
-        </div>
-
-      </form>
-    </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}

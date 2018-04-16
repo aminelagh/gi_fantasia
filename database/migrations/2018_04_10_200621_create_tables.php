@@ -13,63 +13,79 @@ class CreateTables extends Migration
   */
   public function up()
   {
-    //table familles
-    Schema::create('familles', function (Blueprint $table) {
-      $table->increments('id_famille');
-      $table->string('libelle',255);
-      $table->timestamps();
-    });
-    //table categories
+    //table categories ---------------------------------------------------------
     Schema::create('categories', function (Blueprint $table) {
       $table->increments('id_categorie');
-      $table->integer('id_famille');
+      $table->string('libelle',200)->unique();
+      $table->timestamps();
+      $table->engine = 'InnoDB';
+    });
+    //table familles -----------------------------------------------------------
+    Schema::create('familles', function (Blueprint $table) {
+      $table->increments('id_famille');
+      $table->integer('id_categorie');
       $table->string('libelle',255);
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
+    //--------------------------------------------------------------------------
 
-    //table societes
+    //table societes -----------------------------------------------------------
     Schema::create('societes', function (Blueprint $table) {
       $table->increments('id_societe');
-      $table->string('libelle',255);
+      $table->string('libelle',200)->unique();
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
-    //table sites
+    //table sites --------------------------------------------------------------
     Schema::create('sites', function (Blueprint $table) {
       $table->increments('id_site');
       $table->integer('id_societe');
       $table->string('libelle',255);
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
-    //table zones
+    //table zones --------------------------------------------------------------
     Schema::create('zones', function (Blueprint $table) {
       $table->increments('id_zone');
       $table->integer('id_site');
       $table->string('libelle',255);
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
+    //--------------------------------------------------------------------------
 
-    //table unites
+    //table unites -------------------------------------------------------------
     Schema::create('unites', function (Blueprint $table) {
       $table->increments('id_unite');
-      $table->string('libelle',255);
+      $table->string('libelle',200)->unique();
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
-
-    //table articles
+    //table article_site -------------------------------------------------------
+    Schema::create('article_site', function (Blueprint $table) {
+      $table->increments('id_article_site');
+      $table->integer('id_article');
+      $table->integer('id_site');
+      $table->timestamps();
+      $table->engine = 'InnoDB';
+    });
+    //table articles -----------------------------------------------------------
     Schema::create('articles', function (Blueprint $table) {
       $table->increments('id_article');
-      $table->integer('id_categorie');
-      $table->integer('id_zone');
+      $table->integer('id_famille');
       $table->integer('id_unite');
-      $table->string('code',200)->unique();
+      $table->string('code',255);
       $table->string('designation',255);
       $table->timestamps();
+      $table->engine = 'InnoDB';
     });
+    //--------------------------------------------------------------------------
 
-    //table articles
+    //table inventaires --------------------------------------------------------
     Schema::create('inventaires', function (Blueprint $table) {
       $table->increments('id_inventaire');
-      $table->integer('id_article');
+      $table->integer('id_article_site');
       $table->integer('id_zone');
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
@@ -81,12 +97,13 @@ class CreateTables extends Migration
 
       $table->timestamps();
       $table->datetime('validated_at');
+      $table->engine = 'InnoDB';
     });
 
     //table articles
     Schema::create('inventaires_backup', function (Blueprint $table) {
       $table->increments('id_inventaire');
-      $table->integer('id_article');
+      $table->integer('id_article_site');
       $table->integer('id_zone');
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
@@ -98,8 +115,8 @@ class CreateTables extends Migration
 
       $table->timestamps();
       $table->datetime('validated_at');
+      $table->engine = 'InnoDB';
     });
-
   }
 
   public function down()
@@ -111,6 +128,7 @@ class CreateTables extends Migration
     Schema::dropIfExists('zones');
     Schema::dropIfExists('unites');
     Schema::dropIfExists('articles');
+    Schema::dropIfExists('article_site');
     Schema::dropIfExists('inventaires');
     Schema::dropIfExists('inventaires_backup');
   }

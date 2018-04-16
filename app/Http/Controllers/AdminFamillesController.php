@@ -32,6 +32,7 @@ class AdminFamillesController extends Controller
   public function addFamille(Request $request){
     try{
       $item = new Famille();
+      $item->id_categorie = $request->id_categorie;
       $item->libelle = $request->libelle;
       $item->save();
     }catch(Exception $e){
@@ -43,6 +44,7 @@ class AdminFamillesController extends Controller
   public function updateFamille(Request $request){
     try{
       $item = Famille::find($request->id_famille);
+      $item->id_categorie = $request->id_categorie;
       $item->libelle = $request->libelle;
       $item->save();
     }catch(Exception $e){

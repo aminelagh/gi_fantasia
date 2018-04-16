@@ -242,50 +242,7 @@
 
   <div class="row">
     <div class="col-md-7">
-      {{-- *********************************** Categories ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Categories <span class="badge badge-info badge-pill" title="Nombre de categories"> {{ $categories->count() }}</span></h5>
-          <!-- .toolbar -->
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddCategorie">Ajouter une nouvelle categorie</a></li>
-                <li><a href="#">print</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <table id="categoriesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Categorie</th><th>Famille</th><th>date de creation</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($categories as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->libelle_f }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateCategorie" onclick='updateCategorieFunction({{ $item->id_categorie }}, {{ $item->id_famille }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteCategorieFunction({{ $item->id_categorie }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** Categories ************************************* --}}
-    </div>
 
-    <div class="col-md-5">
       {{-- *********************************** familles ************************************* --}}
       <div class="box">
         <header class="dark">
@@ -309,14 +266,15 @@
         </header>
         <div id="collapse" class="body">
           <table id="famillesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Famille</th><th>Date de creation</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Famille</th><th>Catégorie</th><th>Date de creation</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($familles as $item)
                 <tr>
                   <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->libelle_categorie }}</td>
                   <td>{{ $item->created_at }}</td>
                   <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }},{{ $item->id_categorie }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteFamilleFunction({{ $item->id_famille }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
                 </tr>
@@ -326,6 +284,49 @@
         </div>
       </div>
       {{-- *********************************** familles ************************************* --}}
+    </div>
+
+    <div class="col-md-5">
+      {{-- *********************************** Categories ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Categories <span class="badge badge-info badge-pill" title="Nombre de categories"> {{ $categories->count() }}</span></h5>
+          <!-- .toolbar -->
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddCategorie">Ajouter une nouvelle categorie</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="categoriesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Categorie</th><th>date de creation</th><th>Outils</th></tr></thead>
+            <tbody>
+              @foreach($categories as $item)
+                <tr>
+                  <td>{{ $item->libelle }}</td>
+                  <td>{{ $item->created_at }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateCategorie" onclick='updateCategorieFunction({{ $item->id_categorie }},"{{ $item->libelle }}" );' title="Modifier" ></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteCategorieFunction({{ $item->id_categorie }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Categories ************************************* --}}
     </div>
 
   </div>
@@ -505,15 +506,16 @@
         document.getElementById("formDeleteFamille").submit();
       }
     }
-    function updateFamilleFunction(id_famille, libelle){
+    function updateFamilleFunction(id_famille, id_categorie, libelle){
       document.getElementById("update_id_famille").value = id_famille;
+      document.getElementById("update_id_categorie_famille").value = id_famille;
       document.getElementById("update_libelle_famille").value = libelle;
     }
     </script>
 
     {{-- *****************************    Add Famille    ********************************************** --}}
     <div class="modal fade" id="modalAddFamille" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add User --}}
+      {{-- Form add Famille --}}
       <form method="POST" action="{{ route('addFamille') }}">
         @csrf
 
@@ -526,9 +528,20 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-md-4">
-                  {{-- Libelle --}}
+                  {{-- Catégorie --}}
                   <div class="form-group has-feedback">
-                    <label>Nom</label>
+                    <label>Catégorie</label>
+                    <select  class="form-control" name="id_categorie">
+                      @foreach ($categories as $item)
+                        <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  {{-- Famille --}}
+                  <div class="form-group has-feedback">
+                    <label>Famille</label>
                     <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
                   </div>
                 </div>
@@ -547,7 +560,7 @@
 
     {{-- *****************************    update Famille    ************************************************* --}}
     <div class="modal fade" id="modalUpdateFamille" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update User --}}
+      {{-- Form update Famille --}}
       <form method="POST" action="{{ route('updateFamille') }}">
         @csrf
         <input type="hidden" name="id_famille" id="update_id_famille">
@@ -560,10 +573,21 @@
             </div>
             <div class="modal-body">
               <div class="row">
-                <div class="col-md-6">
-                  {{-- Nom --}}
+                <div class="col-md-4">
+                  {{-- Categorie --}}
                   <div class="form-group has-feedback">
-                    <label>Nom</label>
+                    <label>Catégorie</label>
+                    <select  class="form-control" name="id_categorie" id="update_id_categorie_famille">
+                      @foreach ($categories as $item)
+                        <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  {{-- Famille --}}
+                  <div class="form-group has-feedback">
+                    <label>Famille</label>
                     <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_famille" required>
                   </div>
                 </div>
@@ -619,21 +643,10 @@
             </div>
             <div class="modal-body">
               <div class="row">
-                <div class="col-md-4">
-                  {{-- Famille --}}
-                  <div class="form-group has-feedback">
-                    <label>Famille</label>
-                    <select  class="form-control" name="id_famille">
-                      @foreach ($familles as $item)
-                        <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   {{-- Libelle --}}
                   <div class="form-group has-feedback">
-                    <label>Nom</label>
+                    <label>Catégorie</label>
                     <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
                   </div>
                 </div>
@@ -665,17 +678,6 @@
             </div>
             <div class="modal-body">
               <div class="row">
-                <div class="col-md-4">
-                  {{-- Famille --}}
-                  <div class="form-group has-feedback">
-                    <label>Famille</label>
-                    <select  class="form-control" name="id_famille" id="update_id_famille_categorie">
-                      @foreach ($familles as $item)
-                        <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
                 <div class="col-md-6">
                   {{-- Libelle --}}
                   <div class="form-group has-feedback">
