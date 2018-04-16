@@ -49,6 +49,8 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addArticle', 'AdminArticlesController@addArticle')->name('addArticle');
   Route::post('/updateArticle', 'AdminArticlesController@updateArticle')->name('updateArticle');
   Route::post('/deleteArticle', 'AdminArticlesController@deleteArticle')->name('deleteArticle');
+  Route::post('/exportArticles', 'AdminArticlesController@exportArticles')->name('exportArticles');
+  Route::post('/addArticles', 'AdminArticlesController@addArticles')->name('addArticles');
 
   //Users ----------------------------------------------------------------------
   Route::post('/addUser', 'AdminUsersController@addUser')->name('addUser');

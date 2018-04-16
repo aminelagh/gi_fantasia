@@ -16,85 +16,93 @@
 @endsection
 
 @section('content')
-  <div class="row col-lg-12">
-    <div class="box inverse">
-      <header>
-        <div class="icons"><i class="fa fa-th-large"></i></div>
-        <h5>Création d'un nouvel article</h5>
-        <div class="toolbar">
-          <nav style="padding: 8px;">
-            <a href="javascript:;" class="btn btn-default btn-xs collapse-box"><i class="fa fa-minus"></i></a>
-            <a href="javascript:;" class="btn btn-default btn-xs full-box"><i class="fa fa-expand"></i></a>
-            <a href="javascript:;" class="btn btn-danger btn-xs close-box"><i class="fa fa-times"></i></a>
-          </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="box inverse">
+        <header>
+          <div class="icons"><i class="fa fa-th-large"></i></div>
+          <h5>Création d'un nouvel article</h5>
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a href="#" onclick="printArticles()">export</a></li>
+                <li><a data-toggle="modal" class="btn btn-default btn-md" href="#modalAddArticles">Import</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="div-2" class="body">
+          <div class="row">
+            <div class="col-md-12">
+              <form id="formAddArticle" method="POST" action="{{ route('addArticle') }}">
+                @csrf
+                <input type="hidden" name="id_article" id="id_article">
+                <div class="row">
+                  <div class="col-lg-4">
+                    {{-- Site --}}
+                    <div class="form-group has-feedback">
+                      <label>Site</label>
+                      <select  class="form-control" name="id_site" id="id_site">
+                        @foreach ($sites as $item)
+                          <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    {{-- Famille --}}
+                    <div class="form-group has-feedback">
+                      <label>Famille</label>
+                      <select  class="form-control" name="id_famille" id="id_famille">
+                        @foreach ($familles as $item)
+                          <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    {{-- Unité --}}
+                    <div class="form-group has-feedback">
+                      <label>Unité</label>
+                      <select  class="form-control" name="id_unite" id="id_unite">
+                        @foreach ($unites as $item)
+                          <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    {{-- Code --}}
+                    <div class="form-group has-feedback">
+                      <label>Code</label>
+                      <input type="text" class="form-control" placeholder="Code" name="code" value="{{ old('code') }}"  id="code" required>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    {{-- Designation --}}
+                    <div class="form-group has-feedback">
+                      <label>Designation</label>
+                      <input type="text" class="form-control" placeholder="Designation" value="{{ old('designation') }}"  id="designation"  name="designation" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" align="center">
+                  <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </header>
-      <div id="div-2" class="body">
-        <div class="row col-md-12">
-          <form id="formAddArticle" method="POST" action="{{ route('addArticle') }}">
-            @csrf
-            <input type="hidden" name="id_article" id="id_article">
-            <div class="row">
-              <div class="col-lg-4">
-                {{-- Site --}}
-                <div class="form-group has-feedback">
-                  <label>Site</label>
-                  <select  class="form-control" name="id_site" id="id_site">
-                    @foreach ($sites as $item)
-                      <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                {{-- Famille --}}
-                <div class="form-group has-feedback">
-                  <label>Famille</label>
-                  <select  class="form-control" name="id_famille" id="id_famille">
-                    @foreach ($familles as $item)
-                      <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                {{-- Unité --}}
-                <div class="form-group has-feedback">
-                  <label>Unité</label>
-                  <select  class="form-control" name="id_unite" id="id_unite">
-                    @foreach ($unites as $item)
-                      <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-5">
-                {{-- Code --}}
-                <div class="form-group has-feedback">
-                  <label>Code</label>
-                  <input type="text" class="form-control" placeholder="Code" name="code" value="{{ old('code') }}"  id="code" required>
-                </div>
-              </div>
-              <div class="col-md-7">
-                {{-- Designation --}}
-                <div class="form-group has-feedback">
-                  <label>Designation</label>
-                  <input type="text" class="form-control" placeholder="Designation" value="{{ old('designation') }}"  id="designation"  name="designation" required>
-                </div>
-              </div>
-            </div>
-            <div class="row" align="center">
-              <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-          </form>
-        </div>
-
-
       </div>
     </div>
-
   </div>
 
   <hr>
@@ -112,7 +120,7 @@
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
                 <!--li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddArticle">Ajouter un nouvel Article</a></li-->
-                <li><a href="#">print</a></li>
+                <li><a onclick="exportArticlesFunction()">print</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -147,7 +155,6 @@
       </div>
       {{-- *********************************** Articles ************************************* --}}
     </div>
-
   </div>
 
   <hr>
@@ -171,6 +178,22 @@
 @endsection
 
 @section('modals')
+  {{-- ****************************************************************************************** --}}
+  {{-- ****************************** Print Forms *********************************************** --}}
+  <form id="formExportArticles" method="POST" action="{{ route('exportArticles') }}" target="_blank">
+    @csrf
+    <input type="hidden" name="id_type_intervention" id="print_id_type_intervention">
+  </form>
+
+  <script>
+  function exportArticlesFunction(){
+    //let id_type_intervention = document.getElementById("id_type_intervention").value;
+    //document.getElementById("print_id_type_intervention").value = id_type_intervention;
+    document.getElementById("formExportArticles").submit();
+  }
+  </script>
+  {{-- ****************************** Print Forms *********************************************** --}}
+  {{-- ****************************************************************************************** --}}
 
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
@@ -201,6 +224,36 @@
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+
+  <div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Form upload File --}}
+    <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
+      @csrf
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Chargement des articles</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-7">
+                {{-- Libelle --}}
+                <div class="form-group has-feedback">
+                  <label>Fichier</label>
+                  <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 @endsection
 
 @section('styles')

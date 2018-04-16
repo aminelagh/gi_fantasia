@@ -9,13 +9,13 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <!-- Favicon icon -->
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="public/images/favicon.png">
   <title>Inventaire</title>
   <!-- Bootstrap Core CSS -->
-  <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+  <link href="public/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
   <!-- Custom CSS -->
-  <link href="css/helper.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
+  <link href="public/css/helper.css" rel="stylesheet">
+  <link href="public/css/style.css" rel="stylesheet">
 </head>
 
 <body class="fix-header fix-sidebar">
@@ -37,18 +37,18 @@
     </div>
     <!-- End Wrapper -->
     <!-- All Jquery -->
-    <script src="js/lib/jquery/jquery.min.js"></script>
+    <script src="public/js/lib/jquery/jquery.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="js/lib/bootstrap/js/popper.min.js"></script>
-    <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="public/js/lib/bootstrap/js/popper.min.js"></script>
+    <script src="public/js/lib/bootstrap/js/bootstrap.min.js"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="js/jquery.slimscroll.js"></script>
+    <script src="public/js/jquery.slimscroll.js"></script>
     <!--Menu sidebar -->
-    <script src="js/sidebarmenu.js"></script>
+    <script src="public/js/sidebarmenu.js"></script>
     <!--stickey kit -->
-    <script src="js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="public/js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
     <!--Custom JavaScript -->
-    <script src="js/custom.min.js"></script>
+    <script src="public/js/custom.min.js"></script>
 
   </body>
 

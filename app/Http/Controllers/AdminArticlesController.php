@@ -19,6 +19,7 @@ use \App\Models\Article_site;
 use \App\Models\Article;
 use \App\Models\Unite;
 use \DB;
+use Excel;
 
 class AdminArticlesController extends Controller
 {
@@ -99,4 +100,77 @@ class AdminArticlesController extends Controller
     return redirect()->back()->with('alert_success',"Article modifié");
   }
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  public function exportArticles(){
+    try{
+      Excel::create('Gestion Inventaire', function($excel) {
+
+        $excel->sheet('Articles', function($sheet) {
+          $articles = collect(DB::select(
+            "SELECT a.id_article, a.id_famille, a.id_unite, a.code, a.designation, a.created_at, f.libelle as libelle_famille, u.libelle as libelle_unite, s.libelle as libelle_site
+            FROM articles a LEFT JOIN familles f on f.id_famille=a.id_famille
+            LEFT JOIN unites u on u.id_unite=a.id_unite
+            LEFT JOIN article_site on article_site.id_article=a.id_article
+            LEFT JOIN sites s on s.id_site=article_site.id_site;
+            ;"
+          ));
+          $sheet->appendRow(array( "id_article","Code","Famille","Site","Designation","Unité","date de creation"));
+          foreach ($articles as $item) {
+            $sheet->appendRow(array( $item->id_article,$item->code,$item->libelle_famille,$item->libelle_site,$item->designation,$item->libelle_unite,$item->created_at));
+          }
+        });
+      })->export('xls');
+
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur !<br>Message d'erreur: ".$e->getMessage());
+    }
+  }
+
+  public function addArticles(Request $request){
+    $file = $request->file('file');
+    if($file->getClientOriginalExtension() != "xls"){
+      return redirect()->back()->with('alert_warning',"Veuillez importer un fichier excel.");
+    }
+    /*
+    //Display File Name
+    echo 'File Name: '.$file->getClientOriginalName();
+    echo '<br>';
+
+    //Display File Extension
+    echo 'File Extension: '.$file->getClientOriginalExtension();
+    echo '<br>';
+
+    //Display File Real Path
+    echo 'File Real Path: '.$file->getRealPath();
+    echo '<br>';
+
+    //Display File Size
+    echo 'File Size: '.$file->getSize();
+    echo '<br>';
+
+    //Display File Mime Type
+    echo 'File Mime Type: '.$file->getMimeType();*/
+
+    //Move Uploaded File
+    $destinationPath = 'uploads';
+    $file->move($destinationPath,$file->getClientOriginalName());
+
+    Excel::load('uploads/'.$file->getClientOriginalName(), function($reader) {
+      //Excel::selectSheetsByIndex(0)->load();
+      $x = $reader->get(array("id_article","Code","Famille","Site","Designation","Unité","date de creation"));
+      dump($x);
+    });
+
+    Excel::filter('chunk')->load('uploads/'.$file->getClientOriginalName())->chunk(2, function($results)
+    {
+      foreach($results as $row)
+      {
+        echo "id: ".$row->id_article;
+        echo "code: ".$row->code;
+        echo "famille: ".$row->famille;
+        echo "designation: ".$row->designation;
+        echo "<hr>";
+      }
+    });
+  }
 }

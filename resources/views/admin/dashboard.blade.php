@@ -1068,7 +1068,7 @@
 
     {{-- *****************************    update Unite    ************************************************* --}}
     <div class="modal fade" id="modalUpdateUnite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Categorie --}}
+      {{-- Form update Unite --}}
       <form method="POST" action="{{ route('updateUnite') }}">
         @csrf
         <input type="hidden" name="id_unite" id="update_id_unite">
