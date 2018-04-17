@@ -33,7 +33,7 @@
   <script src="public/assets/less/less.js"></script>
   <!-- Toastr -->
   <link href="public/css/lib/toastr/toastr.min.css" rel="stylesheet">
-  
+  <script src="public/assets/less/less.js"></script>
   @yield('styles')
 
   <!--For Development Only. Not required -->

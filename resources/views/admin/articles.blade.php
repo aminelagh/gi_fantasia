@@ -27,7 +27,7 @@
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
                 <li><a href="#" onclick="printArticles()">export</a></li>
-                <li><a data-toggle="modal" class="btn btn-default btn-md" href="#modalAddArticles">Import</a></li>
+                <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -43,6 +43,7 @@
               <form id="formAddArticle" method="POST" action="{{ route('addArticle') }}">
                 @csrf
                 <input type="hidden" name="id_article" id="id_article">
+                <input type="hidden" name="id_article_site" id="id_article_site">
                 <div class="row">
                   <div class="col-lg-4">
                     {{-- Site --}}
@@ -95,7 +96,7 @@
                   </div>
                 </div>
                 <div class="row" align="center">
-                  <button type="submit" class="btn btn-primary">Ajouter</button>
+                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton">
                 </div>
               </form>
             </div>
@@ -114,13 +115,12 @@
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
           <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $articles->count() }}</span></h5>
-          <!-- .toolbar -->
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
-                <!--li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddArticle">Ajouter un nouvel Article</a></li-->
-                <li><a onclick="exportArticlesFunction()">print</a></li>
+                <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
+                <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -131,8 +131,16 @@
           </div>
         </header>
         <div id="collapse" class="body">
+          <!--div class="breadcrumb">
+            Afficher/Masquer:
+            <a class="toggle-vis" data-column="0">Code</a> -
+            <a class="toggle-vis" data-column="1">Famille</a> -
+            <a class="toggle-vis" data-column="2">Site</a> -
+            <a class="toggle-vis" data-column="3">Unité</a>
+          </div-->
           <table id="articlesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th>Outils</th></tr></thead>
+            <tfoot><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th></th></tr></tfoot>
             <tbody>
               @foreach($articles as $item)
                 <tr>
@@ -143,9 +151,9 @@
                   <td>{{ $item->libelle_unite }}</td>
                   <td align="center">
                     <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
-                    onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_famille }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
+                    onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},{{ $item->id_famille }},{{ $item->id_site }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
                     {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                    <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},'{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                    <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},'{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                   </td>
                 </tr>
               @endforeach
@@ -182,7 +190,7 @@
   {{-- ****************************** Print Forms *********************************************** --}}
   <form id="formExportArticles" method="POST" action="{{ route('exportArticles') }}" target="_blank">
     @csrf
-    <input type="hidden" name="id_type_intervention" id="print_id_type_intervention">
+    <input type="hidden" name="name" id="id">
   </form>
 
   <script>
@@ -201,18 +209,23 @@
     <form id="formDeleteArticle" method="POST" action="{{ route('deleteArticle') }}">
       @csrf
       <input type="hidden" id="delete_id_article" name="id_article" />
+      <input type="hidden" id="delete_id_article_site" name="id_article_site" />
     </form>
     <script>
-    function deleteArticleFunction(id_article, designation){
+    function deleteArticleFunction(id_article,id_article_site, designation){
       var go = confirm('Vos êtes sur le point d\'effacer l\'article: "'+designation+'".\n voulez-vous continuer?');
       if(go){
         document.getElementById("delete_id_article").value = id_article;
+        document.getElementById("delete_id_article_site").value = id_article;
         document.getElementById("formDeleteArticle").submit();
       }
     }
-    function updateArticleFunction(id_article,id_famille, id_unite, code, designation){
+    function updateArticleFunction(id_article,id_article_site,id_famille, id_site, id_unite, code, designation){
       document.getElementById("formAddArticle").action = "{{ route('updateArticle') }}";
+      document.getElementById("submitButton").value = "Modifier";
       document.getElementById("id_article").value = id_article;
+      document.getElementById("id_site").value = id_site;
+      document.getElementById("id_article_site").value = id_article_site;
       document.getElementById("id_famille").value = id_famille;
       document.getElementById("id_unite").value = id_unite;
       document.getElementById("code").value = code;
@@ -222,9 +235,9 @@
 
 
   </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     {{-- Form upload File --}}
     <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
@@ -254,30 +267,129 @@
       </div>
     </form>
   </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
 @section('styles')
   <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
-  <link rel="stylesheet" href="assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.semanticui.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-
-  <link rel="stylesheet" href="assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
 @endsection
 
 @section('scripts')
-  <script src="assets/datatables/datatables.min.js"></script>
-  <script src="assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
+  <script src="public/assets/datatables/datatables.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
 
   <script>
+
+  $(document).ready(function () {
+    // Setup - add a text input to each footer cell
+    $('#articlesTable tfoot th').each(function () {
+      var title = $(this).text();
+      if (title == "Reference" || title == "Code") {
+        $(this).html('<input type="text" size="6" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      }
+      else if (title == "Categorie" || title == "Fournisseur" || title == "Marque") {
+        $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      }
+      else if (title == "Designation") {
+        $(this).html('<input type="text" size="15" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      }
+      else if (title == "Couleur" || title == "Sexe") {
+        $(this).html('<input type="text" size="5" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      }
+      else if (title == "Prix") {
+        $(this).html('<input type="text" size="4" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';"/>');
+      }
+      else if (title != "") {
+        $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      }
+    });
+
+    var table = $('#articlesTable').DataTable({
+      dom: '<lf<Bt>ip>',
+      lengthMenu: [
+        [ 10, 25, 50, -1 ],
+        [ '10', '25', '50', 'Tout' ]
+      ],
+      searching: true,
+      paging: true,
+      //"autoWidth": true,
+      info: false,
+      stateSave: false,
+      columnDefs: [
+        { targets: 0, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 1, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 2, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 4, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: false},
+      ],
+    });
+
+    $('a.toggle-vis').on('click', function (e) {
+      e.preventDefault();
+      var column = table.column($(this).attr('data-column'));
+      column.visible(!column.visible());
+    });
+
+    table.columns().every(function () {
+      var that = this;
+      $('input', this.footer()).on('keyup change', function () {
+        if (that.search() !== this.value) {
+          that.search(this.value).draw();
+        }
+      });
+    });
+
+  });
+
+  $('#articlesTablea').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      //{ targets:-1, width: "04%", visible: true, orderable: true, searchable: false},
+      { targets: 0, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+      { targets: 1, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+      { targets: 2, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+      { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: false, orderable: true},
+      { targets: 4, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+      { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: true},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
+
+  $('a.toggle-vis').on('click', function (e) {
+    e.preventDefault();
+    var column = table.column($(this).attr('data-column'));
+    column.visible(!column.visible());
+  });
+
+  table.columns().every(function () {
+    var that = this;
+    $('input', this.footer()).on('keyup change', function () {
+      if (that.search() !== this.value) {
+        that.search(this.value).draw();
+      }
+    });
+  });
+
   function loadMore(){
     var page = $('.endless-pagination').data('next-page');
     if(page !== null) {
@@ -290,23 +402,6 @@
       alert('No more Data');
     }
   }
-
-  $('#articlesTable').DataTable({
-    dom: '<lf<Bt>ip>',
-    buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print',
-    ],
-    lengthMenu: [
-      [ 5, 10, 25, 50, -1 ],
-      [ '5', '10', '25', '50', 'Tout' ]
-    ],
-    columnDefs: [
-      { targets:-1, visible: true, orderable: true, searchable: false},
-      { targets: 0, visible: true, type: "string"},
-      { targets: 1, visible: true},
-    ],
-    //order: [[ 0, "asc" ]],
-  });
 
   </script>
 
