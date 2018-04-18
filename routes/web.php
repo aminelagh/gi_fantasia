@@ -46,11 +46,21 @@ Route::group(['middleware' => 'admin'], function () {
 
   //Unite ----------------------------------------------------------------------
   Route::get('/articles', 'AdminArticlesController@articles')->name('articles');
+  Route::post('/articles', 'AdminArticlesController@articles')->name('articles');
   Route::post('/addArticle', 'AdminArticlesController@addArticle')->name('addArticle');
   Route::post('/updateArticle', 'AdminArticlesController@updateArticle')->name('updateArticle');
   Route::post('/deleteArticle', 'AdminArticlesController@deleteArticle')->name('deleteArticle');
   Route::post('/exportArticles', 'AdminArticlesController@exportArticles')->name('exportArticles');
   Route::post('/addArticles', 'AdminArticlesController@addArticles')->name('addArticles');
+
+  //Inventaire -----------------------------------------------------------------
+  Route::get('/inventaires', 'AdminInventairesController@inventaires')->name('inventaires');
+  Route::post('/inventaires', 'AdminInventairesController@inventaires')->name('inventaires');
+  Route::post('/addInventaire', 'AdminInventairesController@addInventaire')->name('addInventaire');
+  Route::post('/updateInventaire', 'AdminInventairesController@updateInventaire')->name('updateInventaire');
+  Route::post('/deleteInventaire', 'AdminInventairesController@deleteInventaire')->name('deleteInventaire');
+  Route::post('/exportInventaires', 'AdminInventairesController@exportInventaires')->name('exportInventaires');
+  Route::post('/addInventaires', 'AdminInventairesController@addInventaires')->name('addInventaires');
 
   //Users ----------------------------------------------------------------------
   Route::post('/addUser', 'AdminUsersController@addUser')->name('addUser');

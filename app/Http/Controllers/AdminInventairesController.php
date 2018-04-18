@@ -18,12 +18,13 @@ use \App\Models\Zone;
 use \App\Models\Article_site;
 use \App\Models\Article;
 use \App\Models\Unite;
+use \App\Models\Inventaire;
 use \DB;
 use Excel;
 
-class AdminArticlesController extends Controller
+class AdminInventairesController extends Controller
 {
-  public function articles(Request $request){
+  public function inventaires(Request $request){
     $where_id_famille = "";
     $where_id_site = "";
 
@@ -38,9 +39,14 @@ class AdminArticlesController extends Controller
         $id_site = $request->id_site;
         $where_id_site = " and s.id_site = ".$id_site." ";
       }
+
+      if($request->id_article != 'null' ) {
+        $id_article = $request->id_article;
+        $where_id_article = " and i.id_article = ".$id_article." ";
+      }
     }
 
-
+/*
     $sites = collect(DB::select("SELECT s.id_site, s.libelle, s.created_at, so.libelle as libelle_societe FROM sites s LEFT JOIN societes so ON s.id_societe=so.id_societe"));
     $familles = collect(DB::select("SELECT f.id_famille, f.libelle, c.libelle as libelle_famille FROM familles f LEFT JOIN categories c on c.id_categorie = f.id_categorie;"));
     $unites = Unite::all();
@@ -51,14 +57,40 @@ class AdminArticlesController extends Controller
       FROM articles a LEFT JOIN familles f on f.id_famille=a.id_famille
       LEFT JOIN unites u on u.id_unite=a.id_unite
       LEFT JOIN article_site on article_site.id_article=a.id_article
-      LEFT JOIN sites s on s.id_site=article_site.id_site
-      WHERE true " . $where_id_famille . " ".$where_id_site." ;"
+      LEFT JOIN sites s on s.id_site=article_site.id_site;"
+    ));*/
+
+    $articles = collect(DB::select(
+      "SELECT sa.*,
+      a.code, a.designation, a.id_famille, a.id_unite,
+      u.libelle as libelle_unite,
+      s.libelle as libelle_site,
+      so.libelle as libelle_societe,
+      f.libelle as libelle_famille
+      FROM article_site sa LEFT JOIN articles a on a.id_article=sa.id_article
+      LEFT JOIN sites s on s.id_site=sa.id_site
+      LEFT JOIN societes so on so.id_societe=s.id_societe
+      LEFT JOIN unites u on u.id_unite=a.id_unite
+      LEFT JOIN familles f on f.id_famille=a.id_famille
+      ORDER BY a.code asc;"
+    ));
+
+    $zones = collect(DB::select(
+      "SELECT z.id_zone, z.libelle as libelle_zone, z.id_site,
+      s.libelle as libelle_site, so.libelle as libelle_societe
+      FROM zones z LEFT JOIN sites s on s.id_site=z.id_site
+      LEFT JOIN societes so on so.id_societe=s.id_societe; "
+    ));
+
+    //dd($zones);
+    $data = collect(DB::select(
+      "SELECT *
+      FROM inventaires i;"
     ));
 
 
-
     //the returned view
-    $view = view('admin.articles')->withArticles($articles)->withFamilles($familles)->withSites($sites)->withUnites($unites);
+    $view = view('admin.inventaires')->with(compact('data','articles','zones'));
 
 
     if($request->has('submitFiltre')){

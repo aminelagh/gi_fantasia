@@ -14,7 +14,6 @@
 
   <meta name="msapplication-TileColor" content="#5bc0de" />
   <meta name="msapplication-TileImage" content="public/assets/img/metis-tile.png" />
-
   <!-- Bootstrap -->
   <link rel="stylesheet" href="public/assets/lib/bootstrap/css/bootstrap.css">
   <!-- Font Awesome -->
@@ -34,6 +33,8 @@
   <!-- Toastr -->
   <link href="public/css/lib/toastr/toastr.min.css" rel="stylesheet">
   <script src="public/assets/less/less.js"></script>
+  <!-- Bootstrap-Select -->
+  <link rel="stylesheet" href="public/bootstrap-select/bootstrap-select.min.css">
   @yield('styles')
 
   <!--For Development Only. Not required -->
@@ -164,6 +165,8 @@
   <!--Toastr -->
   <script src="public/js/lib/toastr/toastr.min.js"></script>
   <script src="public/js/lib/toastr/toastr.init.js"></script>
+  <!-- Bootstrap-Select -->
+  <script src="public/bootstrap-select/bootstrap-select.min.js"></script>
 
   <script>
   var options = {
