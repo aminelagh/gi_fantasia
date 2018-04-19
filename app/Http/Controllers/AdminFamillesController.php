@@ -12,7 +12,7 @@ use \App\Models\User;
 use \App\Models\Role_user;
 use \App\Models\Famille;
 use \App\Models\Type_intervention;
-use \App\Models\Equipement;
+use \App\Models\Article;
 use \DB;
 
 class AdminFamillesController extends Controller
@@ -21,8 +21,13 @@ class AdminFamillesController extends Controller
   //Delete Famille *************************************************************
   public function deleteFamille(Request $request){
     try{
-      $item = Famille::find($request->id_famille);
-      $item->delete();
+      if(Article::where('id_famille',$request->id_famille)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Impossible de supprimer cet élément !");
+      }
+      else{
+        $item = Famille::find($request->id_famille);
+        $item->delete();
+      }
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression de la famille.<br>Message d'erreur: ".$e->getMessage().".");
     }

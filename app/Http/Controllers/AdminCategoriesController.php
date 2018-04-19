@@ -20,10 +20,15 @@ class AdminCategoriesController extends Controller
   //Delete Categorie *************************************************************
   public function deleteCategorie(Request $request){
     try{
-      $item = Categorie::find($request->id_categorie);
-      $item->delete();
+      if(Famille::where('id_categorie',$request->id_categorie)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Impossible de supprimer cet élément !");
+      }
+      else{
+        $item = Categorie::find($request->id_categorie);
+        $item->delete();
+      }
     }catch(Exception $e){
-      return redirect()->back()->with('alert_danger',"Erreur de suppression de la categorie.<br>Message d'erreur: ".$e->getMessage().".");
+      return redirect()->back()->with('alert_danger',"Erreur de suppression de la catégorie.<br>Message d'erreur: ".$e->getMessage().".");
     }
     return redirect()->back()->with('alert_success',"Categorie supprimée");
   }

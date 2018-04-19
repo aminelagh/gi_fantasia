@@ -9,7 +9,7 @@ use Sentinel;
 use Illuminate\Http\Request;
 use \App\Models\Role;
 use \App\Models\User;
-use \App\Models\Role_user;
+use \App\Models\Article_site;
 use \App\Models\Famille;
 use \App\Models\Categorie;
 use \App\Models\Societe;
@@ -24,8 +24,14 @@ class AdminSitesController extends Controller
   //Delete Site *************************************************************
   public function deleteSite(Request $request){
     try{
-      $item = Site::find($request->id_site);
-      $item->delete();
+      if(Zone::where('id_site',$request->id_site)->get()->first()!=null || Article_site::where('id_site',$request->id_site)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Élément utilisé ailleurs, donc impossible de le supprimer");
+      }
+      else{
+        $item = Site::find($request->id_site);
+        $item->delete();
+      }
+
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression du site.<br>Message d'erreur: ".$e->getMessage().".");
     }

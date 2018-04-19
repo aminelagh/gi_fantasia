@@ -48,9 +48,10 @@
                     {{-- Article --}}
                     <div class="form-group has-feedback">
                       <label>Article</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article" id="id_article">
+                        <option value="null">NULL</option>
                         @foreach ($articles as $item)
-                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                          <option value="{{ $item->id_article }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                         @endforeach
                       </select>
                     </div>
@@ -59,10 +60,7 @@
                     {{-- Zone --}}
                     <div class="form-group has-feedback">
                       <label>Zone</label>
-                      <select  class="form-control selectpicker" data-live-search="true" name="id_zone" id="id_zone" required>
-                        @foreach ($zones as $item)
-                          <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }} ({{ $item->libelle_societe }}))</option>
-                        @endforeach
+                      <select  class="form-control" name="id_zone" id="id_zone" required>
                       </select>
                     </div>
                   </div>
@@ -98,7 +96,7 @@
                   </div>
                 </div>
                 <div class="row" align="center">
-                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton" >
+                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton" onmouseover="populateZone()">
                 </div>
               </form>
             </div>
@@ -109,7 +107,49 @@
   </div>
 
   <script>
+  function populateZone(){
 
+    var zones = [];
+    var selected_id_site = document.getElementById("id_article").value;
+    //alert(selected_id_site);
+    @foreach ($zones as $item)
+    var zone = {id_zone: {{ $item->id_zone }}, libelle_zone: "{{ $item->libelle_zone }}",  id_site: {{ $item->id_site }},libelle_site: "{{ $item->libelle_site }}"  };
+    zones.push(zone);
+    @endforeach
+
+    //console.log(zones);
+    var s1 = document.getElementById("id_article");
+    var s2 = document.getElementById("id_zone");
+    s2.innerHTML = "";
+
+    var myZones = [];
+    for(var i = 0 ; i<zones.length ; i++){
+      if( zones[i].id_site == selected_id_site){
+        myZones.push(zones[i]);
+        console.log(zones[i]);
+      }
+    }
+    for(var i=0;i<myZones.length;i++){
+      var newOption = document.createElement("option");
+      newOption.value = myZones[i].id_zone;
+      newOption.innerHTML = myZones[i].libelle_zone;
+      console.log(newOption);
+      s2.options.add(newOption);
+    }
+
+
+    //  for(var zone in zones){
+    //console.log( zone);
+    //}
+
+    //if(s1.value == "")
+
+    {{--  @foreach ($zones as $item)
+    <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }} ({{ $item->libelle_societe }}))</option>
+    @endforeach
+    --}}
+
+  }
   function calculateTotal(){
     let palettes = document.getElementById("nombre_palettes").value;
     let pieces = document.getElementById("nombre_pieces").value;
@@ -123,6 +163,7 @@
     //alert("unite: "+unite);
     document.getElementById("total").value = total;
     getUnite();
+
   }
 
   function getUnite(){
@@ -130,7 +171,6 @@
     @foreach ($articles as $item)
     var article = {
       id_article: {{ $item->id_article }},
-      id_article_site: {{ $item->id_article_site }},
       unite: "{{ $item->libelle_unite }}"
     };
     articles.push(article);
@@ -139,7 +179,7 @@
     var x =" ";
 
     for(var i=0; i<articles.length;i++){
-      if(document.getElementById("id_article_site").value == articles[i].id_article_site){
+      if(document.getElementById("id_article").value == articles[i].id_article){
         document.getElementById("total").value = document.getElementById("total").value + " "+articles[i].unite;
         break;
       }
@@ -379,8 +419,9 @@
   <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
 
   <script>
-  $('#id_article_site').on('changed.bs.select', function (e) {
+  $('#id_article').on('changed.bs.select', function (e) {
     calculateTotal();
+    populateZone();
   });
 
   $(document).ready(function () {

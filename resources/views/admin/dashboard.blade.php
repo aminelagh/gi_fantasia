@@ -217,7 +217,7 @@
           </div>
         </header>
         <div id="collapse" class="body">
-          <table id="societesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+          <table id="unitesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead><tr><th>Unité</th><th>Date de création</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($unites as $item)
@@ -508,7 +508,7 @@
     }
     function updateFamilleFunction(id_famille, id_categorie, libelle){
       document.getElementById("update_id_famille").value = id_famille;
-      document.getElementById("update_id_categorie_famille").value = id_famille;
+      document.getElementById("update_id_categorie_famille").value = id_categorie;
       document.getElementById("update_libelle_famille").value = libelle;
     }
     </script>
@@ -1107,24 +1107,24 @@
 
 @section('styles')
   <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
-  <link rel="stylesheet" href="assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.semanticui.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
 
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
 
-  <link rel="stylesheet" href="assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
 @endsection
 
 @section('scripts')
-  <script src="assets/datatables/datatables.min.js"></script>
-  <script src="assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
+  <script src="public/assets/datatables/datatables.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
+  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
   <!-- datatables
   <script src="js/lib/datatables/datatables.min.js"></script>
   <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>

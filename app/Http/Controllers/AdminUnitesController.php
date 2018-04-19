@@ -9,7 +9,7 @@ use Sentinel;
 use Illuminate\Http\Request;
 use \App\Models\Role;
 use \App\Models\User;
-use \App\Models\Role_user;
+use \App\Models\Article;
 use \App\Models\Famille;
 use \App\Models\Categorie;
 use \App\Models\Societe;
@@ -24,8 +24,14 @@ class AdminUnitesController extends Controller
   //Delete Unite *************************************************************
   public function deleteUnite(Request $request){
     try{
-      $item = Unite::find($request->id_unite);
-      $item->delete();
+      if(Article::where('id_unite',$request->id_unite)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Impossible de supprimer cet élément !");
+      }
+      else{
+        $item = Unite::find($request->id_unite);
+        $item->delete();
+      }
+
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression de l'unité.<br>Message d'erreur: ".$e->getMessage().".");
     }

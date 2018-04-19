@@ -9,7 +9,7 @@ use Sentinel;
 use Illuminate\Http\Request;
 use \App\Models\Role;
 use \App\Models\User;
-use \App\Models\Role_user;
+use \App\Models\Inventaire;
 use \App\Models\Famille;
 use \App\Models\Categorie;
 use \App\Models\Societe;
@@ -23,8 +23,13 @@ class AdminZonesController extends Controller
   //Delete Zone *************************************************************
   public function deleteZone(Request $request){
     try{
-      $item = Zone::find($request->id_zone);
-      $item->delete();
+      if(Inventaire::where('id_zone',$request->id_zone)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Impossible de supprimer cet élément !");
+      }
+      else{
+        $item = Zone::find($request->id_zone);
+        $item->delete();
+      }
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression de la zone.<br>Message d'erreur: ".$e->getMessage().".");
     }

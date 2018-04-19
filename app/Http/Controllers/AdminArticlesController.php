@@ -9,7 +9,7 @@ use Sentinel;
 use Illuminate\Http\Request;
 use \App\Models\Role;
 use \App\Models\User;
-use \App\Models\Role_user;
+use \App\Models\Inventaire;
 use \App\Models\Famille;
 use \App\Models\Categorie;
 use \App\Models\Societe;
@@ -112,10 +112,16 @@ class AdminArticlesController extends Controller
   //Delete Article *************************************************************
   public function deleteArticle(Request $request){
     try{
-      $item = Article::find($request->id_article);
-      $item->delete();
-      $article_site = Article_site::find($request->id_article_site);
-      $article_site->delete();
+      if(Inventaire::where('id_article',$request->id_article)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Élément utilisé ailleurs, donc impossible de le supprimer.");
+      }
+      else{
+        $item = Article::find($request->id_article);
+        $item->delete();
+        $article_site = Article_site::find($request->id_article_site);
+        $article_site->delete();
+      }
+
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression de l'article.<br>Message d'erreur: ".$e->getMessage().".");
     }

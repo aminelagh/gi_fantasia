@@ -23,8 +23,13 @@ class AdminSocietesController extends Controller
   //Delete Societe *************************************************************
   public function deleteSociete(Request $request){
     try{
-      $item = Societe::find($request->id_societe);
-      $item->delete();
+      if(Site::where('id_societe',$request->id_societe)->get()->first()!=null){
+        return redirect()->back()->with('alert_warning',"Impossible de supprimer cet élément !");
+      }
+      else{
+        $item = Societe::find($request->id_societe);
+        $item->delete();
+      }
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de suppression de la société.<br>Message d'erreur: ".$e->getMessage().".");
     }

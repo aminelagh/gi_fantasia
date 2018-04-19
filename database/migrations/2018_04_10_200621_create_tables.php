@@ -85,7 +85,7 @@ class CreateTables extends Migration
     //table inventaires --------------------------------------------------------
     Schema::create('inventaires', function (Blueprint $table) {
       $table->increments('id_inventaire');
-      $table->integer('id_article_site');
+      $table->integer('id_article');
       $table->integer('id_zone');
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
