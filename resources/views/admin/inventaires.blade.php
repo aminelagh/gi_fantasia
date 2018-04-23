@@ -48,10 +48,10 @@
                     {{-- Article --}}
                     <div class="form-group has-feedback">
                       <label>Article</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article" id="id_article">
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
                         <option value="null">NULL</option>
                         @foreach ($articles as $item)
-                          <option value="{{ $item->id_article }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                         @endforeach
                       </select>
                     </div>
@@ -60,8 +60,7 @@
                     {{-- Zone --}}
                     <div class="form-group has-feedback">
                       <label>Zone</label>
-                      <select  class="form-control" name="id_zone" id="id_zone" required>
-                      </select>
+                      <select  class="form-control" name="id_zone" id="id_zone" required></select>
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -96,7 +95,7 @@
                   </div>
                 </div>
                 <div class="row" align="center">
-                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton" onmouseover="populateZone()">
+                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton">
                 </div>
               </form>
             </div>
@@ -106,176 +105,99 @@
     </div>
   </div>
 
-  <script>
-  function populateZone(){
+  <hr>
 
-    var zones = [];
-    var selected_id_site = document.getElementById("id_article").value;
-    //alert(selected_id_site);
-    @foreach ($zones as $item)
-    var zone = {id_zone: {{ $item->id_zone }}, libelle_zone: "{{ $item->libelle_zone }}",  id_site: {{ $item->id_site }},libelle_site: "{{ $item->libelle_site }}"  };
-    zones.push(zone);
-    @endforeach
-
-    //console.log(zones);
-    var s1 = document.getElementById("id_article");
-    var s2 = document.getElementById("id_zone");
-    s2.innerHTML = "";
-
-    var myZones = [];
-    for(var i = 0 ; i<zones.length ; i++){
-      if( zones[i].id_site == selected_id_site){
-        myZones.push(zones[i]);
-        console.log(zones[i]);
-      }
-    }
-    for(var i=0;i<myZones.length;i++){
-      var newOption = document.createElement("option");
-      newOption.value = myZones[i].id_zone;
-      newOption.innerHTML = myZones[i].libelle_zone;
-      console.log(newOption);
-      s2.options.add(newOption);
-    }
-
-
-    //  for(var zone in zones){
-    //console.log( zone);
-    //}
-
-    //if(s1.value == "")
-
-    {{--  @foreach ($zones as $item)
-    <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }} ({{ $item->libelle_societe }}))</option>
-    @endforeach
-    --}}
-
-  }
-  function calculateTotal(){
-    let palettes = document.getElementById("nombre_palettes").value;
-    let pieces = document.getElementById("nombre_pieces").value;
-    let total = 0;
-    if(palettes == 0){
-      total = pieces;
-    }else{
-      total = pieces * palettes;
-    }
-    //let unite = document.getElementById("id_article").value;
-    //alert("unite: "+unite);
-    document.getElementById("total").value = total;
-    getUnite();
-
-  }
-
-  function getUnite(){
-    var articles = [];
-    @foreach ($articles as $item)
-    var article = {
-      id_article: {{ $item->id_article }},
-      unite: "{{ $item->libelle_unite }}"
-    };
-    articles.push(article);
-    @endforeach
-
-    var x =" ";
-
-    for(var i=0; i<articles.length;i++){
-      if(document.getElementById("id_article").value == articles[i].id_article){
-        document.getElementById("total").value = document.getElementById("total").value + " "+articles[i].unite;
-        break;
-      }
-      //else{alert('not');}
-      //  x+= articles[i].id_article_site+"-"+articles[i].unite;
-    }
-    //alert(x);
-  }
-
-
-</script>
-
-<hr>
-
-<div class="row">
-  <div class="col-md-12">
-    {{-- *********************************** Inventaire ************************************* --}}
-    <div class="box">
-      <header class="dark">
-        <div class="icons"><i class="fa fa-check"></i></div>
-        <h5>Inventaire <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $data->count() }}</span></h5>
-        <div class="toolbar">
-          <nav style="padding: 8px;">
-            <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-            <ul class="dropdown-menu">
-              <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
-              <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
-            </ul>
-            <div class="btn-group">
-              <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-              <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-              <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-            </div>
-          </nav>
+  <div class="row">
+    <div class="col-md-12">
+      {{-- *********************************** Inventaire ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Inventaire <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $data->count() }}</span></h5>
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
+                <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <!--div class="breadcrumb">
+          Afficher/Masquer:
+          <a class="toggle-vis" data-column="0">Code</a> -
+          <a class="toggle-vis" data-column="1">Famille</a> -
+          <a class="toggle-vis" data-column="2">Site</a> -
+          <a class="toggle-vis" data-column="3">Unité</a>
+        </div-->
+        <div class="breadcrumb">
+          <h4>Filtre</h4>
+          <form id="formFilterArticles" method="POST" action="{{ route('articles') }}">
+            @csrf
+            <div class="row">
+              <div class="col-lg-4">
+                {{-- Site
+                <div class="form-group has-feedback">
+                <label>Site</label>
+                <select  class="form-control" name="id_site" id="filter_id_site">
+                <option value="null"></option>
+                @foreach ($articles as $item)
+                <option value="{{ $item->id_article }}" {{ isset($selected_id_site) && $selected_id_site == $item->id_site ? 'selected' : ''  }}>{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
+              @endforeach
+            </select>
+          </div>--}}
         </div>
-      </header>
-      <div id="collapse" class="body">
-        <!--div class="breadcrumb">
-        Afficher/Masquer:
-        <a class="toggle-vis" data-column="0">Code</a> -
-        <a class="toggle-vis" data-column="1">Famille</a> -
-        <a class="toggle-vis" data-column="2">Site</a> -
-        <a class="toggle-vis" data-column="3">Unité</a>
-      </div-->
-      <div class="breadcrumb">
-        <h4>Filtre</h4>
-        <form id="formFilterArticles" method="POST" action="{{ route('articles') }}">
-          @csrf
-          <div class="row">
-            <div class="col-lg-4">
-              {{-- Site
-              <div class="form-group has-feedback">
-              <label>Site</label>
-              <select  class="form-control" name="id_site" id="filter_id_site">
-              <option value="null"></option>
-              @foreach ($articles as $item)
-              <option value="{{ $item->id_article }}" {{ isset($selected_id_site) && $selected_id_site == $item->id_site ? 'selected' : ''  }}>{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
-            @endforeach
-          </select>
-        </div>--}}
-      </div>
-      <div class="col-lg-4">
-        {{-- Famille
-        <div class="form-group has-feedback">
-        <label>Famille</label>
-        <select  class="form-control" name="id_famille" id="filter_id_famille">
-        <option value="null"></option>
-        @foreach ($zones as $item)
-        <option value="{{ $item->id_famille }}" {{ isset($selected_id_famille) && $selected_id_famille == $item->id_famille ? 'selected' : ''  }}>{{ $item->libelle }}</option>
-      @endforeach
-    </select>
-  </div>--}}
-</div>
-<div class="col-lg-2"></div>
-<div class="col-lg-2"><br>
-  <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
-</div>
+        <div class="col-lg-4">
+          {{-- Famille
+          <div class="form-group has-feedback">
+          <label>Famille</label>
+          <select  class="form-control" name="id_famille" id="filter_id_famille">
+          <option value="null"></option>
+          @foreach ($zones as $item)
+          <option value="{{ $item->id_famille }}" {{ isset($selected_id_famille) && $selected_id_famille == $item->id_famille ? 'selected' : ''  }}>{{ $item->libelle }}</option>
+        @endforeach
+      </select>
+    </div>
+    --}}
+  </div>
+  <div class="col-lg-2"></div>
+  <div class="col-lg-2"><br>
+    <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+  </div>
 </div>
 </form>
+<div class="breadcrumb">
+  Afficher/Masquer:
+  <a class="toggle-vis" data-column="0">Article</a> -
+  <a class="toggle-vis" data-column="1">Zone</a> -
+  <a class="toggle-vis" data-column="2">Date</a> -
+  <a class="toggle-vis" data-column="3">Quantité</a> -
+  <a class="toggle-vis" data-column="4">Créé par</a>
+</div>
 </div>
 <table id="inventairesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-  <thead><tr><th>Article</th><th>Site</th><th>Zone</th><th>Quantité</th><th>Unité</th><th>Outils</th></tr></thead>
-  <tfoot><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th></th></tr></tfoot>
+  <thead><tr><th>Article</th><th>Zone</th><th>Date</th><th>Quantité</th><th>Créé par</th><th>Outils</th></tr></thead>
+  <tfoot><tr><th>Article</th><th>Zone</th><th>Date</th><th>Quantité</th><th>Créé par</th><th></th></tr></tfoot>
   <tbody>
     @foreach($data as $item)
       <tr>
         <td>{{ $item->code }} {{ $item->designation }}</td>
-        <td>{{ $item->libelle_famille }}</td>
-        <td>{{ $item->libelle_site }}</td>
-        <td>{{ $item->designation }}</td>
-        <td>{{ $item->libelle_unite }}</td>
+        <td>{{ $item->libelle_zone }}</td>
+        <td>{{ $item->date }}</td>
+        <td>{{ $item->nombre_palettes }}x{{ $item->nombre_pieces }}={{ $item->nombre_palettes*$item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+        <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td>
         <td align="center">
           <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
-          onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},{{ $item->id_famille }},{{ $item->id_site }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
+          onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_article }},"{{ $item->id_article }}" );' title="Modifier" ></i>
           {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-          <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},'{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+          <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},'{{ $item->id_article }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
         </td>
       </tr>
     @endforeach
@@ -332,8 +254,8 @@
 
 
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-<div class="CRUD Articles">
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Inventaires      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="CRUD Inventaires">
   <form id="formDeleteArticle" method="POST" action="{{ route('deleteArticle') }}">
     @csrf
     <input type="hidden" id="delete_id_article" name="id_article" />
@@ -360,8 +282,6 @@
     document.getElementById("designation").value = designation;
   }
   </script>
-
-
 </div>
 
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
@@ -419,34 +339,129 @@
   <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
 
   <script>
-  $('#id_article').on('changed.bs.select', function (e) {
+  $('#id_article_site').on('changed.bs.select', function (e) {
     calculateTotal();
     populateZone();
   });
 
+  function populateZone(){
+    //liste des zones
+    var zones = [];
+    @foreach ($zones as $item)
+    var zone = {
+      id_zone: {{ $item->id_zone }},
+      libelle_zone: "{{ $item->libelle_zone }}",
+      id_site: {{ $item->id_site }},
+      libelle_site: "{{ $item->libelle_site }}"
+    };
+    zones.push(zone);
+    @endforeach
+    console.log("Zones ===> "+zones);
+    //--------------------
+
+    //liste des articles
+    var article_sites = [];
+    @foreach ($articles as $item)
+    var item = {
+      id_article_site: {{ $item->id_article_site }},
+      id_article: {{ $item->id_article }},
+      id_site: {{ $item->id_site }}
+    };
+    article_sites.push(item);
+    @endforeach
+    console.log("article_sites ===> "+article_sites);
+    //--------------------
+
+    var s1 = document.getElementById("id_article_site");
+    var s2 = document.getElementById("id_zone");
+    var selected_id_article_site = s1.value;
+
+    s2.innerHTML = "";
+
+    //get the selected id_site from id_article_site
+    var selected_id_site = 0;
+    for(var i = 0 ; i<article_sites.length ; i++){
+      if( article_sites[i].id_article_site == selected_id_article_site){
+        selected_id_site =  article_sites[i].id_site;
+        break;
+      }
+    }
+    console.log("selected_id_site ===> "+selected_id_site);
+
+    //get zones from the selected id_site
+    var myZones = [];
+    for(var i = 0 ; i<zones.length ; i++){
+      if( zones[i].id_site == selected_id_site){
+        myZones.push(zones[i]);
+      }
+    }
+
+    //fill the select option list with zones
+    for(var i=0;i<myZones.length;i++){
+      var newOption = document.createElement("option");
+      newOption.value = myZones[i].id_zone;
+      newOption.innerHTML = myZones[i].libelle_zone;
+      //console.log(newOption);
+      s2.options.add(newOption);
+    }
+  }
+
+  function calculateTotal(){
+    let palettes = document.getElementById("nombre_palettes").value;
+    let pieces = document.getElementById("nombre_pieces").value;
+    let total = 0;
+    if(palettes == 0){
+      total = pieces;
+    }else{
+      total = pieces * palettes;
+    }
+    //let unite = document.getElementById("id_article").value;
+    //alert("unite: "+unite);
+    document.getElementById("total").value = total;
+    getUnite();
+  }
+
+  function getUnite(){
+    var article_sites = [];
+    @foreach ($articles as $item)
+    var item = {
+      id_article_site: {{ $item->id_article_site }},
+      unite: "{{ $item->libelle_unite }}"
+    };
+    article_sites.push(item);
+    @endforeach
+
+    var selected_id_article_site = document.getElementById("id_article_site").value;
+
+    for(var i=0; i<article_sites.length;i++){
+      if(selected_id_article_site == article_sites[i].id_article_site){
+        document.getElementById("total").value = document.getElementById("total").value + " "+article_sites[i].unite;
+        break;
+      }
+    }
+  }
+
   $(document).ready(function () {
-    // Setup - add a text input to each footer cell
-    $('#articlesTable tfoot th').each(function () {
+
+    $('#inventairesTable tfoot th').each(function () {
       var title = $(this).text();
-      if (title == "Reference" || title == "Code") {
+      if (title == "Article" ) {
         $(this).html('<input type="text" size="6" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
       }
-      else if (title == "Categorie" || title == "Fournisseur" || title == "Marque") {
+      else if (title == "Zone" || title == "Date") {
         $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
       }
-      else if (title == "Designation") {
-        $(this).html('<input type="text" size="15" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+      else if (title == "Quantité") {
+        $(this).html('<input type="text" size="12" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
       }
-      else if (title == "Couleur" || title == "Sexe") {
+      else if (title == "Créé par" || title == "Sexe") {
         $(this).html('<input type="text" size="5" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
-      }
-      else if (title == "Prix") {
-        $(this).html('<input type="text" size="4" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';"/>');
       }
       else if (title != "") {
         $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
       }
     });
+
 
     var table = $('#inventairesTable').DataTable({
       dom: '<lf<Bt>ip>',
@@ -463,7 +478,7 @@
         { targets: 0, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 1, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 2, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
-        { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 3,  type: "string", visible: true, searchable: true, orderable: true},
         { targets: 4, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: false},
       ],
@@ -485,57 +500,57 @@
     });
 
   });
-
+  /*
   $('#articlesTablea').DataTable({
-    dom: '<lf<Bt>ip>',
-    buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print',
-    ],
-    lengthMenu: [
-      [ 5, 10, 25, 50, -1 ],
-      [ '5', '10', '25', '50', 'Tout' ]
-    ],
-    columnDefs: [
-      //{ targets:-1, width: "04%", visible: true, orderable: true, searchable: false},
-      { targets: 0, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 1, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 2, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 4, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: true},
-    ],
-    //order: [[ 0, "asc" ]],
-  });
+  dom: '<lf<Bt>ip>',
+  buttons: [
+  'copy', 'csv', 'excel', 'pdf', 'print',
+],
+lengthMenu: [
+[ 5, 10, 25, 50, -1 ],
+[ '5', '10', '25', '50', 'Tout' ]
+],
+columnDefs: [
+//{ targets:-1, width: "04%", visible: true, orderable: true, searchable: false},
+{ targets: 0, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+{ targets: 1, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+{ targets: 2, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+{ targets: 3,  type: "string", visible: true, searchable: false, orderable: true},
+{ targets: 4, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
+{ targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: true},
+],
+//order: [[ 0, "asc" ]],
+});
 
-  $('a.toggle-vis').on('click', function (e) {
-    e.preventDefault();
-    var column = table.column($(this).attr('data-column'));
-    column.visible(!column.visible());
-  });
+$('a.toggle-vis').on('click', function (e) {
+e.preventDefault();
+var column = table.column($(this).attr('data-column'));
+column.visible(!column.visible());
+});
 
-  table.columns().every(function () {
-    var that = this;
-    $('input', this.footer()).on('keyup change', function () {
-      if (that.search() !== this.value) {
-        that.search(this.value).draw();
-      }
-    });
-  });
+table.columns().every(function () {
+var that = this;
+$('input', this.footer()).on('keyup change', function () {
+if (that.search() !== this.value) {
+that.search(this.value).draw();
+}
+});
+});*/
+/*
+function loadMore(){
+var page = $('.endless-pagination').data('next-page');
+if(page !== null) {
+$.get(page, function(data){
+$('.articlesHere').append(data.articles);
+$('.endless-pagination').data('next-page', data.next_page);
+});
+}
+else{
+alert('No more Data');
+}
+}*/
 
-  function loadMore(){
-    var page = $('.endless-pagination').data('next-page');
-    if(page !== null) {
-      $.get(page, function(data){
-        $('.articlesHere').append(data.articles);
-        $('.endless-pagination').data('next-page', data.next_page);
-      });
-    }
-    else{
-      alert('No more Data');
-    }
-  }
-
-  </script>
+</script>
 
 
 @endsection

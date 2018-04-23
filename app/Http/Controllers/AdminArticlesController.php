@@ -44,6 +44,7 @@ class AdminArticlesController extends Controller
     $sites = collect(DB::select("SELECT s.id_site, s.libelle, s.created_at, so.libelle as libelle_societe FROM sites s LEFT JOIN societes so ON s.id_societe=so.id_societe"));
     $familles = collect(DB::select("SELECT f.id_famille, f.libelle, c.libelle as libelle_famille FROM familles f LEFT JOIN categories c on c.id_categorie = f.id_categorie;"));
     $unites = Unite::all();
+    $title = "Articles";
 
     $articles = collect(DB::select(
       "SELECT a.id_article, a.id_famille, a.id_unite, a.code, a.designation, a.created_at, f.libelle as libelle_famille,
@@ -56,10 +57,7 @@ class AdminArticlesController extends Controller
     ));
 
 
-
-    //the returned view
-    $view = view('admin.articles')->withArticles($articles)->withFamilles($familles)->withSites($sites)->withUnites($unites);
-
+    $view = view('admin.articles')->with(compact('articles','familles','sites','unites','title'));
 
     if($request->has('submitFiltre')){
       if($request->has('id_famille') && $request->id_famille != "null"){

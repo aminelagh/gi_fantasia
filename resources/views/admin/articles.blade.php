@@ -368,7 +368,7 @@
       paging: true,
       //"autoWidth": true,
       info: false,
-      stateSave: false,
+      stateSave: true,
       columnDefs: [
         { targets: 0, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 1, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
