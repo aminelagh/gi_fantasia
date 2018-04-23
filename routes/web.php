@@ -39,10 +39,8 @@ Route::post('/ajaxForm', 'AdminController@ajaxForm')->name('postAjaxForm');
 //@@@@@@@@@@@@@@@@@@@@@   Administrateur-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 Route::group(['middleware' => 'admin'], function () {
-
   Route::get('/admin', 'AdminController@home')->name('admin');
-
-  Route::get('/more', 'AdminController@more')->name('more');
+  //Route::get('/more', 'AdminController@more')->name('more');
 
   //Unite ----------------------------------------------------------------------
   Route::get('/articles', 'AdminArticlesController@articles')->name('articles');
@@ -66,6 +64,7 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addUser', 'AdminUsersController@addUser')->name('addUser');
   Route::post('/updateUser', 'AdminUsersController@updateUser')->name('updateUser');
   Route::post('/deleteUser', 'AdminUsersController@deleteUser')->name('deleteUser');
+  Route::post('/updateProfil', 'AdminUsersController@updateProfil')->name('updateProfil');
 
   //Familles -------------------------------------------------------------------
   Route::post('/addFamille', 'AdminFamillesController@addFamille')->name('addFamille');
@@ -96,20 +95,31 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addUnite', 'AdminUnitesController@addUnite')->name('addUnite');
   Route::post('/updateUnite', 'AdminUnitesController@updateUnite')->name('updateUnite');
   Route::post('/deleteUnite', 'AdminUnitesController@deleteUnite')->name('deleteUnite');
+
 });
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@   Controleur-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-Route::group(['middleware' => 'controleur'], function () {
-  Route::get('/controleur', 'ControleurController@home')->name('controleur.dashboard');
+Route::group(['middleware' => 'controleur','prefix' => 'c'], function () {
+  Route::get('/', 'ControleurController@home')->name('controleur');
 });
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@   Ouvrier-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-Route::group(['middleware' => 'ouvrier'], function () {
-  Route::get('/controleur', 'OuvrierController@home')->name('ouvrier.dashboard');
+Route::group(['middleware' => 'ouvrier', 'prefix' => 'o'], function () {
+  Route::get('/', 'OuvrierController@home')->name('home');
+  //Inventaire -----------------------------------------------------------------
+  /*
+  Route::get('/inventaires', 'OuvrierInventairesController@inventaires')->name('inventaires');
+  Route::post('/inventaires', 'OuvrierInventairesController@inventaires')->name('inventaires');
+  Route::post('/addInventaire', 'OuvrierInventairesController@addInventaire')->name('addInventaire');
+  Route::post('/updateInventaire', 'OuvrierInventairesController@updateInventaire')->name('updateInventaire');
+  Route::post('/deleteInventaire', 'OuvrierInventairesController@deleteInventaire')->name('deleteInventaire');
+  Route::post('/exportInventaires', 'OuvrierInventairesController@exportInventaires')->name('exportInventaires');
+  Route::post('/addInventaires', 'OuvrierInventairesController@addInventaires')->name('addInventaires');*/
+
 });
 
 

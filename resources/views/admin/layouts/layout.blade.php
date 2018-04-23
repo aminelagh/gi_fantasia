@@ -141,6 +141,73 @@
 
   @yield('modals')
 
+  {{-- *****************************    update Profil   ********************************************** --}}
+  <div class="modal fade" id="modalUpdateProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Form update profil --}}
+    <form method="POST" action="{{ route('updateProfil') }}">
+      @csrf
+      <input type="hidden" name="id" value="{{ Session::get('id_user') }}">
+
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Profile</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4">
+                {{-- Role --}}
+                <div class="form-group has-feedback">
+                  <label>Rôle</label>
+                  <input type="text" class="form-control" placeholder="Rôle" value="{{ Session::get('role') }}" readonly>
+                </div>
+              </div>
+              <div class="col-md-4">
+                {{-- Nom --}}
+                <div class="form-group has-feedback">
+                  <label>Nom</label>
+                  <input type="text" class="form-control" placeholder="Nom" name="nom" value="{{ Session::get('nom') }}" required>
+                </div>
+              </div>
+              <div class="col-md-4">
+                {{-- Prenom --}}
+                <div class="form-group has-feedback">
+                  <label>Prenom</label>
+                  <input type="text" class="form-control" placeholder="Prenom" name="prenom" value="{{ Session::get('prenom') }}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                {{-- Login --}}
+                <div class="form-group has-feedback">
+                  <label>Login</label>
+                  <input type="text" class="form-control" placeholder="Login" name="login" value="{{ Session::get('login') }}" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                {{-- Password --}}
+                <div class="form-group has-feedback">
+                  <label>Password</label>
+                  <input type="text" class="form-control" placeholder="Password" name="password">
+                  <small>laissez vide pour garder votre ancien mot de passe.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+
   <!-- /#footer -->
   <footer class="Footer bg-dark dker"><p>2018 &copy; <a href="mailto: amine.laghlabi@gmail.com">Amine Laghlabi</a> <i>version 1.0</i></p></footer>
   <!-- /#footer -->

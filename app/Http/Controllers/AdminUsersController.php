@@ -35,7 +35,6 @@ class AdminUsersController extends Controller
 
   //update User ****************************************************************
   public function updateUser(Request $request){
-    //dd($request->all());
     try{
       $item = User::find($request->id);
       $item->nom = $request->nom;
@@ -66,5 +65,35 @@ class AdminUsersController extends Controller
       return redirect()->back()->with('alert_danger',"Erreur de suppression de l'utilisateur.<br>Message d'erreur: ".$e->getMessage().".");
     }
     return redirect()->back()->with('alert_success',"Suppression de l'utilisateur réussie");
+  }
+
+  //update Profil **************************************************************
+  public function updateProfil(Request $request){
+    try{
+      $item = User::find($request->id);
+      $item->nom = $request->nom;
+      $item->prenom = $request->prenom;
+      $item->login = $request->login;
+      if( $request->password != "" ){
+        $item->password = password_hash($request->password, PASSWORD_DEFAULT);
+      }
+      $item->save();
+      $this->updateSession();
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur de modification de votre profile.<br>Message d'erreur: ".$e->getMessage().".");
+    }
+    return redirect()->back()->with('alert_success',"Modification du profile réussi");
+  }
+
+  //updating Session variable after updating the current user's Profil
+  public static function updateSession(){
+    try{
+      $user = User::find(Session::get('id_user'));
+      Session::put('login', $user->login);
+      Session::put('nom', $user->nom);
+      Session::put('prenom', $user->prenom);
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur de mise a jour de votre session.<br>Message d'erreur: ".$e->getMessage());
+    }
   }
 }

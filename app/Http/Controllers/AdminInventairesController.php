@@ -81,35 +81,35 @@ class AdminInventairesController extends Controller
       LEFT JOIN users us1 ON us1.id=i.created_by
       LEFT JOIN users us2 ON us2.id=i.updated_by
       LEFT JOIN users us3 ON us3.id=i.validated_by
-      WHERE true " . $where_id_article . " ".$where_id_zone." ;"
-    ));
+      WHERE true " . $where_id_article . " ".$where_id_zone." ;
+      "));
 
 
-    //the returned view
-    $view = view('admin.inventaires')->with(compact('data','articles','zones','inventaires'));
+      //the returned view
+      $view = view('admin.inventaires')->with(compact('data','articles','zones','inventaires'));
 
-    //if filter return selected_items
-    if($request->has('submitFiltre')){
-      if($request->has('id_zone') && $request->id_zone != "null"){
-        $view->with('selected_id_zone',$request->id_zone);
+      //if filter return selected_items
+      if($request->has('submitFiltre')){
+        if($request->has('id_zone') && $request->id_zone != "null"){
+          $view->with('selected_id_zone',$request->id_zone);
+        }
+        if($request->has('id_article_site') && $request->id_article_site != "null" ){
+          $view->with('selected_id_article_site',$request->id_article_site);
+        }
       }
-      if($request->has('id_article_site') && $request->id_article_site != "null" ){
-        $view->with('selected_id_article_site',$request->id_article_site);
-      }
-    }
 
-    return $view;
+      return $view;
 
-    /*
-    $articles = Throttle::paginate($this->posts_per_page);
-    if($request->ajax()) {
-    return [
-    'articles' => view('admin.moreData.articles')->with(compact('articles'))->render(),
-    'next_page' => $articles->nextPageUrl()
-  ];
-}
-//return view('admin.articles')->with(compact('articles','sites','unites','familles'));
-*/
+      /*
+      $articles = Throttle::paginate($this->posts_per_page);
+      if($request->ajax()) {
+      return [
+      'articles' => view('admin.moreData.articles')->with(compact('articles'))->render(),
+      'next_page' => $articles->nextPageUrl()
+    ];
+  }
+  //return view('admin.articles')->with(compact('articles','sites','unites','familles'));
+  */
 }
 
 
@@ -214,123 +214,27 @@ public function exportInventaires(Request $request){
           LEFT JOIN users us1 ON us1.id=i.created_by
           LEFT JOIN users us2 ON us2.id=i.updated_by
           LEFT JOIN users us3 ON us3.id=i.validated_by
-          WHERE true " . $where_id_article . " ".$where_id_zone." ;"
-        ));
+          WHERE true " . $where_id_article . " ".$where_id_zone." ;
+          "));
 
-        $sheet->appendRow(array("code article","Article","Zone","date","Nombre plettes","Quantié", "Nombre pieces","Cree par","le","Modifié par","le","validé par","le"));
-        foreach ($data as $item) {
-          $sheet->appendRow(array($item->code, $item->designation, $item->libelle_zone,
-          $item->date, $item->nombre_palettes, $item->nombre_pieces,
-          $item->nombre_palettes*$item->nombre_pieces." ".$item->libelle_unite,
-          $item->created_by_nom .' '. $item->created_by_prenom, $item->created_at,
-          $item->updated_by_nom .' '. $item->updated_by_prenom, $item->updated_at,
-          $item->validated_by_nom .' '. $item->validated_by_prenom, $item->validated_at
-        ));
-      }
-    });
-  })->export('xls');
-
-}catch(Exception $e){
-  return redirect()->back()->with('alert_danger',"Erreur !<br>Message d'erreur: ".$e->getMessage());
-}
-}
-
-public function addArticles(Request $request){
-  $file = $request->file('file');
-  if($file->getClientOriginalExtension() != "xls"){
-    return redirect()->back()->with('alert_warning',"Veuillez importer un fichier excel.");
-  }
-  /*
-  //Display File Name
-  echo 'File Name: '.$file->getClientOriginalName();
-  //Display File Extension
-  echo 'File Extension: '.$file->getClientOriginalExtension();
-  //Display File Real Path
-  echo 'File Real Path: '.$file->getRealPath();
-  //Display File Size
-  echo 'File Size: '.$file->getSize();
-  //Display File Mime Type
-  echo 'File Mime Type: '.$file->getMimeType();*/
-
-  //Move Uploaded File
-  $destinationPath = 'uploads';
-  $file->move($destinationPath,$file->getClientOriginalName());
-
-  Excel::load('uploads/'.$file->getClientOriginalName(), function($reader) {
-    //Excel::selectSheetsByIndex(0)->load();
-    //$x = $reader->get(array("id_article","Code","Famille","Site","Designation","Unité","date de creation"));
-    //dump($x);
-  });
-  try{
-
-    Excel::load('uploads/'.$file->getClientOriginalName())->chunk(1000000, function($results)
-    {
-      $i = 2;
-      foreach($results as $row){
-        try{
-          if(!is_numeric($row->id_article) || !is_numeric($row->id_famille) || !is_numeric($row->id_unite)){
-            throw new Exception("Erreur dans la ligne: ".$i);
-          }
-
-          echo "Article: ".$row->id_article." - ".$row->code_article." - ".$row->designation_article."<br>";
-          echo "Unite: ".$row->id_unite." - ".$row->unite."<br>";
-          echo "Famille: ".$row->id_famille." - ".$row->famille."<hr>";
-
-        }catch(Exception $e){
-          return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+          $sheet->appendRow(array("code article","Article","Zone","date","Nombre plettes","Quantié", "Nombre pieces","Cree par","le","Modifié par","le","validé par","le"));
+          foreach ($data as $item) {
+            $sheet->appendRow(array($item->code, $item->designation, $item->libelle_zone,
+            $item->date, $item->nombre_palettes, $item->nombre_pieces,
+            $item->nombre_palettes*$item->nombre_pieces." ".$item->libelle_unite,
+            $item->created_by_nom .' '. $item->created_by_prenom, $item->created_at,
+            $item->updated_by_nom .' '. $item->updated_by_prenom, $item->updated_at,
+            $item->validated_by_nom .' '. $item->validated_by_prenom, $item->validated_at
+          ));
         }
+      });
+    })->export('xls');
 
-        //$this->saveArticle($row->id_article, $row->id_famille, $row->id_unite, $row->code, $row->designation);
-        //$this->saveFamille($row->id_famille, $row->famille);
-        //$this->saveUnite($row->id_unite, $row->unite);
-        //$this->saveArticleSite($row->id_article_site, $row->id_article, $row->id_site);
-      }
-    });
   }catch(Exception $e){
-    //return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+    return redirect()->back()->with('alert_danger',"Erreur !<br>Message d'erreur: ".$e->getMessage());
   }
-  //return redirect()->back()->with('alert_success',"Chargement des articles réussi");
 }
 
-public static function saveArticle($id_article, $id_famille, $id_unite, $code, $designation){
-  $item = Article::find($id_article);
-  if($item == null){
-    $item = new Article();
-    $item->id_article = $id_article;
-  }
-  $item->id_famille = $id_famille;
-  $item->id_unite = $id_unite;
-  $item->code = $code;
-  $item->designation = $designation;
-  $item->save();
-}
-public static function saveUnite($id_unite, $libelle_unite){
-  $item = Unite::find($id_unite);
-  if($item == null){
-    $item = new Unite();
-    $item->id_unite = $id_unite;
-  }
-  $item->libelle = $libelle_unite;
-  $item->save();
-}
-public static function saveFamille($id_famille, $libelle_famille){
-  $item = Famille::find($id_famille);
-  if($item == null){
-    $item = new Famille();
-    $item->id_famille = $id_famille;
-  }
-  $item->libelle = $libelle_famille;
-  $item->save();
-}
 
-public static function saveArticleSite($id_article_site, $id_article, $id_site){
-  $item = Article_site::find($id_article_site);
-  if($item == null){
-    $item = new Article_site();
-    $item->id_article_site = $id_article_site;
-  }
-  $item->id_article = $id_article;
-  $item->id_site = $id_site;
-  $item->save();
-}
+
 }
