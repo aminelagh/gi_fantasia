@@ -20,10 +20,13 @@ use \App\Models\Article;
 use \App\Models\Unite;
 use \DB;
 use Excel;
+use Illuminate\Foundation\Inspiring;
 
 class AdminArticlesController extends Controller
 {
   public function articles(Request $request){
+
+    //dd( Inspiring::quote() );
     $where_id_famille = "";
     $where_id_site = "";
 
@@ -128,7 +131,7 @@ class AdminArticlesController extends Controller
   //update Article *************************************************************
   public function updateArticle(Request $request){
     try{
-
+      //dd($request->all());
       $item = Article::find($request->id_article);
       $item->id_famille = $request->id_famille;
       $item->id_unite = $request->id_unite;

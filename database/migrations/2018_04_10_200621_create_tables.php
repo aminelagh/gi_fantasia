@@ -87,34 +87,46 @@ class CreateTables extends Migration
       $table->increments('id_inventaire');
       $table->integer('id_article');
       $table->integer('id_zone');
+
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
+
+      $table->integer('longueur')->nullable();
+      $table->integer('largeur')->nullable();
+      $table->integer('hauteur')->nullable();
+
       $table->datetime('date');
 
-      $table->integer('created_by');
-      $table->integer('updated_by');
-      $table->integer('validated_by');
+      $table->integer('created_by')->nullable();
+      $table->integer('updated_by')->nullable();
+      $table->integer('validated_by')->nullable();
 
       $table->timestamps();
-      $table->datetime('validated_at');
+      $table->datetime('validated_at')->nullable();
       $table->engine = 'InnoDB';
     });
 
-    //table articles
+    //table inventaires_backup -------------------------------------------------
     Schema::create('inventaires_backup', function (Blueprint $table) {
       $table->increments('id_inventaire');
-      $table->integer('id_article_site');
+      $table->integer('id_article');
       $table->integer('id_zone');
+
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
+
+      $table->integer('longueur')->nullable();
+      $table->integer('largeur')->nullable();
+      $table->integer('hauteur')->nullable();
+
       $table->datetime('date');
 
-      $table->integer('created_by');
-      $table->integer('updated_by');
-      $table->integer('validated_by');
+      $table->integer('created_by')->nullable();
+      $table->integer('updated_by')->nullable();
+      $table->integer('validated_by')->nullable();
 
       $table->timestamps();
-      $table->datetime('validated_at');
+      $table->datetime('validated_at')->nullable();
       $table->engine = 'InnoDB';
     });
   }
