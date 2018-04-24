@@ -334,7 +334,7 @@
     //calculateTotal();
     //populateZone();
   });
-  
+
 
 
   //add options to familles according to the selected categorie
