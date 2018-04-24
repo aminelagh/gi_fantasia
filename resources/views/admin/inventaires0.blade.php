@@ -42,45 +42,28 @@
             <div class="col-md-12">
               <form id="formAddInventaire" method="POST" action="{{ route('addInventaire') }}">
                 @csrf
+                <input type="hidden" name="id_inventaire" id="id_inventaire">
                 <div class="row">
-                  <div class="col-md-3">
-                    {{-- Catégorie --}}
+                  <div class="col-md-4">
+                    {{-- Article --}}
                     <div class="form-group has-feedback">
-                      <label>Catégorie</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_categorie" id="id_categorie">
-                        @foreach ($categories as $item)
-                          <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
+                      <label>Article</label>
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
+                        <option value="null">NULL</option>
+                        @foreach ($articles as $item)
+                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                         @endforeach
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    {{-- Famille --}}
-                    <div class="form-group has-feedback">
-                      <label>Famille</label>
-                      <select class="form-control" name="id_famille" id="id_famille" onchange="populateArticle();" required>
-                        <option value="null">Choisissez une famille</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    {{-- Article --}}
-                    <div class="form-group has-feedback">
-                      <label>Article</label>
-                      <select class="form-control" name="id_article_site" id="id_article_site">
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
+                  <div class="col-md-4">
                     {{-- Zone --}}
                     <div class="form-group has-feedback">
                       <label>Zone</label>
                       <select  class="form-control" name="id_zone" id="id_zone" required></select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-3">
+                  <div class="col-md-4">
                     {{-- Date --}}
                     <div class="form-group has-feedback">
                       <label>Date</label>
@@ -104,27 +87,6 @@
                     </div>
                   </div>
                   <div class="col-md-3">
-                    {{-- Largeur --}}
-                    <div class="form-group has-feedback">
-                      <label>Largeur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}"  id="largeur"  name="largeur" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    {{-- Longueur  --}}
-                    <div class="form-group has-feedback">
-                      <label>Longueur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}"  id="longueur"  name="longueur" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    {{-- Hauteur --}}
-                    <div class="form-group has-feedback">
-                      <label>Hauteur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}"  id="hauteur"  name="hauteur" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
                     {{-- Total --}}
                     <div class="form-group has-feedback">
                       <label>Total</label>
@@ -133,7 +95,7 @@
                   </div>
                 </div>
                 <div class="row" align="center">
-                  <input type="submit" class="btn btn-primary" value="Ajouter">
+                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton">
                 </div>
               </form>
             </div>
@@ -303,10 +265,43 @@
       document.getElementById("formDeleteArticle").submit();
     }
   }
+
   </script>
 </div>
 
-
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{-- Form upload File --}}
+  <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Chargement des articles</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-7">
+              {{-- Libelle --}}
+              <div class="form-group has-feedback">
+                <label>Fichier</label>
+                <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
 @section('styles')
@@ -329,105 +324,83 @@
   <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
 
   <script>
-  $('#id_categorie').on('changed.bs.select', function (e) {
-    populateFamille();
-    //calculateTotal();
-    //populateZone();
+  $('#id_article_site').on('changed.bs.select', function (e) {
+    calculateTotal();
+    populateZone();
   });
-  
 
+  function updateInventaireFuntion(id_inventaire,id_article_site,id_zone, date, nombre_palettes, nombre_pieces){
+    document.getElementById("formAddInventaire").action = "{{ route('updateInventaire') }}";
+    document.getElementById("submitButton").value = "Modifier";
+    document.getElementById("id_inventaire").value = id_inventaire;
+    document.getElementById("id_article_site").value = id_article_site;
 
-  //add options to familles according to the selected categorie
-  function populateFamille(){
-
-    var selected_id_categorie = document.getElementById("id_categorie").value;
-
-    //liste des familles
-    var familles = [];
-    @foreach ($familles as $item)
-    var famille = {
-      id_famille: {{ $item->id_famille }},
-      id_categorie: {{ $item->id_categorie }},
-      libelle_famille: "{{ $item->libelle }}"
-    };
-    familles.push(famille);
-    //console.log("famille");console.log(famille);
-    @endforeach
-    //--------------------
-
-    var myFamilles = [];
-    for(var i = 0 ; i<familles.length ; i++){
-      if( familles[i].id_categorie == selected_id_categorie){
-        myFamilles.push(familles[i]);
-      }
-    }
-
-    var list_famille = document.getElementById("id_famille");
-    list_famille.innerHTML = "";
-
-    var newOption = document.createElement("option");
-    newOption.value = "null";
-    newOption.innerHTML = "Choisissez une catégorie";
-    list_famille.options.add(newOption);
-
-    //fill the select option list with zones
-    for(var i=0;i<myFamilles.length;i++){
-      var newOption = document.createElement("option");
-      newOption.value = myFamilles[i].id_famille;
-      newOption.innerHTML = myFamilles[i].libelle_famille;
-      list_famille.options.add(newOption);
-    }
+    document.getElementById("date").value = date;
+    document.getElementById("nombre_palettes").value = nombre_palettes;
+    document.getElementById("nombre_pieces").value = nombre_pieces;
+    $('.show-tick').selectpicker('refresh');
+    calculateTotal();
+    populateZone();
+    document.getElementById("id_zone").value = id_zone;
   }
 
-  //add options to familles according to the selected categorie
-  function populateArticle(){
-
-    var selected_id_famille = document.getElementById("id_famille").value;
+  function populateZone(){
+    //liste des zones
+    var zones = [];
+    @foreach ($zones as $item)
+    var zone = {
+      id_zone: {{ $item->id_zone }},
+      libelle_zone: "{{ $item->libelle_zone }}",
+      id_site: {{ $item->id_site }},
+      libelle_site: "{{ $item->libelle_site }}"
+    };
+    zones.push(zone);
+    @endforeach
+    //--------------------
 
     //liste des articles
-    var articles = [];
+    var article_sites = [];
     @foreach ($articles as $item)
-    var article = {
+    var item = {
       id_article_site: {{ $item->id_article_site }},
       id_article: {{ $item->id_article }},
-      id_site: {{ $item->id_site }},
-      id_famille: {{ $item->id_famille }},
-      libelle_famille: "{{ $item->libelle_famille }}",
-      id_unite: {{ $item->id_unite }},
-      code: "{{ $item->code }}",
-      designation: "{{ $item->designation }}"
+      id_site: {{ $item->id_site }}
     };
-    articles.push(article);
+    article_sites.push(item);
     @endforeach
     //--------------------
 
-    var myArticles = [];
-    for(var i = 0 ; i<articles.length ; i++){
-      if( articles[i].id_famille == selected_id_famille){
-        myArticles.push(articles[i]);
+    var s1 = document.getElementById("id_article_site");
+    var s2 = document.getElementById("id_zone");
+    var selected_id_article_site = s1.value;
+
+    s2.innerHTML = "";
+
+    //get the selected id_site from id_article_site
+    var selected_id_site = 0;
+    for(var i = 0 ; i<article_sites.length ; i++){
+      if( article_sites[i].id_article_site == selected_id_article_site){
+        selected_id_site =  article_sites[i].id_site;
+        break;
       }
     }
 
-    var list_article = document.getElementById("id_article_site");
-    list_article.innerHTML = "";
+    //get zones from the selected id_site
+    var myZones = [];
+    for(var i = 0 ; i<zones.length ; i++){
+      if( zones[i].id_site == selected_id_site){
+        myZones.push(zones[i]);
+      }
+    }
 
-    var newOption = document.createElement("option");
-    newOption.value = "null";
-    newOption.innerHTML = "Choisissez un article";
-    list_article.options.add(newOption);
-
-    //fill the select option list with article
-    for(var i=0;i<myArticles.length;i++){
+    //fill the select option list with zones
+    for(var i=0;i<myZones.length;i++){
       var newOption = document.createElement("option");
-      newOption.value = myArticles[i].id_article_site;
-      newOption.innerHTML = myArticles[i].code+" "+myArticles[i].designation;
-      list_article.options.add(newOption);
+      newOption.value = myZones[i].id_zone;
+      newOption.innerHTML = myZones[i].libelle_zone;
+      s2.options.add(newOption);
     }
   }
-
-
-
-
 
   function calculateTotal(){
     let palettes = document.getElementById("nombre_palettes").value;
