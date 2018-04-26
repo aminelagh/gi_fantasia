@@ -48,6 +48,7 @@
                     <div class="form-group has-feedback">
                       <label>Catégorie</label>
                       <select class="form-control selectpicker show-tick" data-live-search="true" name="id_categorie" id="id_categorie">
+                        <option value="null">Choisissez une catégorie</option>
                         @foreach ($categories as $item)
                           <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
                         @endforeach
@@ -58,7 +59,7 @@
                     {{-- Famille --}}
                     <div class="form-group has-feedback">
                       <label>Famille</label>
-                      <select class="form-control" name="id_famille" id="id_famille" onchange="populateArticle();" required>
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_famille" id="id_famille" required>
                         <option value="null">Choisissez une famille</option>
                       </select>
                     </div>
@@ -67,7 +68,7 @@
                     {{-- Article --}}
                     <div class="form-group has-feedback">
                       <label>Article</label>
-                      <select class="form-control" name="id_article_site" id="id_article_site">
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
                       </select>
                     </div>
                   </div>
@@ -75,7 +76,7 @@
                     {{-- Zone --}}
                     <div class="form-group has-feedback">
                       <label>Zone</label>
-                      <select  class="form-control" name="id_zone" id="id_zone" required></select>
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="id_zone" required></select>
                     </div>
                   </div>
                 </div>
@@ -107,21 +108,21 @@
                     {{-- Largeur --}}
                     <div class="form-group has-feedback">
                       <label>Largeur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}"  id="largeur"  name="largeur" required>
+                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}" min="1" id="largeur"  name="largeur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Longueur  --}}
                     <div class="form-group has-feedback">
                       <label>Longueur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}"  id="longueur"  name="longueur" required>
+                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}" min="1" id="longueur"  name="longueur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Hauteur --}}
                     <div class="form-group has-feedback">
                       <label>Hauteur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}"  id="hauteur"  name="hauteur" required>
+                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}" min="1" id="hauteur"  name="hauteur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -331,17 +332,20 @@
   <script>
   $('#id_categorie').on('changed.bs.select', function (e) {
     populateFamille();
-    //calculateTotal();
-    //populateZone();
   });
 
+  $('#id_famille').on('changed.bs.select', function (e) {
+    populateArticle();
+  });
 
+  $('#id_article_site').on('changed.bs.select', function (e) {
+    populateZone();
+    calculateTotal();
+  });
 
   //add options to familles according to the selected categorie
   function populateFamille(){
-
     var selected_id_categorie = document.getElementById("id_categorie").value;
-
     //liste des familles
     var familles = [];
     @foreach ($familles as $item)
@@ -354,36 +358,32 @@
     //console.log("famille");console.log(famille);
     @endforeach
     //--------------------
-
     var myFamilles = [];
     for(var i = 0 ; i<familles.length ; i++){
       if( familles[i].id_categorie == selected_id_categorie){
         myFamilles.push(familles[i]);
       }
     }
-
     var list_famille = document.getElementById("id_famille");
     list_famille.innerHTML = "";
-
     var newOption = document.createElement("option");
     newOption.value = "null";
-    newOption.innerHTML = "Choisissez une catégorie";
+    newOption.innerHTML = "Choisissez une famille";
     list_famille.options.add(newOption);
-
     //fill the select option list with zones
     for(var i=0;i<myFamilles.length;i++){
       var newOption = document.createElement("option");
       newOption.value = myFamilles[i].id_famille;
       newOption.innerHTML = myFamilles[i].libelle_famille;
       list_famille.options.add(newOption);
+      $('.show-tick').selectpicker('refresh');
     }
+    $('.show-tick').selectpicker('refresh');
   }
 
-  //add options to familles according to the selected categorie
+  //add options to articles according to the selected famille
   function populateArticle(){
-
     var selected_id_famille = document.getElementById("id_famille").value;
-
     //liste des articles
     var articles = [];
     @foreach ($articles as $item)
@@ -391,6 +391,7 @@
       id_article_site: {{ $item->id_article_site }},
       id_article: {{ $item->id_article }},
       id_site: {{ $item->id_site }},
+      libelle_site: "{{ $item->libelle_site }}",
       id_famille: {{ $item->id_famille }},
       libelle_famille: "{{ $item->libelle_famille }}",
       id_unite: {{ $item->id_unite }},
@@ -400,69 +401,150 @@
     articles.push(article);
     @endforeach
     //--------------------
-
+    //create list of chosen articles
     var myArticles = [];
     for(var i = 0 ; i<articles.length ; i++){
       if( articles[i].id_famille == selected_id_famille){
         myArticles.push(articles[i]);
       }
     }
-
+    //--------------------
     var list_article = document.getElementById("id_article_site");
     list_article.innerHTML = "";
-
     var newOption = document.createElement("option");
     newOption.value = "null";
     newOption.innerHTML = "Choisissez un article";
     list_article.options.add(newOption);
-
     //fill the select option list with article
     for(var i=0;i<myArticles.length;i++){
       var newOption = document.createElement("option");
       newOption.value = myArticles[i].id_article_site;
-      newOption.innerHTML = myArticles[i].code+" "+myArticles[i].designation;
+      newOption.innerHTML = myArticles[i].code+" - "+myArticles[i].designation+" ("+myArticles[i].libelle_site+")";
       list_article.options.add(newOption);
+      $('.show-tick').selectpicker('refresh');
     }
+    $('.show-tick').selectpicker('refresh');
+    calculateTotal();
   }
 
-
-
-
-
-  function calculateTotal(){
-    let palettes = document.getElementById("nombre_palettes").value;
-    let pieces = document.getElementById("nombre_pieces").value;
-    let total = 0;
-    if(palettes == 0){
-      total = pieces;
-    }else{
-      total = pieces * palettes;
-    }
-    //let unite = document.getElementById("id_article").value;
-    //alert("unite: "+unite);
-    document.getElementById("total").value = total;
-    getUnite();
-  }
-
-  function getUnite(){
-    var article_sites = [];
-    @foreach ($articles as $item)
-    var item = {
-      id_article_site: {{ $item->id_article_site }},
-      unite: "{{ $item->libelle_unite }}"
-    };
-    article_sites.push(item);
-    @endforeach
-
+  //add options to zone according to the selected article
+  function populateZone(){
     var selected_id_article_site = document.getElementById("id_article_site").value;
-
-    for(var i=0; i<article_sites.length;i++){
-      if(selected_id_article_site == article_sites[i].id_article_site){
-        document.getElementById("total").value = document.getElementById("total").value + " "+article_sites[i].unite;
+    //liste des zones
+    var zones = [];
+    @foreach ($zones as $item)
+    var zone = {
+      id_zone: {{ $item->id_zone }},
+      id_site: {{ $item->id_site }},
+      libelle_zone: "{{ $item->libelle_zone }}"
+    };
+    zones.push(zone);
+    @endforeach
+    //--------------------
+    //liste des articles
+    var articles = [];
+    @foreach ($articles as $item)
+    var article = {
+      id_article_site: {{ $item->id_article_site }},
+      id_article: {{ $item->id_article }},
+      id_site: {{ $item->id_site }}
+    };
+    articles.push(article);
+    @endforeach
+    //--------------------
+    var selected_id_site = 0;
+    for(var i = 0 ; i<articles.length ; i++){
+      if( articles[i].id_article_site == selected_id_article_site){
+        selected_id_site = articles[i].id_site;
         break;
       }
     }
+    //create list of chosen zones
+    var myZones = [];
+    for(var i = 0 ; i<zones.length ; i++){
+      if( zones[i].id_site == selected_id_site){
+        myZones.push(zones[i]);
+      }
+    }
+    //--------------------
+    var list_zone = document.getElementById("id_zone");
+    list_zone.innerHTML = "";
+    var newOption = document.createElement("option");
+    newOption.value = "null";
+    newOption.innerHTML = "Choisissez une zone";
+    list_zone.options.add(newOption);
+    //fill the select option list with article
+    for(var i=0;i<myZones.length;i++){
+      var newOption = document.createElement("option");
+      newOption.value = myZones[i].id_zone;
+      newOption.innerHTML = myZones[i].libelle_zone;
+      list_zone.options.add(newOption);
+      $('.show-tick').selectpicker('refresh');
+    }
+    $('.show-tick').selectpicker('refresh');
   }
+
+  function calculateTotal(){
+    document.getElementById("largeur").readOnly = false;
+    document.getElementById("longueur").readOnly = false;
+    document.getElementById("hauteur").readOnly = false;
+    //get unite
+    var articles = [];
+    @foreach ($articles as $item)
+    var article = {
+      id_article_site: {{ $item->id_article_site }},
+      id_unite: {{ $item->id_unite }},
+      libelle_unite: "{{ $item->libelle_unite }}"
+    };
+    articles.push(article);
+    @endforeach
+    //--------------------
+    var selected_id_article_site = document.getElementById("id_article_site").value;
+
+    //var id_unite = 0;
+    //var libelle_unite = " ";
+    //write unite
+    for(var i=0; i<articles.length;i++){
+      if(selected_id_article_site == articles[i].id_article_site){
+
+        var id_unite = articles[i].id_unite;
+        var libelle_unite = articles[i].libelle_unite;
+
+        var palettes = document.getElementById("nombre_palettes").value;
+        var pieces = document.getElementById("nombre_pieces").value;
+
+        var largeur = document.getElementById("largeur").value;
+        var longueur = document.getElementById("longueur").value;
+        var hauteur = document.getElementById("hauteur").value;
+
+        if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
+          document.getElementById("largeur").value = 1;  document.getElementById("largeur").readOnly = true;
+          document.getElementById("longueur").value = 1; document.getElementById("longueur").readOnly = true;
+          document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M2"){
+          document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M3"){
+          document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+        }
+        var total = 0;
+        var dimm = largeur * longueur * hauteur;
+        if(palettes == 0){
+          total = pieces * dimm;
+        }else{
+          total = pieces * palettes * dimm;
+        }
+        document.getElementById("total").value = total + " "+articles[i].libelle_unite;
+        break;
+      }
+    }
+
+
+    //document.getElementById("total").value = total;
+
+  }
+
 
   $(document).ready(function () {
 
