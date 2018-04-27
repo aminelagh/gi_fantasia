@@ -95,7 +95,7 @@ class CreateTables extends Migration
       $table->integer('largeur')->nullable();
       $table->integer('hauteur')->nullable();
 
-      $table->datetime('date');
+      $table->date('date');
 
       $table->integer('created_by')->nullable();
       $table->integer('updated_by')->nullable();
@@ -119,7 +119,7 @@ class CreateTables extends Migration
       $table->integer('largeur')->nullable();
       $table->integer('hauteur')->nullable();
 
-      $table->datetime('date');
+      $table->date('date');
 
       $table->integer('created_by')->nullable();
       $table->integer('updated_by')->nullable();

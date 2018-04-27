@@ -73,7 +73,7 @@ class AdminInventairesController extends Controller
 
     //inventaires query
     $data = collect(DB::select(
-      "SELECT i.id_inventaire, i.id_article, i.id_zone, i.nombre_palettes, i.nombre_pieces, i.date,
+      "SELECT i.id_inventaire, i.id_article, i.id_zone, i.nombre_palettes, i.nombre_pieces,i.longueur, i.largeur, i.hauteur, i.date,
       i.created_at, i.created_by, i.updated_at, i.updated_by, i.validated_at, i.validated_by,
       a.code, a.designation, a.id_unite,
       ars.id_article_site,
@@ -106,7 +106,6 @@ class AdminInventairesController extends Controller
     }
 
     return $view;
-
 
     $articles = Throttle::paginate($this->posts_per_page);
     if($request->ajax()) {

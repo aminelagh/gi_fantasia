@@ -16,6 +16,7 @@
 @endsection
 
 @section('content')
+
   <div class="row">
     <div class="col-lg-12">
       <div class="box inverse">
@@ -60,7 +61,7 @@
                     <div class="form-group has-feedback">
                       <label>Famille</label>
                       <select class="form-control selectpicker show-tick" data-live-search="true" name="id_famille" id="id_famille" required>
-                        <option value="null">Choisissez une famille</option>
+
                       </select>
                     </div>
                   </div>
@@ -209,59 +210,82 @@
 
           <div class="breadcrumb">
             Afficher/Masquer:
-            <a class="toggle-vis" data-column="0">Article</a> -
-            <a class="toggle-vis" data-column="1">Zone</a> -
-            <a class="toggle-vis" data-column="2">Date</a> -
-            <a class="toggle-vis" data-column="3">Quantité</a> -
-            <a class="toggle-vis" data-column="4">Créé par</a>
+            <a class="toggle-vis" data-column="1">Article</a> -
+            <a class="toggle-vis" data-column="2">Zone</a> -
+            <a class="toggle-vis" data-column="3">Date</a> -
+            <a class="toggle-vis" data-column="9">Quantité</a>
           </div>
 
-          <table id="inventairesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Article</th><th>Zone</th><th>Date</th><th>Quantité</th><th>Créé par</th><th>Outils</th></tr></thead>
-            <tfoot><tr><th>Article</th><th>Zone</th><th>Date</th><th>Quantité</th><th>Créé par</th><th></th></tr></tfoot>
-            <tbody>
-              @foreach($data as $item)
-                <tr>
-                  <td>{{ $item->code }} - {{ $item->designation }}</td>
-                  <td>{{ $item->libelle_zone }}</td>
-                  <td>{{ $item->date }}</td>
-                  <td>{{ $item->nombre_palettes }}x{{ $item->nombre_pieces }}={{ $item->nombre_palettes*$item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                  <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td>
-                  <td align="center">
-                    <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
-                    onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}", {{ $item->nombre_palettes }}, {{ $item->nombre_pieces }} );' title="Modifier" ></i>
-                    {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                    <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
+          <table id="inventairesTable"  class="display table table-hover table-striped table-bordered" style="width:100%">
+            <thead>
+              <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <th>Outils</th></tr>
+              </thead>
+              <tfoot>
+                <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
+                  <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                  <th>Créé par</th><th>le</th>
+                  <th>Modifié par</th><th>le</th>
+                  <th>validé par</th><th>le</th>
+                  <th></th></tr>
+                </tfoot>
+                <tbody>
+                  @foreach($data as $item)
+                    <tr>
+                      <td></td>
+                      <td>{{ $item->code }} - {{ $item->designation }}</td>
+                      <td>{{ $item->libelle_zone }}</td>
+                      <td>{{ $item->date }}</td>
+                      <td>{{ $item->longueur }}</td>
+                      <td>{{ $item->largeur }}</td>
+                      <td>{{ $item->hauteur }} </td>
+                      <td>{{ $item->nombre_palettes }} </td>
+                      <td>{{ $item->nombre_pieces }} </td>
+                      <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+                      <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
+                      <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
+                      <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                      <td align="center">
+                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
+                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}", {{ $item->nombre_palettes }}, {{ $item->nombre_pieces }} );' title="Modifier" ></i>
+                        {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
+                        <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {{-- *********************************** Articles ************************************* --}}
         </div>
       </div>
-      {{-- *********************************** Articles ************************************* --}}
+
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          {{-- *********************************** Zones ************************************* --}
+
+          <table class="articlesHere endless-pagination" data-next-page="{{ $articles->nextPageUrl() }}" border="1" cellspacing="0">
+          <thead>  <tr><th>id</th><th>ip</th><th>type</th><th>created_at</th></tr></thead>
+          @foreach($articles as $post)
+          <tr><td>{{ $post->id }}</td><td>{{ $post->ip }}</td><td>{{ $post->type }}</td><td>{{ $post->created_at }}</td></tr>
+        @endforeach
+        {{-- {!! $posts->render() !!} --}
+        <tfoot><tr><th colspan="4">    <button class="btn btn-default" onclick="loadMore()">LoadMore</button></th></tr></tfoot>
+      </table>
+
+      {{-- *********************************** articles ************************************* --}}
     </div>
   </div>
 
-  <hr>
-  <div class="row">
-    <div class="col-md-12">
-      {{-- *********************************** Zones ************************************* --}
-
-      <table class="articlesHere endless-pagination" data-next-page="{{ $articles->nextPageUrl() }}" border="1" cellspacing="0">
-      <thead>  <tr><th>id</th><th>ip</th><th>type</th><th>created_at</th></tr></thead>
-      @foreach($articles as $post)
-      <tr><td>{{ $post->id }}</td><td>{{ $post->ip }}</td><td>{{ $post->type }}</td><td>{{ $post->created_at }}</td></tr>
-    @endforeach
-    {{-- {!! $posts->render() !!} --}
-    <tfoot><tr><th colspan="4">    <button class="btn btn-default" onclick="loadMore()">LoadMore</button></th></tr></tfoot>
-  </table>
-
-  {{-- *********************************** articles ************************************* --}}
-</div>
-</div>
 
 @endsection
+
 
 @section('modals')
 
@@ -286,7 +310,6 @@
 {{-- ************************** Export To Excel Forms ***************************************** --}}
 {{-- ****************************************************************************************** --}}
 
-
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Inventaires      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 <div class="CRUD Inventaires">
@@ -304,10 +327,43 @@
       document.getElementById("formDeleteArticle").submit();
     }
   }
+
   </script>
 </div>
 
-
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{-- Form upload File --}}
+  <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Chargement des articles</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-7">
+              {{-- Libelle --}}
+              <div class="form-group has-feedback">
+                <label>Fichier</label>
+                <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
 @section('styles')
@@ -336,6 +392,7 @@
 
   $('#id_famille').on('changed.bs.select', function (e) {
     populateArticle();
+    calculateTotal();
   });
 
   $('#id_article_site').on('changed.bs.select', function (e) {
@@ -523,10 +580,14 @@
           document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
         }
         else if( libelle_unite=="M2"){
+          document.getElementById("largeur").readOnly = false;
+          document.getElementById("longueur").readOnly = false;
           document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
         }
         else if( libelle_unite=="M3"){
-          document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+          document.getElementById("largeur").readOnly = false;
+          document.getElementById("longueur").readOnly = false;
+          document.getElementById("hauteur").readOnly = false;
         }
         var total = 0;
         var dimm = largeur * longueur * hauteur;
@@ -539,15 +600,21 @@
         break;
       }
     }
-
-
     //document.getElementById("total").value = total;
+  }
 
+  function format ( d ) {
+    // `d` is the original data object for the row
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">'+
+    '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>'+
+    '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>'+
+    '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>'+
+    '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>'+
+    '</table>';
   }
 
 
   $(document).ready(function () {
-
     $('#inventairesTable tfoot th').each(function () {
       var title = $(this).text();
       if (title == "Article" ) {
@@ -579,44 +646,101 @@
       info: false,
       stateSave: false,
       columnDefs: [
-        { targets: 0, width: "", type: "string", visible: true, searchable: true, orderable: true},       //article
-        { targets: 1, width: "10%", type: "string", visible: true, searchable: true, orderable: true},    //zone
-        { targets: 2, width: "10%", type: "string", visible: true, searchable: true, orderable: true},    //date
-        { targets: 3, width: "", type: "string", visible: true, searchable: true, orderable: true},    //quantite
-        { targets: 4, width: "10%", type: "string", visible: true, searchable: true, orderable: true},    //cree par
-        { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: false},  //outils
+        { targets: 00, width: "1%", type: "string", visible: true, searchable: true, orderable: true},  //article
+        { targets: 01, width: "", type: "string", visible: true, searchable: true, orderable: true},    //article
+        { targets: 02, width: "", type: "string", visible: true, searchable: true, orderable: true},    //Zone
+        { targets: 03, width: "", type: "string", visible: true, searchable: true, orderable: true},    //date
+        { targets: 04, width: "", type: "string", visible: false, searchable: true, orderable: true},    //L
+        { targets: 05, width: "", type: "string", visible: false, searchable: false, orderable: false},  //l
+        { targets: 06, width: "", type: "string", visible: false, searchable: false, orderable: false},  //h
+        { targets: 07, width: "", type: "string", visible: false, searchable: false, orderable: false},  //palette
+        { targets: 08, width: "", type: "string", visible: false, searchable: false, orderable: false},  //pieces
+        { targets: 09, width: "", type: "string", visible: true, searchable: false, orderable: false},  //Quantite
+        { targets: 10, width: "", type: "string", visible: false, searchable: false, orderable: false},  //cree
+        { targets: 11, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+        { targets: 12, width: "", type: "string", visible: false, searchable: false, orderable: false},  //modifie
+        { targets: 13, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+        { targets: 14, width: "", type: "string", visible: false, searchable: false, orderable: false},  //valide
+        { targets: 15, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+        { targets: 16, width: "1%", type: "string", visible: true, searchable: false, orderable: false},  //outils
+
+
       ],
-    });
+      //  ajax: "",
+      columns: [
+        {"className":'details-control',"orderable":false,"data":null,"defaultContent": ''},
+        { "data": "article" },
+        { "data": "zone" },
+        { "data": "date" },
+        { "data": "longueur" },
+        { "data": "largeur" },
+        { "data": "hauteur" },
+        { "data": "nombre_palettes" },
+        { "data": "nombre_pieces" },
+        { "data": "quantite" },
+        { "data": "cree_par" }, { "data": "cree_le" },
+        { "data": "modifie_par" }, { "data": "modifie_le" },
+        { "data": "valide_par" }, { "data": "valide_le" },
+        { "data": "outils" }
 
-    $('a.toggle-vis').on('click', function (e) {
-      e.preventDefault();
-      var column = table.column($(this).attr('data-column'));
-      column.visible(!column.visible());
-    });
-
-    table.columns().every(function () {
-      var that = this;
-      $('input', this.footer()).on('keyup change', function () {
-        if (that.search() !== this.value) {
-          that.search(this.value).draw();
-        }
-      });
-    });
-
-  });
-  /*
-  function loadMore(){
-  var page = $('.endless-pagination').data('next-page');
-  if(page !== null) {
-  $.get(page, function(data){
-  $('.articlesHere').append(data.articles);
-  $('.endless-pagination').data('next-page', data.next_page);
+      ],
+      /*  data: [
+      {
+      "id": "1",
+      "name": "Tiger Nixon",
+      "position": "System Architect",
+      "salary": "$320,800",
+      "start_date": "2011/04/25",
+      "office": "Edinburgh",
+      "extn": "5421"
+    },
+    {
+    "id": "2",
+    "name": "Garrett Winters",
+    "position": "Accountant",
+    "salary": "$170,750",
+    "start_date": "2011/07/25",
+    "office": "Tokyo",
+    "extn": "8422"
+  },
+  {"id": "3","name": "Ashton Cox","position": "Junior Technical Author","salary": "$86,000","start_date": "2009/01/12","office": "San Francisco","extn": "1562"}
+],*/
 });
-}
-else{
-alert('No more Data');
-}
-}*/
+
+$('a.toggle-vis').on('click', function (e) {
+  e.preventDefault();
+  var column = table.column($(this).attr('data-column'));
+  column.visible(!column.visible());
+});
+
+table.columns().every(function () {
+  var that = this;
+  $('input', this.footer()).on('keyup change', function () {
+    if (that.search() !== this.value) {
+      that.search(this.value).draw();
+    }
+  });
+});
+
+// Add event listener for opening and closing details
+$('#inventairesTable tbody').on('click', 'td.details-control', function () {
+  var tr = $(this).closest('tr');
+  var row = table.row( tr );
+
+  if ( row.child.isShown() ) {
+    // This row is already open - close it
+    row.child.hide();
+    tr.removeClass('shown');
+  }
+  else {
+    // Open this row
+    row.child( format(row.data()) ).show();
+    tr.addClass('shown');
+  }
+} );
+
+});
+
 
 </script>
 
