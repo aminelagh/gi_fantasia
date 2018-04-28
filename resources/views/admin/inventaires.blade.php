@@ -95,35 +95,35 @@
                     {{-- Nombre de palettes --}}
                     <div class="form-group has-feedback">
                       <label>Nombre de palettes</label>
-                      <input type="number" class="form-control" placeholder="palettes" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_palettes')==null? 1 : old('nombre_palettes') }}"  id="nombre_palettes"  name="nombre_palettes" required>
+                      <input disabled type="number" class="form-control" placeholder="palettes" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_palettes')==null? 1 : old('nombre_palettes') }}"  id="nombre_palettes"  name="nombre_palettes" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Nombre de pieces --}}
                     <div class="form-group has-feedback">
                       <label>Nombre de pieces</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_pieces')==null? 0 : old('nombre_pieces') }}"  id="nombre_pieces"  name="nombre_pieces" required>
+                      <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_pieces')==null? 0 : old('nombre_pieces') }}"  id="nombre_pieces"  name="nombre_pieces" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Largeur --}}
                     <div class="form-group has-feedback">
                       <label>Largeur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}" min="1" id="largeur"  name="largeur" required>
+                      <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}" min="1" id="largeur"  name="largeur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Longueur  --}}
                     <div class="form-group has-feedback">
                       <label>Longueur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}" min="1" id="longueur"  name="longueur" required>
+                      <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}" min="1" id="longueur"  name="longueur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     {{-- Hauteur --}}
                     <div class="form-group has-feedback">
                       <label>Hauteur</label>
-                      <input type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}" min="1" id="hauteur"  name="hauteur" required>
+                      <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}" min="1" id="hauteur"  name="hauteur" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -250,10 +250,10 @@
                       <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
                       <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
                       <td align="center">
-                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-toggle="tooltip"
-                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}", {{ $item->nombre_palettes }}, {{ $item->nombre_pieces }} );' title="Modifier" ></i>
+                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-target="#modalUpdateInventaire" data-toggle="modal"
+                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier" ></i>
                         {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                        <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                        <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                       </td>
                     </tr>
                   @endforeach
@@ -313,56 +313,205 @@
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Inventaires      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 <div class="CRUD Inventaires">
-  <form id="formDeleteArticle" method="POST" action="{{ route('deleteArticle') }}">
+  <form id="formDeleteInventaire" method="POST" action="{{ route('deleteInventaire') }}">
     @csrf
-    <input type="hidden" id="delete_id_article" name="id_article" />
-    <input type="hidden" id="delete_id_article_site" name="id_article_site" />
+    <input type="hidden" id="delete_id_inventaire" name="id_inventaire" />
   </form>
   <script>
-  function deleteInventaireFunction(id_article,id_article_site, designation){
-    var go = confirm('Vos êtes sur le point d\'effacer l\'article: "'+designation+'".\n voulez-vous continuer?');
+  function deleteInventaireFunction(id_inventaire,code,designation,date){
+    var go = confirm('Vos êtes sur le point d\'effacer l\'inventaire: "'+code+' - '+designation+' '+date+'".\n voulez-vous continuer?');
     if(go){
-      document.getElementById("delete_id_article").value = id_article;
-      document.getElementById("delete_id_article_site").value = id_article;
-      document.getElementById("formDeleteArticle").submit();
+      document.getElementById("delete_id_inventaire").value = id_inventaire;
+      document.getElementById("formDeleteInventaire").submit();
     }
+  }
+
+  function updateInventaireFuntion(id_inventaire,id_article_site, id_zone, date, nombre_palettes, nombre_pieces, longueur, largeur, hauteur){
+
+    document.getElementById("update_id_inventaire").value = id_inventaire;
+    document.getElementById("update_id_article_site").value = id_article_site;
+    $('.show-tick').selectpicker('refresh');
+    document.getElementById("update_id_zone").value = id_zone;
+    $('.show-tick').selectpicker('refresh');
+    document.getElementById("update_date").value = date;
+
+    document.getElementById("update_nombre_palettes").value = nombre_palettes;
+    document.getElementById("update_nombre_pieces").value = nombre_pieces;
+
+    document.getElementById("update_longueur").value = longueur;
+    document.getElementById("update_largeur").value = largeur;
+    document.getElementById("update_hauteur").value = hauteur;
+    $('.show-tick').selectpicker('refresh');
+    update_calculateTotal();
+  }
+
+  function update_calculateTotal(){
+    document.getElementById("update_largeur").readOnly = false;
+    document.getElementById("update_longueur").readOnly = false;
+    document.getElementById("update_hauteur").readOnly = false;
+    //get unite
+    var articles = [];
+    @foreach ($articles as $item)
+    var article = {
+      id_article_site: {{ $item->id_article_site }},
+      id_unite: {{ $item->id_unite }},
+      libelle_unite: "{{ $item->libelle_unite }}"
+    };
+    articles.push(article);
+    @endforeach
+    //--------------------
+    var selected_id_article_site = document.getElementById("update_id_article_site").value;
+
+    //var id_unite = 0;
+    //var libelle_unite = " ";
+    //write unite
+    for(var i=0; i<articles.length;i++){
+      if(selected_id_article_site == articles[i].id_article_site){
+
+        var id_unite = articles[i].id_unite;
+        var libelle_unite = articles[i].libelle_unite;
+
+        var palettes = document.getElementById("update_nombre_palettes").value;
+        var pieces = document.getElementById("update_nombre_pieces").value;
+
+        var largeur = document.getElementById("update_largeur").value;
+        var longueur = document.getElementById("update_longueur").value;
+        var hauteur = document.getElementById("update_hauteur").value;
+
+        if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
+          document.getElementById("update_largeur").value = 1;  document.getElementById("update_largeur").readOnly = true;
+          document.getElementById("update_longueur").value = 1; document.getElementById("update_longueur").readOnly = true;
+          document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M2"){
+          document.getElementById("update_largeur").readOnly = false;
+          document.getElementById("update_longueur").readOnly = false;
+          document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M3"){
+          document.getElementById("update_largeur").readOnly = false;
+          document.getElementById("update_longueur").readOnly = false;
+          document.getElementById("update_hauteur").readOnly = false;
+        }
+        var total = 0;
+        var dimm = largeur * longueur * hauteur;
+        if(palettes == 0){
+          total = pieces * dimm;
+        }else{
+          total = pieces * palettes * dimm;
+        }
+        document.getElementById("update_total").value = total + " "+articles[i].libelle_unite;
+        break;
+      }
+    }
+    //document.getElementById("total").value = total;
   }
 
   </script>
 </div>
 
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-<div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="modal fade lg" id="modalUpdateInventaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   {{-- Form upload File --}}
-  <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
+  <form method="POST" action="{{ route('updateInventaire') }}">
     @csrf
+    <input type="hidden" name="id_inventaire" id="update_id_inventaire">
+
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Chargement des articles</h4>
+          <h4 class="modal-title">Modification de l'inventaire</h4>
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-7">
-              {{-- Libelle --}}
+            <div class="col-md-4">
+              {{-- Article --}}
               <div class="form-group has-feedback">
-                <label>Fichier</label>
-                <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
+                <label>Article</label>
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site">
+                  @foreach ($articles as $item)
+                    <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Zone --}}
+              <div class="form-group has-feedback">
+                <label>Zone</label>
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" required>
+                  @foreach ($zones as $item)
+                    <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Date --}}
+              <div class="form-group has-feedback">
+                <label>Date</label>
+                <input type="date" class="form-control" placeholder="Date" name="date" id="update_date" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              {{-- Nombre de palettes --}}
+              <div class="form-group has-feedback">
+                <label>Nombre de palettes</label>
+                <input type="number" class="form-control" placeholder="palettes" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_nombre_palettes"  name="nombre_palettes" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Nombre de pieces --}}
+              <div class="form-group has-feedback">
+                <label>Nombre de pieces</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();"  id="update_nombre_pieces"  name="nombre_pieces" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              {{-- Largeur --}}
+              <div class="form-group has-feedback">
+                <label>Largeur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_largeur"  name="largeur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Longueur  --}}
+              <div class="form-group has-feedback">
+                <label>Longueur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_longueur"  name="longueur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Hauteur --}}
+              <div class="form-group has-feedback">
+                <label>Hauteur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_hauteur"  name="hauteur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Total --}}
+              <div class="form-group has-feedback">
+                <label>Total</label>
+                <input type="text" class="form-control" value=""  id="update_total"  name="total" readonly>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Ajouter</button>
+          <button type="submit" class="btn btn-primary">Modifier</button>
         </div>
       </div>
     </div>
   </form>
 </div>
-{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
@@ -398,6 +547,15 @@
   $('#id_article_site').on('changed.bs.select', function (e) {
     populateZone();
     calculateTotal();
+    document.getElementById("nombre_palettes").disabled = false;
+    document.getElementById("nombre_pieces").disabled = false;
+    document.getElementById("largeur").disabled = false;
+    document.getElementById("longueur").disabled = false;
+    document.getElementById("hauteur").disabled = false;
+  });
+
+  $('#update_id_article_site').on('changed.bs.select', function (e) {
+    update_calculateTotal();
   });
 
   //add options to familles according to the selected categorie
@@ -603,6 +761,7 @@
     //document.getElementById("total").value = total;
   }
 
+  //extra info on every table row
   function format ( d ) {
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">'+
@@ -612,7 +771,6 @@
     '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>'+
     '</table>';
   }
-
 
   $(document).ready(function () {
     $('#inventairesTable tfoot th').each(function () {

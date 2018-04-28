@@ -171,6 +171,9 @@ class AdminInventairesController extends Controller
       $item->date = $request->date;
       $item->nombre_palettes = $request->nombre_palettes;
       $item->nombre_pieces = $request->nombre_pieces;
+      $item->longueur = $request->longueur;
+      $item->largeur = $request->largeur;
+      $item->hauteur = $request->hauteur;
       //$item->created_by = $request->session()->get('id_user');
       $item->updated_by = $request->session()->get('id_user');;
       //$item->validated_by = null;

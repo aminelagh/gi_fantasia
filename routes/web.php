@@ -1,5 +1,18 @@
 <?php
 
+use Illuminate\Http\Request;
+use \App\Models\Role;
+use \App\Models\User;
+use \App\Models\Role_user;
+use \App\Models\Famille;
+use \App\Models\Categorie;
+use \App\Models\Societe;
+use \App\Models\Site;
+use \App\Models\Zone;
+use \App\Models\Article_site;
+use \App\Models\Article;
+use \App\Models\Unite;
+use \App\Models\Inventaire;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +36,7 @@ $user = Sentinel::registerAndActivate($credentials);
 
 $role = Sentinel::findRoleBySlug('admin');
 $role->users()->attach($user);*/
+
 
 return view('welcome');
 });
@@ -109,16 +123,18 @@ Route::group(['middleware' => 'controleur','prefix' => 'c'], function () {
 //@@@@@@@@@@@@@@@@@@@@@@@@   Ouvrier-routes   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 Route::group(['middleware' => 'ouvrier', 'prefix' => 'o'], function () {
-  Route::get('/', 'OuvrierController@home')->name('home');
+  Route::get('/', 'OuvrierController@home')->name('ouvrier');
+  Route::post('/', 'OuvrierController@home')->name('ouvrier');
+  Route::post('/updateProfil', 'OuvrierController@updateProfil')->name('o.updateProfil');
+
   //Inventaire -----------------------------------------------------------------
-  /*
-  Route::get('/inventaires', 'OuvrierInventairesController@inventaires')->name('inventaires');
-  Route::post('/inventaires', 'OuvrierInventairesController@inventaires')->name('inventaires');
-  Route::post('/addInventaire', 'OuvrierInventairesController@addInventaire')->name('addInventaire');
-  Route::post('/updateInventaire', 'OuvrierInventairesController@updateInventaire')->name('updateInventaire');
-  Route::post('/deleteInventaire', 'OuvrierInventairesController@deleteInventaire')->name('deleteInventaire');
-  Route::post('/exportInventaires', 'OuvrierInventairesController@exportInventaires')->name('exportInventaires');
-  Route::post('/addInventaires', 'OuvrierInventairesController@addInventaires')->name('addInventaires');*/
+  //Route::get('/inventaires', 'OuvrierInventairesController@inventaires')->name('o.inventaires');
+  Route::post('/inventaires', 'OuvrierController@inventaires')->name('o.inventaires');
+  Route::post('/addInventaire', 'OuvrierController@addInventaire')->name('o.addInventaire');
+  Route::post('/updateInventaire', 'OuvrierController@updateInventaire')->name('o.updateInventaire');
+  Route::post('/deleteInventaire', 'OuvrierController@deleteInventaire')->name('o.deleteInventaire');
+  Route::post('/exportInventaires', 'OuvrierController@exportInventaires')->name('o.exportInventaires');
+  Route::post('/addInventaires', 'OuvrierController@addInventaires')->name('o.addInventaires');
 
 });
 

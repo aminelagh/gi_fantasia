@@ -39,7 +39,19 @@ class AuthController extends Controller
         Session::put('login', $user->login);
         Session::put('nom', $user->nom);
         Session::put('prenom', $user->prenom);
-        //dd($request->session()->all());
+        if( Sentinel::inRole('ouvrier') ||  Sentinel::inRole('controleur') ){
+          $zone = collect(DB::select("SELECT * FROM zones WHERE id_zone=". $user->id_zone .";"))->first();
+          $site = collect(DB::select("SELECT * FROM sites WHERE id_site in (SELECT id_site FROM zones z WHERE id_zone=". $user->id_zone .");"))->first();
+          $societe = collect(DB::select("SELECT * FROM societes WHERE id_societe in (SELECT id_societe FROM sites WHERE id_societe=".$site->id_societe.");"))->first();
+          Session::put('id_zone', $user->id_zone);
+          Session::put('libelle_zone', $zone->libelle);
+
+          Session::put('id_site', $site->id_site);
+          Session::put('libelle_site', $site->libelle);
+
+          Session::put('id_societe', $societe->id_societe);
+          Session::put('libelle_societe', $societe->libelle);
+        }
         return $this->redirectToSpace();
       } else {
         return redirect()->back()->withInput()->with("alert_warning","<b>login et/ou mot de passe incorrect</b>");

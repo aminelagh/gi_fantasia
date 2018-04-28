@@ -357,6 +357,19 @@
       document.getElementById("update_login_user").value = login;
       //document.getElementById("update_password_equipement").value = password;
     }
+
+    function loadZones(){
+      var role = document.getElementById("id_role").value;
+      if(role == "ouvrier"){
+        document.getElementById("id_zone").required = true;
+        document.getElementById("id_zone").disabled = false;
+      }
+      else {
+        document.getElementById("id_zone").required = false;
+        document.getElementById("id_zone").disabled = true;
+      }
+    }
+
     </script>
 
     {{-- *****************************    Add User    ********************************************** --}}
@@ -377,7 +390,7 @@
                   {{-- Role --}}
                   <div class="form-group has-feedback">
                     <label>Role</label>
-                    <select  class="form-control" name="slug">
+                    <select  class="form-control" name="slug" onchange="loadZones();" id="id_role">
                       @foreach ($roles as $item)
                         <option value="{{ $item->slug }}">{{ $item->name }}</option>
                       @endforeach
@@ -412,6 +425,19 @@
                   <div class="form-group has-feedback">
                     <label>Password</label>
                     <input type="text" class="form-control" placeholder="Password" name="password" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5">
+                  {{-- Zone --}}
+                  <div class="form-group has-feedback">
+                    <label>Role</label>
+                    <select  class="form-control" name="id_zone" id="id_zone" disabled>
+                      @foreach ($zones as $item)
+                        <option value="{{ $item->id_zone }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
                   </div>
                 </div>
               </div>

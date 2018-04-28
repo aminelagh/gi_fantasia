@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--Mobile first-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="16x16" href="public/gi_logo.png">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>{{ $title or 'Inventaire' }}</title>
 
@@ -66,16 +67,16 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{{ route('o') }}" class="navbar-brand"><img src="public/assets/img/logo.png" alt="Admin"></a>
+            <a href="{{ route('ouvrier') }}" class="navbar-brand"><img src="public/assets/img/logo.png" alt="Ouvrier"></a>
           </header>
 
 
           <!--  top right menu  -->
-          @include('admin.layouts.top_right_menu')
+          @include('ouvrier.layouts.top_right_menu')
           <!--  end top right menu -->
 
           <!--  top left menu  -->
-          @include('admin.layouts.top_left_menu')
+          @include('ouvrier.layouts.top_left_menu')
           <!--  end top left menu -->
 
         </div>
@@ -156,21 +157,30 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 {{-- Role --}}
                 <div class="form-group has-feedback">
                   <label>Rôle</label>
                   <input type="text" class="form-control" placeholder="Rôle" value="{{ Session::get('role') }}" readonly>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
+                {{-- Zone --}}
+                <div class="form-group has-feedback">
+                  <label>Zone</label>
+                  <input type="text" class="form-control" placeholder="Zone" value="{{ Session::get('libelle_zone') }}" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
                 {{-- Nom --}}
                 <div class="form-group has-feedback">
                   <label>Nom</label>
                   <input type="text" class="form-control" placeholder="Nom" name="nom" value="{{ Session::get('nom') }}" required>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 {{-- Prenom --}}
                 <div class="form-group has-feedback">
                   <label>Prenom</label>
