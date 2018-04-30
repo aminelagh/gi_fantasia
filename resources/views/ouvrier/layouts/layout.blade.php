@@ -34,18 +34,22 @@
   <!-- Toastr -->
   <link href="public/css/lib/toastr/toastr.min.css" rel="stylesheet">
   <script src="public/assets/less/less.js"></script>
-  <!-- Bootstrap-Select -->
-  <link rel="stylesheet" href="public/bootstrap-select/bootstrap-select.min.css">
-  @yield('styles')
+  <style>
+  td.details-control {background: url('public/assets/datatables/plus.png') no-repeat center center;cursor: pointer;}
+  tr.shown td.details-control {background: url('public/assets/datatables/plus.png') no-repeat center center;}
+</style>
+<!-- Bootstrap-Select -->
+<link rel="stylesheet" href="public/bootstrap-select/bootstrap-select.min.css">
+@yield('styles')
 
-  <!--For Development Only. Not required -->
-  <script>
-  less = {
-    env: "development",
-    relativeUrls: false,
-    rootpath: "/assets/"
-  };
-  </script>
+<!--For Development Only. Not required -->
+<script>
+less = {
+  env: "development",
+  relativeUrls: false,
+  rootpath: "/assets/"
+};
+</script>
 </head>
 
 <body class="">
