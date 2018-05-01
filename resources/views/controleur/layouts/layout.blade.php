@@ -145,7 +145,7 @@
   {{-- *****************************    update Profil   ********************************************** --}}
   <div class="modal fade" id="modalUpdateProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     {{-- Form update profil --}}
-    <form method="POST" action="{{ route('updateProfil') }}">
+    <form method="POST" action="{{ route('c.updateProfil') }}">
       @csrf
       <input type="hidden" name="id" value="{{ Session::get('id_user') }}">
 

@@ -97,6 +97,7 @@ class OuvrierController extends Controller
 
 
 
+
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //add Inventaire *************************************************************
   public function addInventaire(Request $request){

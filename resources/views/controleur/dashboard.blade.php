@@ -7,8 +7,7 @@
     </div>
     <div class="col-md-7 align-self-center">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active"><a href="{{ route('controleur') }}">Dashboard</a></li>
-        <!--li class="breadcrumb-item active">Dashboard</li-->
+        <li class="breadcrumb-item"><a href="{{ route('controleur') }}">Dashboard</a></li>
       </ol>
     </div>
   </div>
@@ -18,19 +17,18 @@
 @section('content')
 
   <div class="row">
-    <div class="col-md-4">
-      {{-- *********************************** Societes ************************************* --}}
+    <div class="col-md-12">
+      {{-- *********************************** Inventaire invalide ************************************* --}}
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Sociétés <span class="badge badge-info badge-pill" title="Nombre de sociétés"> {{ $societes->count() }}</span></h5>
-          <!-- .toolbar -->
+          <h5>Inventaires non valide <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ $data->count() }}</span></h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddSociete">Ajouter une nouvelle société</a></li>
-                <li><a href="#">print</a></li>
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddInventaire">Ajouter inventaire</a></li>
+                <li><a href="#" onclick="exportInventairesFunction()">export</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -40,892 +38,601 @@
             </nav>
           </div>
         </header>
+
         <div id="collapse" class="body">
-          <table id="societesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Societe</th><th>Date de création</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($societes as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSociete" onclick='updateSocieteFunction({{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteSocieteFunction({{ $item->id_societe }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** Societes ************************************* --}}
-    </div>
-    <div class="col-md-4">
-      {{-- *********************************** Sites ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Sites <span class="badge badge-info badge-pill" title="Nombre de sites"> {{ $sites->count() }}</span></h5>
-          <!-- .toolbar -->
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddSite">Ajouter un nouveau site</a></li>
-                <li><a href="#">print</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <table id="sitesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Site</th><th>Societe</th><th>Date de creation</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($sites as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->libelle_so }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSite" onclick='updateSiteFunction({{ $item->id_site }},{{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteSiteFunction({{ $item->id_site }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** Sites ************************************* --}}
-    </div>
-    <div class="col-md-4">
-      {{-- *********************************** Zones ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Zones <span class="badge badge-info badge-pill" title="Nombre de zones"> {{ $zones->count() }}</span></h5>
-          <!-- .toolbar -->
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddZone">Ajouter une nouvelle zone</a></li>
-                <li><a href="#">print</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <table id="zonesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Zone</th><th>Site</th><th>Date de creation</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($zones as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->libelle_s }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateZone" onclick='updateZoneFunction({{ $item->id_zone }},{{ $item->id_site }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteZoneFunction({{ $item->id_zone }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** Zones ************************************* --}}
-    </div>
-  </div>
-  
-  <hr>
 
-  <div class="row">
-    <div class="col-md-7">
-
-      {{-- *********************************** familles ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Familles <span class="badge badge-info badge-pill" title="Nombre de familles"> {{ $familles->count() }}</span></h5>
-          <!-- .toolbar -->
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddFamille">Ajouter une nouvelle famille</a></li>
-                <li><a href="#">print</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <table id="famillesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Famille</th><th>Catégorie</th><th>Date de creation</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($familles as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->libelle_categorie }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }},{{ $item->id_categorie }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteFamilleFunction({{ $item->id_famille }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** familles ************************************* --}}
-    </div>
-
-    <div class="col-md-5">
-      {{-- *********************************** Categories ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Categories <span class="badge badge-info badge-pill" title="Nombre de categories"> {{ $categories->count() }}</span></h5>
-          <!-- .toolbar -->
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddCategorie">Ajouter une nouvelle categorie</a></li>
-                <li><a href="#">print</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <table id="categoriesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Categorie</th><th>date de creation</th><th>Outils</th></tr></thead>
-            <tbody>
-              @foreach($categories as $item)
-                <tr>
-                  <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }}</td>
-                  <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateCategorie" onclick='updateCategorieFunction({{ $item->id_categorie }},"{{ $item->libelle }}" );' title="Modifier" ></i>
-                    <i class="glyphicon glyphicon-trash" onclick="deleteCategorieFunction({{ $item->id_categorie }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {{-- *********************************** Categories ************************************* --}}
-    </div>
-
-  </div>
-
-@endsection
-
-@section('modals')
-
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="CRUD Familles">
-    <form id="formDeleteFamille" method="POST" action="{{ route('deleteFamille') }}">
-      @csrf
-      <input type="hidden" id="delete_id_famille" name="id_famille" />
-    </form>
-    <script>
-    function deleteFamilleFunction(id_famille, libelle){
-      var go = confirm('Vos êtes sur le point d\'effacer la famille: "'+libelle+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_famille").value = id_famille;
-        document.getElementById("formDeleteFamille").submit();
-      }
-    }
-    function updateFamilleFunction(id_famille, id_categorie, libelle){
-      document.getElementById("update_id_famille").value = id_famille;
-      document.getElementById("update_id_categorie_famille").value = id_categorie;
-      document.getElementById("update_libelle_famille").value = libelle;
-    }
-    </script>
-
-    {{-- *****************************    Add Famille    ********************************************** --}}
-    <div class="modal fade" id="modalAddFamille" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add Famille --}}
-      <form method="POST" action="{{ route('addFamille') }}">
-        @csrf
-
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Création de nouvelle famille</h4>
-            </div>
-            <div class="modal-body">
+          <div class="breadcrumb">
+            <h4>Filtre</h4>
+            <form id="formFilterInventaires" method="POST" action="{{ route('controleur') }}">
+              @csrf
               <div class="row">
-                <div class="col-md-4">
-                  {{-- Catégorie --}}
+                <div class="col-sm-4">
                   <div class="form-group has-feedback">
-                    <label>Catégorie</label>
-                    <select  class="form-control" name="id_categorie">
-                      @foreach ($categories as $item)
-                        <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="filter_id_article_site">
+                      <option value="null">Tous les articles</option>
+                      @foreach ($articles as $item)<option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>@endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-2"></div>
+                  <div class="col-sm-2"><br>
+                    <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
                   </div>
                 </div>
-                <div class="col-md-6">
-                  {{-- Famille --}}
-                  <div class="form-group has-feedback">
-                    <label>Famille</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
+              </form>
             </div>
 
+            <div class="breadcrumb">
+              Afficher/Masquer:
+              <a class="toggle-vis" data-column="1">Article</a> -
+              <a class="toggle-vis" data-column="2">Zone</a> -
+              <a class="toggle-vis" data-column="3">Date</a> -
+              <a class="toggle-vis" data-column="9">Quantité</a>
+            </div>
+
+            <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
+                  <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                  <th>Créé par</th><th>le</th>
+                  <th>Modifié par</th><th>le</th>
+                  <th>validé par</th><th>le</th>
+                  <th>Outils</th></tr>
+                </thead>
+                <tfoot>
+                  <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
+                    <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                    <th>Créé par</th><th>le</th>
+                    <th>Modifié par</th><th>le</th>
+                    <th>validé par</th><th>le</th>
+                    <th></th></tr>
+                  </tfoot>
+                  <tbody>
+                    @foreach($data as $item)
+                      <tr @if($item->validated_by == null) @endif class="bg-warning">
+                        <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
+                        <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ $item->date }}</td>
+                        <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }} </td>
+                        <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
+                        <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+                        <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
+                        <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
+                        <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                        <td align="center">
+                          <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
+                          onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
+                          {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
+                          <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {{-- *********************************** Inventaire ************************************* --}}
           </div>
         </div>
 
-      </form>
-    </div>
+      @endsection
 
-    {{-- *****************************    update Famille    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateFamille" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Famille --}}
-      <form method="POST" action="{{ route('updateFamille') }}">
-        @csrf
-        <input type="hidden" name="id_famille" id="update_id_famille">
 
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification de la famille</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Categorie --}}
-                  <div class="form-group has-feedback">
-                    <label>Catégorie</label>
-                    <select  class="form-control" name="id_categorie" id="update_id_categorie_famille">
-                      @foreach ($categories as $item)
-                        <option value="{{ $item->id_categorie }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
+      @section('modals')
+
+        {{-- ****************************************************************************************** --}}
+        {{-- ************************** Export To Excel Forms ***************************************** --}}
+        <form id="formExportInventaires" method="POST" action="{{ route('c.exportInventaires') }}" target="_blank">
+          @csrf
+          <input type="hidden" name="id_article_site" id="export_id_article">
+          <input type="hidden" name="id_zone" id="export_id_zone">
+        </form>
+
+        <script>
+        function exportInventairesFunction(){
+          let id_article_site = document.getElementById("filter_id_article_site").value;
+          let id_zone = document.getElementById("filter_id_zone").value;
+
+          document.getElementById("export_id_article").value = id_article_site;
+          document.getElementById("export_id_zone").value = id_zone;
+          document.getElementById("formExportInventaires").submit();
+        }
+        </script>
+        {{-- ************************** Export To Excel Forms ***************************************** --}}
+        {{-- ****************************************************************************************** --}}
+
+        {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+        {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Inventaires      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+        <div class="CRUD Inventaires">
+          <form id="formDeleteInventaire" method="POST" action="{{ route('c.deleteInventaire') }}">
+            @csrf
+            <input type="hidden" id="delete_id_inventaire" name="id_inventaire" />
+          </form>
+          <script>
+          function deleteInventaireFunction(id_inventaire,code,designation,date){
+            var go = confirm('Vos êtes sur le point d\'effacer l\'inventaire: "'+code+' - '+designation+' '+date+'".\n voulez-vous continuer?');
+            if(go){
+              document.getElementById("delete_id_inventaire").value = id_inventaire;
+              document.getElementById("formDeleteInventaire").submit();
+            }
+          }
+
+          function updateInventaireFuntion(id_inventaire,id_article_site, id_zone, date, nombre_palettes, nombre_pieces, longueur, largeur, hauteur){
+
+            document.getElementById("update_id_inventaire").value = id_inventaire;
+            document.getElementById("update_id_article_site").value = id_article_site;
+            $('.show-tick').selectpicker('refresh');
+            document.getElementById("update_date").value = date;
+
+            document.getElementById("update_nombre_palettes").value = nombre_palettes;
+            document.getElementById("update_nombre_pieces").value = nombre_pieces;
+
+            document.getElementById("update_longueur").value = longueur;
+            document.getElementById("update_largeur").value = largeur;
+            document.getElementById("update_hauteur").value = hauteur;
+            $('.show-tick').selectpicker('refresh');
+            update_calculateTotal();
+          }
+
+          function update_calculateTotal(){
+            document.getElementById("update_largeur").readOnly = false;
+            document.getElementById("update_longueur").readOnly = false;
+            document.getElementById("update_hauteur").readOnly = false;
+            //get unite
+            var articles = [];
+            @foreach ($articles as $item)
+            var article = {
+              id_article_site: {{ $item->id_article_site }},
+              id_unite: {{ $item->id_unite }},
+              libelle_unite: "{{ $item->libelle_unite }}"
+            };
+            articles.push(article);
+            @endforeach
+            //--------------------
+            var selected_id_article_site = document.getElementById("update_id_article_site").value;
+
+            //var id_unite = 0;
+            //var libelle_unite = " ";
+            //write unite
+            for(var i=0; i<articles.length;i++){
+              if(selected_id_article_site == articles[i].id_article_site){
+
+                var id_unite = articles[i].id_unite;
+                var libelle_unite = articles[i].libelle_unite;
+
+                var palettes = document.getElementById("update_nombre_palettes").value;
+                var pieces = document.getElementById("update_nombre_pieces").value;
+
+                var largeur = document.getElementById("update_largeur").value;
+                var longueur = document.getElementById("update_longueur").value;
+                var hauteur = document.getElementById("update_hauteur").value;
+
+                if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
+                  document.getElementById("update_largeur").value = 1;  document.getElementById("update_largeur").readOnly = true;
+                  document.getElementById("update_longueur").value = 1; document.getElementById("update_longueur").readOnly = true;
+                  document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+                }
+                else if( libelle_unite=="M2"){
+                  document.getElementById("update_largeur").readOnly = false;
+                  document.getElementById("update_longueur").readOnly = false;
+                  document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+                }
+                else if( libelle_unite=="M3"){
+                  document.getElementById("update_largeur").readOnly = false;
+                  document.getElementById("update_longueur").readOnly = false;
+                  document.getElementById("update_hauteur").readOnly = false;
+                }
+                var total = 0;
+                var dimm = largeur * longueur * hauteur;
+                if(palettes == 0){
+                  total = pieces * dimm;
+                }else{
+                  total = pieces * palettes * dimm;
+                }
+                document.getElementById("update_total").value = total + " "+articles[i].libelle_unite;
+                break;
+              }
+            }
+            //document.getElementById("total").value = total;
+          }
+
+          </script>
+
+          {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Update Inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+          <div class="modal fade" id="modalUpdateInventaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {{-- Form upload File --}}
+            <form method="POST" action="{{ route('c.updateInventaire') }}">
+              @csrf
+              <input type="hidden" name="id_inventaire" id="update_id_inventaire">
+
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modification et validation de l'inventaire</h4>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  {{-- Famille --}}
-                  <div class="form-group has-feedback">
-                    <label>Famille</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_famille" required>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-sm-4 col-sm-offset-2">
+                        {{-- Article --}}
+                        <div class="form-group has-feedback">
+                          <label>Article</label>
+                          <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site">
+                            @foreach ($articles as $item)
+                              <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                            @endforeach
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        {{-- Date --}}
+                        <div class="form-group has-feedback">
+                          <label>Date</label>
+                          <input type="date" class="form-control" placeholder="Date" name="date" id="update_date" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3  col-sm-offset-3">
+                        {{-- Nombre de palettes --}}
+                        <div class="form-group has-feedback">
+                          <label>Nombre de palettes</label>
+                          <input type="number" class="form-control" placeholder="palettes" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_nombre_palettes"  name="nombre_palettes" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        {{-- Nombre de pieces --}}
+                        <div class="form-group has-feedback">
+                          <label>Nombre de pieces</label>
+                          <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();"  id="update_nombre_pieces"  name="nombre_pieces" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                        {{-- Largeur --}}
+                        <div class="form-group has-feedback">
+                          <label>Largeur</label>
+                          <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_largeur"  name="largeur" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        {{-- Longueur  --}}
+                        <div class="form-group has-feedback">
+                          <label>Longueur</label>
+                          <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_longueur"  name="longueur" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        {{-- Hauteur --}}
+                        <div class="form-group has-feedback">
+                          <label>Hauteur</label>
+                          <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_hauteur"  name="hauteur" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        {{-- Total --}}
+                        <div class="form-group has-feedback">
+                          <label>Total</label>
+                          <input type="text" class="form-control" value=""  id="update_total"  name="total" readonly>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
-
-          </div>
-        </div>
-
-      </form>
-    </div>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="CRUD Categories">
-    <form id="formDeleteCategorie" method="POST" action="{{ route('deleteCategorie') }}">
-      @csrf
-      <input type="hidden" id="delete_id_categorie" name="id_categorie" />
-    </form>
-    <script>
-    function deleteCategorieFunction(id_categorie, libelle){
-      var go = confirm('Vos êtes sur le point d\'effacer la categorie: "'+libelle+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_categorie").value = id_categorie;
-        document.getElementById("formDeleteCategorie").submit();
-      }
-    }
-    function updateCategorieFunction(id_categorie, id_famille, libelle){
-      document.getElementById("update_id_categorie").value = id_categorie;
-      document.getElementById("update_id_famille_categorie").value = id_famille;
-      document.getElementById("update_libelle_categorie").value = libelle;
-    }
-    </script>
-
-    {{-- *****************************    Add Categorie    ********************************************** --}}
-    <div class="modal fade" id="modalAddCategorie" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add User --}}
-      <form method="POST" action="{{ route('addCategorie') }}">
-        @csrf
-
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Création d'une nouvelle categorie</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-6">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Catégorie</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-
-          </div>
-        </div>
-
-      </form>
-    </div>
-
-    {{-- *****************************    update Categorie    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateCategorie" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Categorie --}}
-      <form method="POST" action="{{ route('updateCategorie') }}">
-        @csrf
-        <input type="hidden" name="id_categorie" id="update_id_categorie">
-
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification de la famille</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-6">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Nom</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_categorie" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
-
-          </div>
-        </div>
-
-      </form>
-    </div>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="CRUD Societes">
-    <form id="formDeleteSociete" method="POST" action="{{ route('deleteSociete') }}">
-      @csrf
-      <input type="hidden" id="delete_id_societe" name="id_societe" />
-    </form>
-    <script>
-    function deleteSocieteFunction(id_societe, libelle){
-      var go = confirm('Vos êtes sur le point d\'effacer la société: "'+libelle+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_societe").value = id_societe;
-        document.getElementById("formDeleteSociete").submit();
-      }
-    }
-    function updateSocieteFunction(id_societe, libelle){
-      document.getElementById("update_id_societe").value = id_societe;
-      document.getElementById("update_libelle_societe").value = libelle;
-    }
-    </script>
-
-    {{-- *****************************    Add Societe    ********************************************** --}}
-    <div class="modal fade" id="modalAddSociete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add Societe --}}
-      <form method="POST" action="{{ route('addSociete') }}">
-        @csrf
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Création d'une nouvelle société</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-7">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Société</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    {{-- *****************************    update Societe    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateSociete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Categorie --}}
-      <form method="POST" action="{{ route('updateSociete') }}">
-        @csrf
-        <input type="hidden" name="id_societe" id="update_id_societe">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification de la société</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-7">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Société</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_societe" required>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Modifier et valider</button>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
-
+            </form>
           </div>
-        </div>
 
-      </form>
-    </div>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+          {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Add Inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+          <div class="modal fade lg" id="modalAddInventaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {{-- Form Add inventaire --}}
+            <form id="formAddInventaire" method="POST" action="{{ route('c.addInventaire') }}">
+              @csrf
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="CRUD Sites">
-    <form id="formDeleteSite" method="POST" action="{{ route('deleteSite') }}">
-      @csrf
-      <input type="hidden" id="delete_id_site" name="id_site" />
-    </form>
-    <script>
-    function deleteSiteFunction(id_site, libelle){
-      var go = confirm('Vos êtes sur le point d\'effacer le site: "'+libelle+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_site").value = id_site;
-        document.getElementById("formDeleteSite").submit();
-      }
-    }
-    function updateSiteFunction(id_site,id_societe, libelle){
-      document.getElementById("update_id_site").value = id_site;
-      document.getElementById("update_id_societe_site").value = id_societe;
-      document.getElementById("update_libelle_site").value = libelle;
-    }
-    </script>
-
-    {{-- *****************************    Add Site    ********************************************** --}}
-    <div class="modal fade" id="modalAddSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add Site --}}
-      <form method="POST" action="{{ route('addSite') }}">
-        @csrf
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Création d'un nouveau site</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Societe --}}
-                  <div class="form-group has-feedback">
-                    <label>Société</label>
-                    <select  class="form-control" name="id_societe">
-                      @foreach ($societes as $item)
-                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Nouvel inventaire</h4>
                   </div>
-                </div>
-                <div class="col-md-8">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Site</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
+                  <div class="modal-body">
+
+                    <div class="row">
+                      <div class="col-md-12">
+
+                        <div class="row">
+                          <div class="col-md-4 col-lg-offset-2">
+                            {{-- Article --}}
+                            <div class="form-group has-feedback">
+                              <label>Article</label>
+                              <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
+                                <option value="null">Choisissez un article</option>
+                                @foreach ($articles as $item)
+                                  <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            {{-- Date --}}
+                            <div class="form-group has-feedback">
+                              <label>Date</label>
+                              <input type="date" class="form-control" placeholder="Date" name="date" value="{{ old('date') }}"  id="date" required>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3">
+                            {{-- Nombre de palettes --}}
+                            <div class="form-group has-feedback">
+                              <label>Palettes</label>
+                              <input disabled type="number" class="form-control" placeholder="palettes" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_palettes')==null? 1 : old('nombre_palettes') }}"  id="nombre_palettes"  name="nombre_palettes" required>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            {{-- Nombre de pieces --}}
+                            <div class="form-group has-feedback">
+                              <label>Pieces</label>
+                              <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('nombre_pieces')==null? 0 : old('nombre_pieces') }}"  id="nombre_pieces"  name="nombre_pieces" required>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            {{-- Largeur --}}
+                            <div class="form-group has-feedback">
+                              <label>Largeur</label>
+                              <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('largeur')==null? 0 : old('largeur') }}" min="1" id="largeur"  name="largeur" required>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            {{-- Longueur  --}}
+                            <div class="form-group has-feedback">
+                              <label>Longueur</label>
+                              <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('longueur')==null? 0 : old('longueur') }}" min="1" id="longueur"  name="longueur" required>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            {{-- Hauteur --}}
+                            <div class="form-group has-feedback">
+                              <label>Hauteur</label>
+                              <input disabled type="number" class="form-control" placeholder="pieces" onkeyup="calculateTotal();" onclick="calculateTotal();" value="{{ old('hauteur')==null? 0 : old('hauteur') }}" min="1" id="hauteur"  name="hauteur" required>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            {{-- Total --}}
+                            <div class="form-group has-feedback">
+                              <label>Total</label>
+                              <input type="text" class="form-control" value=""  id="total"  name="total" readonly>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    {{-- *****************************    update Site    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Site --}}
-      <form method="POST" action="{{ route('updateSite') }}">
-        @csrf
-        <input type="hidden" name="id_site" id="update_id_site">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification du site</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Societe --}}
-                  <div class="form-group has-feedback">
-                    <label>Société</label>
-                    <select  class="form-control" name="id_societe" id="update_id_societe_site">
-                      @foreach ($societes as $item)
-                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Site</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_site" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
-
+            </form>
           </div>
         </div>
 
-      </form>
-    </div>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+      @endsection
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="CRUD Zones">
-    <form id="formDeleteZone" method="POST" action="{{ route('deleteZone') }}">
-      @csrf
-      <input type="hidden" id="delete_id_zone" name="id_zone" />
-    </form>
-    <script>
-    function deleteZoneFunction(id_zone, libelle){
-      var go = confirm('Vos êtes sur le point d\'effacer la zone: "'+libelle+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_zone").value = id_zone;
-        document.getElementById("formDeleteZone").submit();
-      }
-    }
-    function updateZoneFunction(id_zone,id_site, libelle){
-      document.getElementById("update_id_zone").value = id_zone;
-      document.getElementById("update_id_site_zone").value = id_site;
-      document.getElementById("update_libelle_zone").value = libelle;
-    }
-    </script>
+      @section('styles')
+        <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.semanticui.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.foundation.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('public/assets/datatables/Buttons/css/buttons.bootstrap.min.css') }}">
+      @endsection
 
-    {{-- *****************************    Add Zone    ********************************************** --}}
-    <div class="modal fade" id="modalAddZone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form add Zone --}}
-      <form method="POST" action="{{ route('addZone') }}">
-        @csrf
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Création d'une nouvelle zone</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Site --}}
-                  <div class="form-group has-feedback">
-                    <label>Site</label>
-                    <select  class="form-control" name="id_site">
-                      @foreach ($sites as $item)
-                        <option value="{{ $item->id_site }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Zone</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+      @section('scripts')
+        <script src="{{ asset('public/assets/datatables/datatables.min.js') }}"></script>
+        <script src="{{ asset('public/assets/datatables/dataTables/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js') }}"></script>
+        <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js') }}"></script>
+        <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.semanticui.min.js') }}"></script>
 
-    {{-- *****************************    update Zone    ************************************************* --}}
-    <div class="modal fade" id="modalUpdateZone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      {{-- Form update Zone --}}
-      <form method="POST" action="{{ route('updateZone') }}">
-        @csrf
-        <input type="hidden" name="id_zone" id="update_id_zone">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Modification de la zone</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  {{-- Site --}}
-                  <div class="form-group has-feedback">
-                    <label>Site</label>
-                    <select  class="form-control" name="id_site" id="update_id_site_zone">
-                      @foreach ($sites as $item)
-                        <option value="{{ $item->id_site }}">{{ $item->libelle }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  {{-- Libelle --}}
-                  <div class="form-group has-feedback">
-                    <label>Zone</label>
-                    <input type="text" class="form-control" placeholder="Libelle" name="libelle" id="update_libelle_zone" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
+        <script>
+        $('#id_article_site').on('changed.bs.select', function (e) {
+          calculateTotal();
+          document.getElementById("nombre_palettes").disabled = false;
+          document.getElementById("nombre_pieces").disabled = false;
+          document.getElementById("largeur").disabled = false;
+          document.getElementById("longueur").disabled = false;
+          document.getElementById("hauteur").disabled = false;
+        });
 
-          </div>
-        </div>
+        $('#update_id_article_site').on('changed.bs.select', function (e) {
+          update_calculateTotal();
+        });
 
-      </form>
-    </div>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+        function calculateTotal(){
+          document.getElementById("largeur").readOnly = false;
+          document.getElementById("longueur").readOnly = false;
+          document.getElementById("hauteur").readOnly = false;
+          //get unite
+          var articles = [];
+          @foreach ($articles as $item)
+          var article = {
+            id_article_site: {{ $item->id_article_site }},
+            id_unite: {{ $item->id_unite }},
+            libelle_unite: "{{ $item->libelle_unite }}"
+          };
+          articles.push(article);
+          @endforeach
+          //--------------------
+          var selected_id_article_site = document.getElementById("id_article_site").value;
 
+          //var id_unite = 0;
+          //var libelle_unite = " ";
+          //write unite
+          for(var i=0; i<articles.length;i++){
+            if(selected_id_article_site == articles[i].id_article_site){
 
-@endsection
+              var id_unite = articles[i].id_unite;
+              var libelle_unite = articles[i].libelle_unite;
 
-@section('styles')
-  <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
-  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+              var palettes = document.getElementById("nombre_palettes").value;
+              var pieces = document.getElementById("nombre_pieces").value;
 
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+              var largeur = document.getElementById("largeur").value;
+              var longueur = document.getElementById("longueur").value;
+              var hauteur = document.getElementById("hauteur").value;
 
-  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
-@endsection
+              if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
+                document.getElementById("largeur").value = 1;  document.getElementById("largeur").readOnly = true;
+                document.getElementById("longueur").value = 1; document.getElementById("longueur").readOnly = true;
+                document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+              }
+              else if( libelle_unite=="M2"){
+                document.getElementById("largeur").readOnly = false;
+                document.getElementById("longueur").readOnly = false;
+                document.getElementById("hauteur").value = 1;  document.getElementById("hauteur").readOnly = true;
+              }
+              else if( libelle_unite=="M3"){
+                document.getElementById("largeur").readOnly = false;
+                document.getElementById("longueur").readOnly = false;
+                document.getElementById("hauteur").readOnly = false;
+              }
+              var total = 0;
+              var dimm = largeur * longueur * hauteur;
+              if(palettes == 0){
+                total = pieces * dimm;
+              }else{
+                total = pieces * palettes * dimm;
+              }
+              document.getElementById("total").value = total + " "+articles[i].libelle_unite;
+              break;
+            }
+          }
+          //document.getElementById("total").value = total;
+        }
 
-@section('scripts')
-  <script src="public/assets/datatables/datatables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
-  <!-- datatables
-  <script src="js/lib/datatables/datatables.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-  <script src="js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-  <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-  <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-  <script src="js/lib/datatables/datatables-init.js"></script>
--->
+        //extra info on every table row
+        function format ( d ) {
+          var row1 = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">';
+          var row2 = '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>';
+          var row3 = '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>';
+          if(d.modifie_par!=null){
+            row4 = '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>';
+          }else {
+            row4 = '';
+          }
+          if(d.valide_par!=null){
+            row4 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
+          }else {
+            row4 = '';
+          }
+          var row5 = '</table>';
+          var data = row1+row2+row3+row4+row5;
+          return data;
+        }
 
-<!-- scripit init
-<script src="js/lib/sweetalert/sweetalert.init.js"></script> -->
+        $(document).ready(function () {
+          $('#inventairesTable tfoot th').each(function () {
+            var title = $(this).text();
+            if (title != "") {
+              $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
+            }
+          });
 
-<script>
+          var table = $('#inventairesTable').DataTable({
+            dom: '<lf<Bt>ip>',
+            lengthMenu: [
+              [ 10, 25, 50, -1 ],
+              [ '10', '25', '50', 'Tout' ]
+            ],
+            searching: true,
+            paging: true,
+            //"autoWidth": true,
+            info: false,
+            stateSave: false,
+            columnDefs: [
+              { targets: 00, width: "1%", type: "string", visible: true, searchable: true, orderable: true},  //article
+              { targets: 01, width: "", type: "string", visible: true, searchable: true, orderable: true},    //article
+              { targets: 02, width: "", type: "string", visible: true, searchable: true, orderable: true},    //Zone
+              { targets: 03, width: "", type: "string", visible: true, searchable: true, orderable: true},    //date
+              { targets: 04, width: "", type: "string", visible: false, searchable: true, orderable: true},    //L
+              { targets: 05, width: "", type: "string", visible: false, searchable: false, orderable: false},  //l
+              { targets: 06, width: "", type: "string", visible: false, searchable: false, orderable: false},  //h
+              { targets: 07, width: "", type: "string", visible: false, searchable: false, orderable: false},  //palette
+              { targets: 08, width: "", type: "string", visible: false, searchable: false, orderable: false},  //pieces
+              { targets: 09, width: "", type: "string", visible: true, searchable: false, orderable: false},  //Quantite
+              { targets: 10, width: "", type: "string", visible: false, searchable: false, orderable: false},  //cree
+              { targets: 11, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+              { targets: 12, width: "", type: "string", visible: false, searchable: false, orderable: false},  //modifie
+              { targets: 13, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+              { targets: 14, width: "", type: "string", visible: false, searchable: false, orderable: false},  //valide
+              { targets: 15, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
+              { targets: 16, width: "1%", type: "string", visible: true, searchable: false, orderable: false},  //outils
+            ],
+            //  ajax: "",
+            columns: [
+              {"className":'details-control',"orderable":false,"defaultContent": ''},
+              { "data": "article" },
+              { "data": "zone" },
+              { "data": "date" },
+              { "data": "longueur" },
+              { "data": "largeur" },
+              { "data": "hauteur" },
+              { "data": "nombre_palettes" },
+              { "data": "nombre_pieces" },
+              { "data": "quantite" },
+              { "data": "cree_par" }, { "data": "cree_le" },
+              { "data": "modifie_par" }, { "data": "modifie_le" },
+              { "data": "valide_par" }, { "data": "valide_le" },
+              { "data": "outils" }
+            ],
+          });
 
-$('#usersTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true},
-    { targets: 0, visible: true},
-    { targets: 1, visible: true},
-    { targets: 2, visible: true},
-  ],
-});
+          $('a.toggle-vis').on('click', function (e) {
+            e.preventDefault();
+            var column = table.column($(this).attr('data-column'));
+            column.visible(!column.visible());
+          });
 
-$('#famillesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true},
-    { targets: 0, visible: true},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+          table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+              if (that.search() !== this.value) {
+                that.search(this.value).draw();
+              }
+            });
+          });
 
-$('#categoriesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+          // Add event listener for opening and closing details
+          $('#inventairesTable tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
 
-$('#societesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+            if ( row.child.isShown() ) {
+              // This row is already open - close it
+              row.child.hide();
+              tr.removeClass('shown');
+            }
+            else {
+              // Open this row
+              row.child( format(row.data()) ).show();
+              tr.addClass('shown');
+            }
+          } );
 
-$('#sitesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
-
-$('#zonesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
-
-$(document).ready(function() {
-  $('#familleTable').DataTable({
-    "order": [[ 0, "asc" ]],
-    "language": {
-      "lengthMenu": "Display _MENU_ records per page",
-      "zeroRecords": "Nothing found - sorry",
-      "info": "Showing page _PAGE_ of _PAGES_",
-      "infoEmpty": "No records available",
-      "infoFiltered": "(filtered from _MAX_ total records)"
-    }
-  } );
-} );
+        });
 
 
+      </script>
 
-</script>
 
-
-@endsection
+    @endsection

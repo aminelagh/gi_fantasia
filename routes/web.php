@@ -56,7 +56,7 @@ Route::group(['middleware' => 'admin'], function () {
   Route::get('/admin', 'AdminController@home')->name('admin');
   //Route::get('/more', 'AdminController@more')->name('more');
 
-  //Unite ----------------------------------------------------------------------
+  //articles -------------------------------------------------------------------
   Route::get('/articles', 'AdminArticlesController@articles')->name('articles');
   Route::post('/articles', 'AdminArticlesController@articles')->name('articles');
   Route::post('/addArticle', 'AdminArticlesController@addArticle')->name('addArticle');
@@ -118,8 +118,12 @@ Route::group(['middleware' => 'admin'], function () {
 Route::group(['middleware' => 'controleur','prefix' => 'c'], function () {
   Route::get('/', 'ControleurController@home')->name('controleur');
 
+  Route::post('/updateProfil', 'ControleurController@updateProfil')->name('c.updateProfil');
 
   //Inventaire -----------------------------------------------------------------
+  Route::get('/inventairesValide', 'ControleurController@inventairesValide')->name('c.inventairesValide');
+  Route::post('/inventairesValide', 'ControleurController@inventairesValide')->name('c.inventairesValide');
+
   Route::get('/inventaires', 'ControleurController@inventaires')->name('c.inventaires');
   Route::post('/inventaires', 'ControleurController@inventaires')->name('c.inventaires');
   Route::post('/addInventaire', 'ControleurController@addInventaire')->name('c.addInventaire');
@@ -128,14 +132,14 @@ Route::group(['middleware' => 'controleur','prefix' => 'c'], function () {
   Route::post('/exportInventaires', 'ControleurController@exportInventaires')->name('c.exportInventaires');
   Route::post('/addInventaires', 'ControleurController@addInventaires')->name('c.addInventaires');
 
-  //Unite ----------------------------------------------------------------------
-  Route::get('/articles', 'ControleurController@articles')->name('c.articles');
-  Route::post('/articles', 'AdminArticlesController@articles')->name('c.articles');
-  Route::post('/addArticle', 'AdminArticlesController@addArticle')->name('c.addArticle');
-  Route::post('/updateArticle', 'AdminArticlesController@updateArticle')->name('c.updateArticle');
-  Route::post('/deleteArticle', 'AdminArticlesController@deleteArticle')->name('c.deleteArticle');
-  Route::post('/exportArticles', 'AdminArticlesController@exportArticles')->name('c.exportArticles');
-  Route::post('/addArticles', 'AdminArticlesController@addArticles')->name('c.addArticles');
+  //Articles -------------------------------------------------------------------
+  Route::get('/articles', 'ControleurArticlesController@articles')->name('c.articles');
+  Route::post('/articles', 'ControleurArticlesController@articles')->name('c.articles');
+  Route::post('/addArticle', 'ControleurArticlesController@addArticle')->name('c.addArticle');
+  Route::post('/updateArticle', 'ControleurArticlesController@updateArticle')->name('c.updateArticle');
+  Route::post('/deleteArticle', 'ControleurArticlesController@deleteArticle')->name('c.deleteArticle');
+  Route::post('/exportArticles', 'ControleurArticlesController@exportArticles')->name('c.exportArticles');
+  Route::post('/addArticles', 'ControleurArticlesController@addArticles')->name('c.addArticles');
 
   //Familles -------------------------------------------------------------------
   Route::post('/addFamille', 'AdminFamillesController@addFamille')->name('c.addFamille');

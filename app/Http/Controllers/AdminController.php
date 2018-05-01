@@ -69,14 +69,6 @@ class AdminController extends Controller
   }
 
 
-
-
-
-
-
-
-
-
   //updating Session variable after updating the current user's Profil
   public static function updateSession(){
     try{
