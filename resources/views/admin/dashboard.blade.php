@@ -47,7 +47,7 @@
               @foreach($societes as $item)
                 <tr>
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSociete" onclick='updateSocieteFunction({{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteSocieteFunction({{ $item->id_societe }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -90,7 +90,7 @@
                 <tr>
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_so }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSite" onclick='updateSiteFunction({{ $item->id_site }},{{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteSiteFunction({{ $item->id_site }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -133,7 +133,7 @@
                 <tr>
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_s }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateZone" onclick='updateZoneFunction({{ $item->id_zone }},{{ $item->id_site }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteZoneFunction({{ $item->id_zone }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -182,9 +182,10 @@
                   <td>{{ $item->name }}</td>
                   <td>{{ $item->nom }} {{ $item->prenom }}</td>
                   <td>{{ $item->login }}</td>
-                  <td>{{ $item->last_login }}</td>
+                  <td>{{ formatDateTime($item->last_login) }}</td>
                   <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUser" onclick='updateUserFunction({{ $item->id_user }}, "{{ $item->nom }}", "{{ $item->prenom }}","{{ $item->login }}" );' title="Modifier" ></i>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUser"
+                    onclick='updateUserFunction({{ $item->id_user }}, "{{ $item->nom }}", "{{ $item->prenom }}","{{ $item->login }}","{{ $item->slug }}", {{ $item->id_societe == null ? 0 : $item->id_societe }},{{ $item->id_zone == null ? 0: $item->id_zone }} );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteUserFunction({{ $item->id_user }},'{{ $item->nom }}','{{ $item->prenom }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
                 </tr>
@@ -350,23 +351,45 @@
         document.getElementById("formDeleteUser").submit();
       }
     }
-    function updateUserFunction(id_user, nom, prenom, login){
+    function updateUserFunction(id_user, nom, prenom, login, role, id_societe, id_zone){
+      if(role == "admin"){
+        document.getElementById("update_form_societe").style.visibility = "hidden";
+        document.getElementById("update_form_zone").style.visibility = "hidden";
+        document.getElementById("update_id_societe_user").value = 0;
+        document.getElementById("update_id_zone_user").value = 0;
+      }
+      if(role == "ouvrier"){
+        document.getElementById("update_form_societe").style.visibility = "hidden";
+        document.getElementById("update_form_zone").style.visibility = "visible";
+        document.getElementById("update_id_societe_user").value = 0;
+        document.getElementById("update_id_zone_user").value = id_zone;
+      }
+      else if(role == "controleur"){
+        document.getElementById("update_form_societe").style.visibility = "visible";
+        document.getElementById("update_form_zone").style.visibility = "hidden";
+        document.getElementById("update_id_societe_user").value = id_societe;
+        document.getElementById("update_id_zone_user").value = 0;
+      }
       document.getElementById("update_id_user").value = id_user;
       document.getElementById("update_nom_user").value = nom;
       document.getElementById("update_prenom_user").value = prenom;
       document.getElementById("update_login_user").value = login;
-      //document.getElementById("update_password_equipement").value = password;
+
     }
 
-    function loadZones(){
+    function onSelectedRoleUser(){
       var role = document.getElementById("id_role").value;
-      if(role == "ouvrier"){
-        document.getElementById("id_zone").required = true;
-        document.getElementById("id_zone").disabled = false;
+      if(role == "admin"){
+        document.getElementById("form_societe").style.visibility = "hidden";
+        document.getElementById("form_zone").style.visibility = "hidden";
       }
-      else {
-        document.getElementById("id_zone").required = false;
-        document.getElementById("id_zone").disabled = true;
+      if(role == "ouvrier"){
+        document.getElementById("form_societe").style.visibility = "hidden";
+        document.getElementById("form_zone").style.visibility = "visible";
+      }
+      else if(role == "controleur"){
+        document.getElementById("form_societe").style.visibility = "visible";
+        document.getElementById("form_zone").style.visibility = "hidden";
       }
     }
 
@@ -390,7 +413,7 @@
                   {{-- Role --}}
                   <div class="form-group has-feedback">
                     <label>Role</label>
-                    <select  class="form-control" name="slug" onchange="loadZones();" id="id_role">
+                    <select  class="form-control" name="slug" onchange="onSelectedRoleUser();" id="id_role">
                       @foreach ($roles as $item)
                         <option value="{{ $item->slug }}">{{ $item->name }}</option>
                       @endforeach
@@ -429,13 +452,24 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-5" id="form_zone" style="visibility: hidden">
                   {{-- Zone --}}
                   <div class="form-group has-feedback">
-                    <label>Role</label>
-                    <select  class="form-control" name="id_zone" id="id_zone" disabled>
+                    <label>Zone</label>
+                    <select  class="form-control" name="id_zone" id="id_zone">
                       @foreach ($zones as $item)
                         <option value="{{ $item->id_zone }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-5" id="form_societe" style="visibility: hidden">
+                  {{-- Société --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <select  class="form-control" name="id_societe" id="id_societe">
+                      @foreach ($societes as $item)
+                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -501,6 +535,30 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-5" id="update_form_zone" style="visibility: hidden">
+                  {{-- Zone --}}
+                  <div class="form-group has-feedback">
+                    <label>Zone</label>
+                    <select  class="form-control" name="id_zone" id="update_id_zone_user">
+                      @foreach ($zones as $item)
+                        <option value="{{ $item->id_zone }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-5" id="update_form_societe" style="visibility: hidden">
+                  {{-- Société --}}
+                  <div class="form-group has-feedback">
+                    <label>Société</label>
+                    <select  class="form-control" name="id_societe" id="update_id_societe_user">
+                      @foreach ($societes as $item)
+                        <option value="{{ $item->id_societe }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="modal-footer">
@@ -515,9 +573,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Users       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Familles">
     <form id="formDeleteFamille" method="POST" action="{{ route('deleteFamille') }}">
@@ -631,9 +687,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Familles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Categories">
     <form id="formDeleteCategorie" method="POST" action="{{ route('deleteCategorie') }}">
@@ -725,9 +779,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Categories       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Societes">
     <form id="formDeleteSociete" method="POST" action="{{ route('deleteSociete') }}">
@@ -814,9 +866,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Societes      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Sites">
     <form id="formDeleteSite" method="POST" action="{{ route('deleteSite') }}">
@@ -926,9 +976,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Zones">
     <form id="formDeleteZone" method="POST" action="{{ route('deleteZone') }}">
@@ -1038,9 +1086,7 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Zones      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Unites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Unites">
     <form id="formDeleteUnite" method="POST" action="{{ route('deleteUnite') }}">
@@ -1127,7 +1173,6 @@
     </div>
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Unites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
 @endsection
 
@@ -1137,11 +1182,9 @@
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-
   <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
 @endsection
 

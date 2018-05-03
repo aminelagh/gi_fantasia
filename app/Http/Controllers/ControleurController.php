@@ -19,17 +19,59 @@ use \App\Models\Article;
 use \App\Models\Unite;
 use \App\Models\Article_site;
 use \App\Models\Inventaire;
+use \App\Models\Session as Sessions;
 use \DB;
 
 class ControleurController extends Controller
 {
   //liste inventaires pas encore valide
   public function home(Request $request){
-    $where_id_zone = "";
-    $where_id_article = "";
+
+    if($request->has('submitValidate')){
+      dd($request->all());
+      foreach($request->valide as $id_inventaire){
+        dump($id_inventaire);
+        dump(Inventaire::find($id_inventaire));
+      }
+
+    }
+
+    $whereSession = "";
+    $whereSite = "";
+    $whereZone = "";
+    $whereArticle = "";
     if($request->has('submitFiltre')){
-      if($request->id_zone != 'null' ) {$where_id_zone = " and z.id_zone = ".$request->id_zone." ";}
-      if($request->id_article_site != 'null' ) {$where_id_article = " and i.id_article = ".Article_site::find($request->id_article_site)->id_article." ";}
+      if($request->id_session != 'null')       {$whereSession = " AND i.id_session = ".$request->id_session." ";}
+      if($request->id_site != 'null')          {$whereSite = " AND s.id_site = ".$request->id_site." ";}
+      if($request->id_zone != 'null')          {$whereZone = " AND z.id_zone = ".$request->id_zone." ";}
+      if($request->id_article_site != 'null')  {$whereArticle = " AND i.id_article = ".Article_site::find($request->id_article_site)->id_article." ";}
+
+      //inventaires query
+      $data = collect(DB::select(
+        "SELECT i.id_inventaire, i.id_article, i.id_zone, i.nombre_palettes, i.nombre_pieces,i.longueur, i.largeur, i.hauteur, i.date,
+        i.created_at, i.created_by, i.updated_at, i.updated_by, i.validated_at, i.validated_by,
+        a.code, a.designation, a.id_unite,
+        ars.id_article_site,
+        u.libelle as libelle_unite,
+        z.libelle as libelle_zone,
+        us1.nom as created_by_nom, us1.prenom as created_by_prenom,
+        us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
+        us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
+        FROM inventaires i
+        LEFT JOIN articles a ON i.id_article=a.id_article
+        LEFT JOIN article_site ars ON ars.id_article=i.id_article AND ars.id_site=(select id_site from zones where zones.id_zone=i.id_zone)
+        LEFT JOIN sites s ON s.id_site=ars.id_site
+        LEFT JOIN zones z ON i.id_zone=z.id_zone
+        LEFT JOIN unites u ON u.id_unite=a.id_unite
+        LEFT JOIN users us1 ON us1.id=i.created_by
+        LEFT JOIN users us2 ON us2.id=i.updated_by
+        LEFT JOIN users us3 ON us3.id=i.validated_by
+        WHERE i.id_zone in (SELECT id_zone FROM zones WHERE id_site in (SELECT id_site FROM sites WHERE id_societe=".Session::get('id_societe')."))
+        " . $whereSession . " " . $whereSite . " " . $whereZone . " " . $whereArticle . " ;"
+      ));
+    }
+    else{
+      $data = null;
     }
 
     $articles = collect(DB::select(
@@ -39,43 +81,30 @@ class ControleurController extends Controller
       s.libelle as libelle_site,
       so.libelle as libelle_societe,
       f.libelle as libelle_famille
-      FROM article_site sa LEFT JOIN articles a on a.id_article=sa.id_article
+      FROM article_site sa
+      LEFT JOIN articles a on a.id_article=sa.id_article
       LEFT JOIN sites s on s.id_site=sa.id_site
       LEFT JOIN societes so on so.id_societe=s.id_societe
       LEFT JOIN unites u on u.id_unite=a.id_unite
       LEFT JOIN familles f on f.id_famille=a.id_famille
-      WHERE sa.id_site = ".Session::get('id_site')."
+      WHERE so.id_societe = ".Session::get('id_societe')."
       ORDER BY a.code asc;"
     ));
+    $sessions = Sessions::all();
+    $sites = Site::where('id_societe',Session('id_societe'))->get();
+    $zones = Zone::all();
 
-    $title = "Inventaires valide";
+    $title = "Inventaires";
 
-    //inventaires query
-    $data = collect(DB::select(
-      "SELECT i.id_inventaire, i.id_article, i.id_zone, i.nombre_palettes, i.nombre_pieces,i.longueur, i.largeur, i.hauteur, i.date,
-      i.created_at, i.created_by, i.updated_at, i.updated_by, i.validated_at, i.validated_by,
-      a.code, a.designation, a.id_unite,
-      ars.id_article_site,
-      u.libelle as libelle_unite,
-      z.libelle as libelle_zone,
-      us1.nom as created_by_nom, us1.prenom as created_by_prenom,
-      us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
-      us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
-      FROM inventaires i LEFT JOIN articles a ON i.id_article=a.id_article
-      LEFT JOIN article_site ars ON ars.id_article=i.id_article AND ars.id_site=(select id_site from zones where zones.id_zone=i.id_zone)
-      LEFT JOIN zones z ON i.id_zone=z.id_zone
-      LEFT JOIN unites u ON u.id_unite=a.id_unite
-      LEFT JOIN users us1 ON us1.id=i.created_by
-      LEFT JOIN users us2 ON us2.id=i.updated_by
-      LEFT JOIN users us3 ON us3.id=i.validated_by
-      WHERE i.id_zone = ".Session::get('id_zone')." AND validated_by is null " . $where_id_article . " ".$where_id_zone." ;"
-    ));
+
 
     //the returned view
-    $view = view('controleur.dashboard')->with(compact('data','articles','title'));
+    $view = view('controleur.dashboard')->with(compact('data','articles','title','sessions','sites','zones'));
 
     //if filter return selected_items
     if($request->has('submitFiltre')){
+      if($request->has('id_session') && $request->id_session != "null"){$view->with('selected_id_session',$request->id_session);}
+      if($request->has('id_site') && $request->id_site != "null"){$view->with('selected_id_site',$request->id_site);}
       if($request->has('id_zone') && $request->id_zone != "null"){$view->with('selected_id_zone',$request->id_zone);}
       if($request->has('id_article_site') && $request->id_article_site != "null" ){$view->with('selected_id_article_site',$request->id_article_site);}
     }

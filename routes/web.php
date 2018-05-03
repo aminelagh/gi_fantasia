@@ -13,18 +13,29 @@ use \App\Models\Article_site;
 use \App\Models\Article;
 use \App\Models\Unite;
 use \App\Models\Inventaire;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use \App\Models\Session as Sessions;
+use Carbon\Carbon;
+
 
 Route::get('/', function () {
+  /*
+  $lastRecord = DB::table('sessions')->orderBy('id_session', 'desc')->first();
+  dump($lastRecord);
+
+  $debut = Carbon::createFromFormat('Y-m-d', $lastRecord->date_debut);
+  $fin = Carbon::createFromFormat('Y-m-d', $lastRecord->date_fin);
+  $date = Carbon::now();
+
+  dump($debut->dayOfWeek );
+  dump($date->dayOfWeek );
+  dump($fin->dayOfWeek );
+
+  $now = Carbon::now();
+  $startOfWeek = $now->copy()->startOfWeek();
+  $endOfWeek = $now->copy()->endOfWeek();*/
+
+  //return $result;
+
   /*$credentials = [
   'login'    => 'admin',
   'password' => '123456',
@@ -44,6 +55,7 @@ return view('welcome');
 Route::get('/s',function(){
   dd(Session::all());
 });
+
 
 Route::get('/ajaxForm', 'AdminController@ajaxForm')->name('ajaxForm');
 Route::post('/ajaxForm', 'AdminController@ajaxForm')->name('postAjaxForm');
@@ -117,6 +129,7 @@ Route::group(['middleware' => 'admin'], function () {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 Route::group(['middleware' => 'controleur','prefix' => 'c'], function () {
   Route::get('/', 'ControleurController@home')->name('controleur');
+  Route::post('/', 'ControleurController@home')->name('controleur');
 
   Route::post('/updateProfil', 'ControleurController@updateProfil')->name('c.updateProfil');
 

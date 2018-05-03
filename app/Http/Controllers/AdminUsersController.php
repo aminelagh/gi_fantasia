@@ -40,6 +40,16 @@ class AdminUsersController extends Controller
       $item->nom = $request->nom;
       $item->prenom = $request->prenom;
       $item->login = $request->login;
+      if($request->id_zone == 0){
+        $item->id_zone = null;
+      }else{
+        $item->id_zone = $request->id_zone;
+      }
+      if($request->id_societe == 0){
+        $item->id_societe = null;
+      }else{
+        $item->id_societe = $request->id_societe;
+      }
       if( $request->password != "" ){
         $item->password = password_hash($request->password, PASSWORD_DEFAULT);
       }

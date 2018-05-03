@@ -19,6 +19,7 @@ use \App\Models\Article_site;
 use \App\Models\Article;
 use \App\Models\Unite;
 use \App\Models\Inventaire;
+use \App\Models\Session as Sessions;
 use \DB;
 use Excel;
 
@@ -33,7 +34,6 @@ class OuvrierController extends Controller
         $id_zone = $request->id_zone;
         $where_id_zone = " and z.id_zone = ".$id_zone." ";
       }
-
       if($request->id_article_site != 'null' ) {
         $id_article = Article_site::find($request->id_article_site)->id_article;
         $where_id_article = " and i.id_article = ".$id_article." ";
@@ -57,6 +57,7 @@ class OuvrierController extends Controller
     ));
 
     $title = "Inventaires";
+    $session = Sessions::find(Sessions::getNextID());
 
     //inventaires query
     $data = collect(DB::select(
@@ -76,11 +77,14 @@ class OuvrierController extends Controller
       LEFT JOIN users us1 ON us1.id=i.created_by
       LEFT JOIN users us2 ON us2.id=i.updated_by
       LEFT JOIN users us3 ON us3.id=i.validated_by
-      WHERE i.created_by=". Session::get('id_user') ." AND validated_by is null " . $where_id_article . " ".$where_id_zone." ;"
+      WHERE i.created_by=". Session::get('id_user') ."
+      AND i.id_session = " . Sessions::getNextID() . "  " .
+      $where_id_article . " ".
+      $where_id_zone." ;"
     ));
 
     //the returned view
-    $view = view('ouvrier.dashboard')->with(compact('data','articles'));
+    $view = view('ouvrier.dashboard')->with(compact('data','articles','session'));
 
     //if filter return selected_items
     if($request->has('submitFiltre')){
@@ -105,6 +109,7 @@ class OuvrierController extends Controller
       $item = new Inventaire();
       $item->id_article = Article_site::find($request->id_article_site)->id_article;
       $item->id_zone =  $request->session()->get('id_zone');
+      $item->id_session = Sessions::getNextID();
       $item->date = $request->date;
       $item->nombre_palettes = $request->nombre_palettes;
       $item->nombre_pieces = $request->nombre_pieces;

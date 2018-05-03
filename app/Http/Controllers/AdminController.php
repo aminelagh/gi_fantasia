@@ -27,7 +27,7 @@ class AdminController extends Controller
   public function home(Request $request){
     //dd($request->session()->all());
 
-    $users = collect(DB::select("select u.id as id_user,u.nom, u.prenom,r.slug,r.name,u.last_login,u.created_at,u.login from users u LEFT JOIN role_users ru on ru.user_id = u.id LEFT JOIN roles r on r.id = ru.role_id;"));
+    $users = collect(DB::select("SELECT u.id as id_user,u.nom, u.prenom,r.slug,r.name,u.last_login,u.created_at,u.login,u.id_zone, u.id_societe from users u LEFT JOIN role_users ru on ru.user_id = u.id LEFT JOIN roles r on r.id = ru.role_id;"));
     $roles = Role::all();
     $categories = Categorie::all();
     $familles = collect(DB::select(

@@ -157,21 +157,30 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 {{-- Role --}}
                 <div class="form-group has-feedback">
                   <label>Rôle</label>
                   <input type="text" class="form-control" placeholder="Rôle" value="{{ Session::get('role') }}" readonly>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
+                {{-- Societe --}}
+                <div class="form-group has-feedback">
+                  <label>Société</label>
+                  <input type="text" class="form-control" placeholder="Societe" value="{{ Session::get('libelle_societe') }}" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
                 {{-- Nom --}}
                 <div class="form-group has-feedback">
                   <label>Nom</label>
                   <input type="text" class="form-control" placeholder="Nom" name="nom" value="{{ Session::get('nom') }}" required>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 {{-- Prenom --}}
                 <div class="form-group has-feedback">
                   <label>Prenom</label>

@@ -81,12 +81,22 @@ class CreateTables extends Migration
       $table->engine = 'InnoDB';
     });
     //--------------------------------------------------------------------------
+    //table sessions -----------------------------------------------------------
+    Schema::create('sessions', function (Blueprint $table) {
+      $table->increments('id_session');
+      $table->date('date_debut');
+      $table->date('date_fin');
+      $table->timestamps();
+      $table->engine = 'InnoDB';
+    });
+    //--------------------------------------------------------------------------
 
     //table inventaires --------------------------------------------------------
     Schema::create('inventaires', function (Blueprint $table) {
       $table->increments('id_inventaire');
       $table->integer('id_article');
       $table->integer('id_zone');
+      $table->integer('id_session');
 
       $table->integer('nombre_palettes');
       $table->integer('nombre_pieces');
@@ -143,5 +153,6 @@ class CreateTables extends Migration
     Schema::dropIfExists('article_site');
     Schema::dropIfExists('inventaires');
     Schema::dropIfExists('inventaires_backup');
+    Schema::dropIfExists('sessions');
   }
 }
