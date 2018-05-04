@@ -28,10 +28,20 @@ class ControleurController extends Controller
   public function home(Request $request){
 
     if($request->has('submitValidate')){
-      dd($request->all());
-      foreach($request->valide as $id_inventaire){
-        dump($id_inventaire);
-        dump(Inventaire::find($id_inventaire));
+      $inventaires = $request->id_inventaire;
+      $valides = $request->valide;
+      $i = 1;
+      foreach($inventaires as $inv){
+        $item = Inventaire::find($inv);
+        if(isset($valides[$inv]) && $valides[$inv] == "isValide"){
+          $item->validated_by = Session::get('id_user');
+          $item->validated_at = date('Y-m-d h:m:s');
+        }else{
+          $item->validated_by = null;
+          $item->validated_at = null;
+        }
+        $i++;
+        $item->save();
       }
 
     }
@@ -90,16 +100,24 @@ class ControleurController extends Controller
       WHERE so.id_societe = ".Session::get('id_societe')."
       ORDER BY a.code asc;"
     ));
+
     $sessions = Sessions::all();
     $sites = Site::where('id_societe',Session('id_societe'))->get();
-    $zones = Zone::all();
+    $categories = Categorie::all();
+    $familles = Famille::all();
+    $zones = collect(DB::select(
+      "SELECT z.id_zone, z.libelle as libelle_zone, z.id_site,
+      s.libelle as libelle_site, so.libelle as libelle_societe
+      FROM zones z LEFT JOIN sites s on s.id_site=z.id_site
+      LEFT JOIN societes so on so.id_societe=s.id_societe
+      WHERE so.id_societe = ".Session::get('id_societe').";"
+    ));
+
 
     $title = "Inventaires";
 
-
-
     //the returned view
-    $view = view('controleur.dashboard')->with(compact('data','articles','title','sessions','sites','zones'));
+    $view = view('controleur.dashboard')->with(compact('data','articles','title','sessions','sites','zones','categories','familles'));
 
     //if filter return selected_items
     if($request->has('submitFiltre')){
@@ -240,21 +258,21 @@ public function addInventaire(Request $request){
   try{
     $item = new Inventaire();
     $item->id_article = Article_site::find($request->id_article_site)->id_article;
-    $item->id_zone = Session::get('id_zone');
+    $item->id_zone = $request->id_zone;
+    $item->id_session = Sessions::getNextID();
     $item->date = $request->date;
-
     $item->nombre_palettes = $request->nombre_palettes;
     $item->nombre_pieces = $request->nombre_pieces;
+
     $item->hauteur = $request->hauteur;
     $item->largeur = $request->largeur;
     $item->longueur = $request->longueur;
-
-    $item->created_by = Session::get('id_user');
+    $item->created_by = $request->session()->get('id_user');
     $item->updated_by = null;
-    $item->validated_by = Session::get('id_user');
+    $item->validated_by = null;
     //$item->created_at = null;
     //$item->updated_at = null;
-    $item->validated_at = date('Y-m-d H:i:s');
+    $item->validated_at = null;
     $item->save();
 
   }catch(Exception $e){
@@ -277,7 +295,7 @@ public function updateInventaire(Request $request){
   try{
     $item = Inventaire::find($request->id_inventaire);
     $item->id_article = Article_site::find($request->id_article_site)->id_article;
-    $item->id_zone = $request->session()->get('id_zone');
+    $item->id_zone = $request->id_zone;
     $item->date = $request->date;
     $item->nombre_palettes = $request->nombre_palettes;
     $item->nombre_pieces = $request->nombre_pieces;

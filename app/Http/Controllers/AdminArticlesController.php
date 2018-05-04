@@ -90,8 +90,19 @@ class AdminArticlesController extends Controller
   //add Article ****************************************************************
   public function addArticle(Request $request){
     try{
-      $id_article = Article::getNextID();
 
+
+      $articles = Article::where('code',$request->code)->get();
+      foreach($articles as $item){
+        $id_article = $item->id_article;
+        $article_sites = Article_site::where('id_article',$id_article)->get();
+        foreach($article_sites as $as){
+          if($as->id_site == $request->id_site){
+            return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
+          }
+        }
+      }
+      $id_article = Article::getNextID();
       $item = new Article();
       $item->id_article = $id_article;
       $item->id_famille = $request->id_famille;

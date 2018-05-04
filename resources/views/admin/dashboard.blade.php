@@ -224,7 +224,7 @@
               @foreach($unites as $item)
                 <tr>
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUnite" onclick='updateUniteFunction({{ $item->id_unite }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteUniteFunction({{ $item->id_unite }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -273,7 +273,7 @@
                 <tr>
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_categorie }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }},{{ $item->id_categorie }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteFamilleFunction({{ $item->id_famille }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -316,7 +316,7 @@
               @foreach($categories as $item)
                 <tr>
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ formatDateTime($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateCategorie" onclick='updateCategorieFunction({{ $item->id_categorie }},"{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteCategorieFunction({{ $item->id_categorie }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
