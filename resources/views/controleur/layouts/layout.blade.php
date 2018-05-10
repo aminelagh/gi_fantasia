@@ -111,7 +111,19 @@
     <div id="content">
       <!-- outer -->
       <div class="outer">
-        @yield('content-head')
+
+        <div class="main-bar">
+          <div class="col-md-5 align-self-center">
+            <h3></h3>
+          </div>
+          <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{{ route('controleur') }}">Dashboard</a></li>
+              @yield('content-head')
+            </ol>
+          </div>
+        </div>
+
         <!-- inner -->
         <div class="inner bg-light lter">
 

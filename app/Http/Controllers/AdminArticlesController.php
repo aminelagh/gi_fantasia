@@ -90,8 +90,6 @@ class AdminArticlesController extends Controller
   //add Article ****************************************************************
   public function addArticle(Request $request){
     try{
-
-
       $articles = Article::where('code',$request->code)->get();
       foreach($articles as $item){
         $id_article = $item->id_article;
@@ -142,7 +140,18 @@ class AdminArticlesController extends Controller
   //update Article *************************************************************
   public function updateArticle(Request $request){
     try{
-      //dd($request->all());
+
+      $articles = Article::where('code',$request->code)->get();
+      foreach($articles as $item){
+        $id_article = $item->id_article;
+        $article_sites = Article_site::where('id_article',$id_article)->get();
+        foreach($article_sites as $as){
+          if($as->id_site == $request->id_site){
+            return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
+          }
+        }
+      }
+
       $item = Article::find($request->id_article);
       $item->id_famille = $request->id_famille;
       $item->id_unite = $request->id_unite;

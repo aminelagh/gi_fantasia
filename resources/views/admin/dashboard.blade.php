@@ -1,20 +1,5 @@
 @extends('admin.layouts.layout')
 
-@section('content-head')
-  <div class="main-bar">
-    <div class="col-md-5 align-self-center">
-      <h3></h3>
-    </div>
-    <div class="col-md-7 align-self-center">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item active"><a href="{{ route('admin') }}">Dashboard</a></li>
-        <!--li class="breadcrumb-item active">Dashboard</li-->
-      </ol>
-    </div>
-  </div>
-
-@endsection
-
 @section('content')
 
   <div class="row">
@@ -45,10 +30,10 @@
             <thead><tr><th>Societe</th><th>Date de création</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($societes as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
-                  <td>
+                  <td>{{ formatDate($item->created_at) }}</td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSociete" onclick='updateSocieteFunction({{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteSocieteFunction({{ $item->id_societe }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -87,10 +72,10 @@
             <thead><tr><th>Site</th><th>Societe</th><th>Date de creation</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($sites as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_so }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
+                  <td>{{ formatDate($item->created_at) }}</td>
                   <td>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSite" onclick='updateSiteFunction({{ $item->id_site }},{{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteSiteFunction({{ $item->id_site }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -130,11 +115,11 @@
             <thead><tr><th>Zone</th><th>Site</th><th>Date de creation</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($zones as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_s }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
-                  <td>
+                  <td>{{ formatDate($item->created_at) }}</td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateZone" onclick='updateZoneFunction({{ $item->id_zone }},{{ $item->id_site }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteZoneFunction({{ $item->id_zone }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -151,7 +136,7 @@
   <hr>
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
       {{-- *********************************** Users ************************************* --}}
       <div class="box">
         <header class="dark">
@@ -175,15 +160,15 @@
         </header>
         <div id="collapse" class="body">
           <table id="usersTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Rôle</th><th>Utilisateur</th><th>Login</th><th>last login</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Rôle</th><th>Utilisateur</th><th>Login</th><th>Dernière connexion</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($users as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->name }}</td>
                   <td>{{ $item->nom }} {{ $item->prenom }}</td>
                   <td>{{ $item->login }}</td>
                   <td>{{ formatDateTime($item->last_login) }}</td>
-                  <td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUser"
                     onclick='updateUserFunction({{ $item->id_user }}, "{{ $item->nom }}", "{{ $item->prenom }}","{{ $item->login }}","{{ $item->slug }}", {{ $item->id_societe == null ? 0 : $item->id_societe }},{{ $item->id_zone == null ? 0: $item->id_zone }} );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteUserFunction({{ $item->id_user }},'{{ $item->nom }}','{{ $item->prenom }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
@@ -196,7 +181,7 @@
       </div>
       {{-- *********************************** Users ************************************* --}}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       {{-- *********************************** Unites ************************************* --}}
       <div class="box">
         <header class="dark">
@@ -219,13 +204,12 @@
         </header>
         <div id="collapse" class="body">
           <table id="unitesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Unité</th><th>Date de création</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Unité</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($unites as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
-                  <td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateUnite" onclick='updateUniteFunction({{ $item->id_unite }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteUniteFunction({{ $item->id_unite }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -243,7 +227,6 @@
 
   <div class="row">
     <div class="col-md-7">
-
       {{-- *********************************** familles ************************************* --}}
       <div class="box">
         <header class="dark">
@@ -270,11 +253,11 @@
             <thead><tr><th>Famille</th><th>Catégorie</th><th>Date de creation</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($familles as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_categorie }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
-                  <td>
+                  <td>{{ formatDate($item->created_at) }}</td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateFamille" onclick='updateFamilleFunction({{ $item->id_famille }},{{ $item->id_categorie }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteFamilleFunction({{ $item->id_famille }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -311,13 +294,13 @@
         </header>
         <div id="collapse" class="body">
           <table id="categoriesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Categorie</th><th>date de creation</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Categorie</th><th>Date de creation</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($categories as $item)
-                <tr>
+                <tr align="center">
                   <td>{{ $item->libelle }}</td>
-                  <td>{{ formatDateTime($item->created_at) }}</td>
-                  <td>
+                  <td>{{ formatDate($item->created_at) }}</td>
+                  <td align="center">
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateCategorie" onclick='updateCategorieFunction({{ $item->id_categorie }},"{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteCategorieFunction({{ $item->id_categorie }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -331,7 +314,6 @@
     </div>
 
   </div>
-
 @endsection
 
 @section('modals')
@@ -1178,153 +1160,138 @@
 
 @section('styles')
   <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
-  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.semanticui.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.foundation.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/Buttons/css/buttons.bootstrap.min.css') }}">
 @endsection
 
 @section('scripts')
-  <script src="public/assets/datatables/datatables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
-  <!-- datatables
-  <script src="js/lib/datatables/datatables.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-  <script src="js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-  <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-  <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-  <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-  <script src="js/lib/datatables/datatables-init.js"></script>
--->
+  <script src="{{ asset('public/assets/datatables/datatables.min.js') }}"></script>
+  {{--
+  <script src="{{ asset('public/assets/datatables/dataTables/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.semanticui.min.js') }}"></script>--}}
 
-<!-- scripit init
-<script src="js/lib/sweetalert/sweetalert.init.js"></script> -->
+  <script>
 
-<script>
+  $('#usersTable').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
+      { targets: 1, visible: true},
+      { targets: 2, visible: true},
+    ],
+  });
 
-$('#usersTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true},
-    { targets: 0, visible: true},
-    { targets: 1, visible: true},
-    { targets: 2, visible: true},
-  ],
-});
+  $('#famillesTable').DataTable({
+    dom: '<lf<t>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets:-1, visible: true, orderable: true},
+      { targets: 0, visible: true, type: 'num'},
+      { targets: 1, visible: true},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
 
-$('#famillesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true},
-    { targets: 0, visible: true},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+  $('#categoriesTable').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets:-1, visible: true, orderable: true, searchable: false},
+      { targets: 0, visible: true, type: "num"},
+      { targets: 1, visible: true},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
 
-$('#categoriesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+  $('#societesTable').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
+      { targets: 1, visible: true},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
 
-$('#societesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+  $('#sitesTable').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets:-1, visible: true, orderable: true, searchable: false},
+      { targets: 0, visible: true, type: "num"},
+      { targets: 1, visible: true},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
 
-$('#sitesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
+  $('#zonesTable').DataTable({
+    dom: '<lf<Bt>ip>',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print',
+    ],
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
+    columnDefs: [
+      { targets:-1, visible: true, orderable: true, searchable: false},
+      { targets: 0, visible: true, type: "num"},
+      { targets: 1, visible: true, type: 'string'},
+    ],
+    //order: [[ 0, "asc" ]],
+  });
 
-$('#zonesTable').DataTable({
-  dom: '<lf<Bt>ip>',
-  buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print',
-  ],
-  lengthMenu: [
-    [ 5, 10, 25, 50, -1 ],
-    [ '5', '10', '25', '50', 'Tout' ]
-  ],
-  columnDefs: [
-    { targets:-1, visible: true, orderable: true, searchable: false},
-    { targets: 0, visible: true, type: "string"},
-    { targets: 1, visible: true},
-  ],
-  //order: [[ 0, "asc" ]],
-});
-
-$(document).ready(function() {
-  $('#familleTable').DataTable({
-    "order": [[ 0, "asc" ]],
-    "language": {
-      "lengthMenu": "Display _MENU_ records per page",
-      "zeroRecords": "Nothing found - sorry",
-      "info": "Showing page _PAGE_ of _PAGES_",
-      "infoEmpty": "No records available",
-      "infoFiltered": "(filtered from _MAX_ total records)"
-    }
+  $(document).ready(function() {
+    $('#familleTable').DataTable({
+      "order": [[ 0, "asc" ]],
+      "language": {
+        "lengthMenu": "Display _MENU_ records per page",
+        "zeroRecords": "Nothing found - sorry",
+        "info": "Showing page _PAGE_ of _PAGES_",
+        "infoEmpty": "No records available",
+        "infoFiltered": "(filtered from _MAX_ total records)"
+      }
+    } );
   } );
-} );
 
 
 

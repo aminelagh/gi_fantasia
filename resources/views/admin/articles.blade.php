@@ -1,18 +1,7 @@
 @extends('admin.layouts.layout')
 
 @section('content-head')
-  <div class="main-bar">
-    <div class="col-md-5 align-self-center">
-      <h3></h3>
-    </div>
-    <div class="col-md-7 align-self-center">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Articles</li>
-      </ol>
-    </div>
-  </div>
-
+  <li class="breadcrumb-item active">Articles</li>
 @endsection
 
 @section('content')
@@ -276,7 +265,9 @@
     document.getElementById("update_2_id_site").value = id_site;
     document.getElementById("update_2_id_article_site").value = id_article_site;
     document.getElementById("update_2_id_famille").value = id_famille;
+    document.getElementById("update_2_id_famille_2").value = id_famille;
     document.getElementById("update_2_id_unite").value = id_unite;
+    document.getElementById("update_2_id_unite_2").value = id_unite;
     document.getElementById("update_2_code").value = code;
     document.getElementById("update_2_designation").value = designation;
   }
@@ -371,6 +362,10 @@
       <input type="hidden" name="id_article_site" id="update_2_id_article_site">
       <input type="hidden" name="id_article" id="update_2_id_article">
 
+      <input type="hidden" name="id_famille" id="update_2_id_famille_2">
+      <input type="hidden" name="id_unite" id="update_2_id_unite_2">
+
+
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -396,7 +391,7 @@
                     {{-- Famille --}}
                     <div class="form-group has-feedback">
                       <label>Famille</label>
-                      <select  class="form-control" name="id_famille" id="update_2_id_famille" readonly>
+                      <select  class="form-control" id="update_2_id_famille" disabled>
                         @foreach ($familles as $item)
                           <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
                         @endforeach
@@ -407,7 +402,7 @@
                     {{-- Unité --}}
                     <div class="form-group has-feedback">
                       <label>Unité</label>
-                      <select  class="form-control" name="id_unite" id="update_2_id_unite" readonly>
+                      <select  class="form-control" id="update_2_id_unite" disabled>
                         @foreach ($unites as $item)
                           <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
                         @endforeach

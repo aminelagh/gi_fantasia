@@ -1,28 +1,18 @@
 @extends('controleur.layouts.layout')
 
 @section('content-head')
-  <div class="main-bar">
-    <div class="col-md-5 align-self-center">
-      <h3></h3>
-    </div>
-    <div class="col-md-7 align-self-center">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('controleur') }}">Dashboard</a></li>
-      </ol>
-    </div>
-  </div>
-
 @endsection
 
 @section('content')
 
   <div class="row">
     <div class="col-md-12">
-      {{-- *********************************** Inventaire invalide ************************************* --}}
+      {{-- *********************************** Inventaire ************************************* --}}
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Inventaires <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{-- $data->count() --}}</span></h5>
+          <h5>Inventaires <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ isset($data) ? $data->count() : 0 }}</span></h5>
+          <h6>Session: <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ formatDate2($session->date_debut) }} - {{ formatDate2($session->date_fin) }}</span></h6>
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
@@ -53,7 +43,7 @@
                     <select class="form-control selectpicker show-tick" data-live-search="true" name="id_session" id="filter_id_session">
                       <option value="null">Toutes les sessions</option>
                       @foreach ($sessions as $item)
-                        <option value="{{ $item->id_session }}" {{ isset($selected_id_session) && $selected_id_session == $item->id_session ? 'selected' : ''  }}>{{ formatDate($item->date_debut) }} - {{ formatDate($item->date_fin) }}</option>
+                        <option value="{{ $item->id_session }}" {{ isset($selected_id_session) && $selected_id_session == $item->id_session ? 'selected' : ''  }}>{{ formatDate2($item->date_debut) }} - {{ formatDate2($item->date_fin) }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -83,107 +73,120 @@
                 {{-- Article --}}
                 <div class="col-sm-3">
                   <div class="form-group has-feedback">
-                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="filter_id_article_site">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="code" id="filter_code">
                       <option value="null">Tous les articles</option>
-                      @foreach ($articles as $item)
-                        <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                      @foreach ($filtreArticles as $item)
+                        <option value="{{ $item->code }}" {{ isset($selected_code) && $selected_code == $item->code ? 'selected' : ''  }}>{{ $item->code }}</option>
                       @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-sm-2"></div>
-                <div class="col-sm-2"><br>
-                  <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+                      {{--@foreach ($articles as $item)
+                      <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                    @endforeach
+                    --}}
+                  </select>
                 </div>
               </div>
-            </form>
-          </div>
-          {{-- ***************************** /.Filtre ****************************************** --}}
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"><br>
+                <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+              </div>
+            </div>
+          </form>
+        </div>
+        {{-- ***************************** /.Filtre ****************************************** --}}
 
 
 
-          <div class="breadcrumb">
-            Afficher/Masquer:
-            <a class="toggle-vis" data-column="1">Article</a> -
-            <a class="toggle-vis" data-column="2">Zone</a> -
-            <a class="toggle-vis" data-column="3">Date</a> -
-            <a class="toggle-vis" data-column="9">Quantité</a>
-          </div>
+        <div class="breadcrumb">
+          Afficher/Masquer:
+          <a class="toggle-vis" data-column="1">Article</a> -
+          <a class="toggle-vis" data-column="2">Zone</a> -
+          <a class="toggle-vis" data-column="3">Date</a> -
+          <a class="toggle-vis" data-column="9">Quantité</a>
+        </div>
 
-          <!--script>
-          function submitValidation(){
-          document.getElementById("formValidateInventaires").submit();
+        <script>
+        function submitValidate(){
+          document.getElementById("validateForm_filter_code").value = document.getElementById("filter_code").value;
+          document.getElementById("validateForm_filter_id_zone").value = document.getElementById("filter_id_zone").value;
+          document.getElementById("validateForm_filter_id_site").value = document.getElementById("filter_id_site").value;
+          document.getElementById("validateForm_filter_id_session").value = document.getElementById("filter_id_session").value;
         }
-      </script-->
+        </script>
 
-      <form name="formValidateInventaires" id="formValidateInventaires" method="POST" action="{{ route('controleur') }}">
-        @csrf
-        <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
+        <form name="formValidateInventaires" id="formValidateInventaires" method="POST" action="{{ route('controleur') }}">
+          @csrf
 
-          <thead>
-            <tr>
-              <th></th><th>Article</th><th>Zone</th><th>Date</th>
-              <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
-              <th>Créé par</th><th>le</th>
-              <th>Modifié par</th><th>le</th>
-              <th>validé par</th><th>le</th>
-              <th>Valide</th>
-              <th>Outils</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <th></th><th>Article</th><th>Zone</th><th>Date</th>
-              <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
-              <th>Créé par</th><th>le</th>
-              <th>Modifié par</th><th>le</th>
-              <th>validé par</th><th>le</th>
-              <td><input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires" ></td>
-              <th></th>
-            </tr>
-          </tfoot>
+          <input type="hidden" name="code" id="validateForm_filter_code">
+          <input type="hidden" name="id_zone" id="validateForm_filter_id_zone">
+          <input type="hidden" name="id_site" id="validateForm_filter_id_site">
+          <input type="hidden" name="id_session" id="validateForm_filter_id_session">
 
-          <tbody>
-            @if(isset($data) && $data != NULL )
-              @foreach($data as $item)
+          <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
 
-                <tr>
-                  <input type="hidden" name="id_inventaire[{{ $loop->iteration }}]" value="{{ $item->id_inventaire }}">
+            <thead>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <th>Valide</th>
+                <th>Outils</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <td onclick="submitValidate();" align="center"><input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires"></td>
+                <th></th>
+              </tr>
+            </tfoot>
 
-                  <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
-                  <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ $item->date }}</td>
-                  <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
-                  <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
-                  <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                  <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
-                  <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
-                  <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
-                  <td align="center">
-                    <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
-                      value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
-                    </td>
+            <tbody>
+              @if(isset($data) && $data != NULL )
+                @foreach($data as $item)
+
+                  <tr>
+                    <input type="hidden" name="id_inventaire[{{ $loop->iteration }}]" value="{{ $item->id_inventaire }}">
+
+                    <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
+                    <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ formatDate2($item->date) }}</td>
+                    <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
+                    <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
+                    <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+                    <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
+                    <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
+                    <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
                     <td align="center">
-                      <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
-                      onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
-                      {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                      <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
-                    </td>
-                  </tr>
-                @endforeach
-              @endif
-            </tbody>
+                      <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
+                        value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
+                      </td>
+                      <td align="center">
+                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
+                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
+                        {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
+                        <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                      </td>
+                    </tr>
+                  @endforeach
+                @endif
+              </tbody>
 
-          </table>
-          <div class="row" align="center">
-            <input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires" >
-          </div>
-        </form>
+            </table>
+            <div class="row" align="center">
+              <input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires" >
+            </div>
+          </form>
 
+        </div>
       </div>
+      {{-- *********************************** Inventaire ************************************* --}}
     </div>
-    {{-- *********************************** Inventaire ************************************* --}}
   </div>
-</div>
 
 @endsection
 
@@ -324,7 +327,7 @@
             </div>
             <div class="modal-body">
               <div class="row">
-                <div class="col-sm-4 col-sm-offset-2">
+                <div class="col-sm-4">
                   {{-- Article --}}
                   <div class="form-group has-feedback">
                     <label>Article</label>
@@ -335,7 +338,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                   {{-- Zone --}}
                   <div class="form-group has-feedback">
                     <label>Zone</label>
@@ -403,7 +406,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Modifier et valider</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
             </div>
           </div>
         </div>
@@ -782,7 +785,6 @@
     //document.getElementById("total").value = total;
   }
 
-
   $('#update_id_article_site').on('changed.bs.select', function (e) {
     update_calculateTotal();
   });
@@ -804,8 +806,6 @@
     //--------------------
     var selected_id_article_site = document.getElementById("id_article_site").value;
 
-    //var id_unite = 0;
-    //var libelle_unite = " ";
     //write unite
     for(var i=0; i<articles.length;i++){
       if(selected_id_article_site == articles[i].id_article_site){
@@ -984,9 +984,6 @@
     } );
 
   });
-
-
   </script>
-
 
 @endsection

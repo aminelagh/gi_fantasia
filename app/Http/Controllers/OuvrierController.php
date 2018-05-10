@@ -26,17 +26,11 @@ use Excel;
 class OuvrierController extends Controller
 {
   public function home(Request $request){
-    //dd(Session::all());
-    $where_id_zone = "";
     $where_id_article = "";
     if($request->has('submitFiltre')){
-      if($request->id_zone != 'null' ) {
-        $id_zone = $request->id_zone;
-        $where_id_zone = " and z.id_zone = ".$id_zone." ";
-      }
       if($request->id_article_site != 'null' ) {
         $id_article = Article_site::find($request->id_article_site)->id_article;
-        $where_id_article = " and i.id_article = ".$id_article." ";
+        $where_id_article = " AND i.id_article = ".$id_article." ";
       }
     }
 
@@ -79,8 +73,7 @@ class OuvrierController extends Controller
       LEFT JOIN users us3 ON us3.id=i.validated_by
       WHERE i.created_by=". Session::get('id_user') ."
       AND i.id_session = " . Sessions::getNextID() . "  " .
-      $where_id_article . " ".
-      $where_id_zone." ;"
+      $where_id_article . " ;"
     ));
 
     //the returned view

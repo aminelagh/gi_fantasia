@@ -1,18 +1,7 @@
 @extends('admin.layouts.layout')
 
 @section('content-head')
-  <div class="main-bar">
-    <div class="col-md-5 align-self-center">
-      <h3></h3>
-    </div>
-    <div class="col-md-7 align-self-center">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Inventaire</li>
-      </ol>
-    </div>
-  </div>
-
+  <li class="breadcrumb-item active">Inventaire</li>
 @endsection
 
 @section('content')
@@ -153,7 +142,7 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Inventaire <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ $data->count() }}</span></h5>
+          <h5>Inventaire <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ isset($data) ? $data->count() : 0 }}</span></h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
@@ -171,28 +160,38 @@
 
         <div id="collapse" class="body">
 
+          {{-- ****************************** Filtre ******************************************* --}}
           <div class="breadcrumb">
             <h4>Filtre</h4>
             <form id="formFilterInventaires" method="POST" action="{{ route('inventaires') }}">
               @csrf
               <div class="row">
-                <div class="col-md-4">
-                  {{-- Article --}}
+                {{-- Session --}}
+                <div class="col-sm-3">
                   <div class="form-group has-feedback">
-                    <label>Article</label>
-                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="filter_id_article_site">
-                      <option value="null">Tous les articles</option>
-                      @foreach ($articles as $item)
-                        <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_session" id="filter_id_session">
+                      <option value="null">Toutes les sessions</option>
+                      @foreach ($sessions as $item)
+                        <option value="{{ $item->id_session }}" {{ isset($selected_id_session) && $selected_id_session == $item->id_session ? 'selected' : ''  }}>{{ formatDate2($item->date_debut) }} - {{ formatDate2($item->date_fin) }}</option>
                       @endforeach
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-4">
-                  {{-- Zone --}}
+                {{-- Site --}}
+                <div class="col-sm-3">
                   <div class="form-group has-feedback">
-                    <label>Zone</label>
-                    <select  class="form-control" name="id_zone" id="filter_id_zone">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_site" id="filter_id_site">
+                      <option value="null">Tous les sites</option>
+                      @foreach ($sites as $item)
+                        <option value="{{ $item->id_site }}" {{ isset($selected_id_site) && $selected_id_site == $item->id_site ? 'selected' : ''  }}>{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                {{-- Zone --}}
+                <div class="col-sm-3">
+                  <div class="form-group has-feedback">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="filter_id_zone">
                       <option value="null">Toutes les zones</option>
                       @foreach ($zones as $item)
                         <option value="{{ $item->id_zone }}" {{ isset($selected_id_zone) && $selected_id_zone == $item->id_zone ? 'selected' : ''  }}>{{ $item->libelle_zone }}</option>
@@ -200,88 +199,137 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-2"></div>
-                <div class="col-lg-2"><br>
-                  <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+                {{-- Article --}}
+                <div class="col-sm-3">
+                  <div class="form-group has-feedback">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="code" id="filter_code">
+                      <option value="null">Tous les articles</option>
+                      @foreach ($filtreArticles as $item)
+                        <option value="{{ $item->code }}" {{ isset($selected_code) && $selected_code == $item->code ? 'selected' : ''  }}>{{ $item->code }}</option>
+                      @endforeach
+                      {{--@foreach ($articles as $item)
+                      <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                    @endforeach
+                    --}}
+                  </select>
                 </div>
               </div>
-            </form>
-          </div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"><br>
+                <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+              </div>
+            </div>
+          </form>
+        </div>
+        {{-- ***************************** /.Filtre ****************************************** --}}
 
-          <div class="breadcrumb">
-            Afficher/Masquer:
-            <a class="toggle-vis" data-column="1">Article</a> -
-            <a class="toggle-vis" data-column="2">Zone</a> -
-            <a class="toggle-vis" data-column="3">Date</a> -
-            <a class="toggle-vis" data-column="9">Quantité</a>
-          </div>
+        <div class="breadcrumb">
+          Afficher/Masquer:
+          <a class="toggle-vis" data-column="1">Article</a> -
+          <a class="toggle-vis" data-column="2">Zone</a> -
+          <a class="toggle-vis" data-column="3">Date</a> -
+          <a class="toggle-vis" data-column="9">Quantité</a>
+        </div>
 
-          <table id="inventairesTable"  class="display table table-hover table-striped table-bordered" style="width:100%">
+
+        <script>
+        function submitValidate(){
+          document.getElementById("validateForm_filter_code").value = document.getElementById("filter_code").value;
+          document.getElementById("validateForm_filter_id_zone").value = document.getElementById("filter_id_zone").value;
+          document.getElementById("validateForm_filter_id_site").value = document.getElementById("filter_id_site").value;
+          document.getElementById("validateForm_filter_id_session").value = document.getElementById("filter_id_session").value;
+        }
+        </script>
+
+
+        <!-- ********************* Form / Table ******************************************* -->
+        <form name="formValidateInventaires" id="formValidateInventaires" method="POST" action="{{ route('inventaires') }}">
+          @csrf
+          <input type="hidden" name="code" id="validateForm_filter_code">
+          <input type="hidden" name="id_zone" id="validateForm_filter_id_zone">
+          <input type="hidden" name="id_site" id="validateForm_filter_id_site">
+          <input type="hidden" name="id_session" id="validateForm_filter_id_session">
+
+          <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
             <thead>
-              <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
                 <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
                 <th>Créé par</th><th>le</th>
                 <th>Modifié par</th><th>le</th>
                 <th>validé par</th><th>le</th>
-                <th>Outils</th></tr>
-              </thead>
-              <tfoot>
-                <tr><th></th><th>Article</th><th>Zone</th><th>Date</th>
-                  <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
-                  <th>Créé par</th><th>le</th>
-                  <th>Modifié par</th><th>le</th>
-                  <th>validé par</th><th>le</th>
-                  <th></th></tr>
-                </tfoot>
-                <tbody>
-                  @foreach($data as $item)
-                    <tr>
-                      <td></td>
-                      <td>{{ $item->code }} - {{ $item->designation }}</td>
-                      <td>{{ $item->libelle_zone }}</td>
-                      <td>{{ $item->date }}</td>
-                      <td>{{ $item->longueur }}</td>
-                      <td>{{ $item->largeur }}</td>
-                      <td>{{ $item->hauteur }} </td>
-                      <td>{{ $item->nombre_palettes }} </td>
-                      <td>{{ $item->nombre_pieces }} </td>
-                      <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                      <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
-                      <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
-                      <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                <th>Valide</th>
+                <th>Outils</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <td onclick="submitValidate();" align="center"><input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires"></td>
+                <th></th>
+              </tr>
+            </tfoot>
+            <tbody>
+              @if(isset($data) && $data != NULL )
+                @foreach($data as $item)
+
+                  <tr>
+                    <input type="hidden" name="id_inventaire[{{ $loop->iteration }}]" value="{{ $item->id_inventaire }}">
+
+                    <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
+                    <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ formatDate2($item->date) }}</td>
+                    <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
+                    <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
+                    <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+                    <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
+                    <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
+                    <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                    <td align="center">
+                      <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
+                        value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
+                      </td>
                       <td align="center">
-                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier" data-target="#modalUpdateInventaire" data-toggle="modal"
-                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier" ></i>
+                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
+                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
                         {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
                         <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                       </td>
                     </tr>
                   @endforeach
-                </tbody>
-              </table>
-            </div>
-          </div>
-          {{-- *********************************** Articles ************************************* --}}
+                @endif
+              </tbody>
+
+            </table>
+          </form>
+          <!-- ********************* /.Form / Table ******************************************* -->
+
         </div>
       </div>
-
-      <hr>
-      <div class="row">
-        <div class="col-md-12">
-          {{-- *********************************** Zones ************************************* --}
-
-          <table class="articlesHere endless-pagination" data-next-page="{{ $articles->nextPageUrl() }}" border="1" cellspacing="0">
-          <thead>  <tr><th>id</th><th>ip</th><th>type</th><th>created_at</th></tr></thead>
-          @foreach($articles as $post)
-          <tr><td>{{ $post->id }}</td><td>{{ $post->ip }}</td><td>{{ $post->type }}</td><td>{{ $post->created_at }}</td></tr>
-        @endforeach
-        {{-- {!! $posts->render() !!} --}
-        <tfoot><tr><th colspan="4">    <button class="btn btn-default" onclick="loadMore()">LoadMore</button></th></tr></tfoot>
-      </table>
-
-      {{-- *********************************** articles ************************************* --}}
+      {{-- *********************************** Articles ************************************* --}}
     </div>
   </div>
+
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      {{-- *********************************** Zones ************************************* --}
+
+      <table class="articlesHere endless-pagination" data-next-page="{{ $articles->nextPageUrl() }}" border="1" cellspacing="0">
+      <thead>  <tr><th>id</th><th>ip</th><th>type</th><th>created_at</th></tr></thead>
+      @foreach($articles as $post)
+      <tr><td>{{ $post->id }}</td><td>{{ $post->ip }}</td><td>{{ $post->type }}</td><td>{{ $post->created_at }}</td></tr>
+    @endforeach
+    {{-- {!! $posts->render() !!} --}
+    <tfoot><tr><th colspan="4">    <button class="btn btn-default" onclick="loadMore()">LoadMore</button></th></tr></tfoot>
+  </table>
+
+  {{-- *********************************** articles ************************************* --}}
+</div>
+</div>
 
 
 @endsection
@@ -763,31 +811,28 @@
 
   //extra info on every table row
   function format ( d ) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">'+
-    '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>'+
-    '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>'+
-    '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>'+
-    '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>'+
-    '</table>';
+    var row1 = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">';
+    var row2 = '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>';
+    var row3 = '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>';
+    if(d.modifie_par!=null){
+      row4 = '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>';
+    }else {
+      row4 = '';
+    }
+    if(d.valide_par!=null){
+      row4 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
+    }else {
+      row4 = '';
+    }
+    var row5 = '</table>';
+    var data = row1+row2+row3+row4+row5;
+    return data;
   }
 
   $(document).ready(function () {
     $('#inventairesTable tfoot th').each(function () {
       var title = $(this).text();
-      if (title == "Article" ) {
-        $(this).html('<input type="text" size="6" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
-      }
-      else if (title == "Zone" || title == "Date") {
-        $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
-      }
-      else if (title == "Quantité") {
-        $(this).html('<input type="text" size="12" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
-      }
-      else if (title == "Créé par" || title == "Sexe") {
-        $(this).html('<input type="text" size="5" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
-      }
-      else if (title != "") {
+      if (title != "") {
         $(this).html('<input type="text" size="8" class="form-control input-sm" placeholder="' + title + '" title="Rechercher par ' + title + '" onfocus="this.placeholder= \'\';" />');
       }
     });
@@ -809,24 +854,23 @@
         { targets: 02, width: "", type: "string", visible: true, searchable: true, orderable: true},    //Zone
         { targets: 03, width: "", type: "string", visible: true, searchable: true, orderable: true},    //date
         { targets: 04, width: "", type: "string", visible: false, searchable: true, orderable: true},    //L
-        { targets: 05, width: "", type: "string", visible: false, searchable: false, orderable: false},  //l
-        { targets: 06, width: "", type: "string", visible: false, searchable: false, orderable: false},  //h
-        { targets: 07, width: "", type: "string", visible: false, searchable: false, orderable: false},  //palette
-        { targets: 08, width: "", type: "string", visible: false, searchable: false, orderable: false},  //pieces
-        { targets: 09, width: "", type: "string", visible: true, searchable: false, orderable: false},  //Quantite
-        { targets: 10, width: "", type: "string", visible: false, searchable: false, orderable: false},  //cree
-        { targets: 11, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
-        { targets: 12, width: "", type: "string", visible: false, searchable: false, orderable: false},  //modifie
-        { targets: 13, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
-        { targets: 14, width: "", type: "string", visible: false, searchable: false, orderable: false},  //valide
-        { targets: 15, width: "", type: "string", visible: false, searchable: false, orderable: false},  //le
-        { targets: 16, width: "1%", type: "string", visible: true, searchable: false, orderable: false},  //outils
-
-
+        { targets: 05, width: "", type: "string", visible: false, searchable: true, orderable: false},  //l
+        { targets: 06, width: "", type: "string", visible: false, searchable: true, orderable: false},  //h
+        { targets: 07, width: "", type: "string", visible: false, searchable: true, orderable: false},  //palette
+        { targets: 08, width: "", type: "string", visible: false, searchable: true, orderable: false},  //pieces
+        { targets: 09, width: "", type: "string", visible: true, searchable: true, orderable: false},  //Quantite
+        { targets: 10, width: "", type: "string", visible: false, searchable: true, orderable: false},  //cree
+        { targets: 11, width: "", type: "string", visible: false, searchable: true, orderable: false},  //le
+        { targets: 12, width: "", type: "string", visible: false, searchable: true, orderable: false},  //modifie
+        { targets: 13, width: "", type: "string", visible: false, searchable: true, orderable: false},  //le
+        { targets: 14, width: "", type: "string", visible: false, searchable: true, orderable: false},  //valide
+        { targets: 15, width: "", type: "string", visible: false, searchable: true, orderable: false},  //le
+        { targets: 16, width: "", type: "string", visible: true, searchable: true, orderable: false},  //valide
+        { targets: 17, width: "1%", type: "string", visible: true, searchable: false, orderable: false},  //outils
       ],
       //  ajax: "",
       columns: [
-        {"className":'details-control',"orderable":false,"data":null,"defaultContent": ''},
+        {"className":'details-control',"orderable":false,"defaultContent": ''},
         { "data": "article" },
         { "data": "zone" },
         { "data": "date" },
@@ -839,66 +883,67 @@
         { "data": "cree_par" }, { "data": "cree_le" },
         { "data": "modifie_par" }, { "data": "modifie_le" },
         { "data": "valide_par" }, { "data": "valide_le" },
+        { "data": "valide" },
         { "data": "outils" }
-
       ],
-      /*  data: [
-      {
-      "id": "1",
-      "name": "Tiger Nixon",
-      "position": "System Architect",
-      "salary": "$320,800",
-      "start_date": "2011/04/25",
-      "office": "Edinburgh",
-      "extn": "5421"
-    },
-    {
-    "id": "2",
-    "name": "Garrett Winters",
-    "position": "Accountant",
-    "salary": "$170,750",
-    "start_date": "2011/07/25",
-    "office": "Tokyo",
-    "extn": "8422"
-  },
-  {"id": "3","name": "Ashton Cox","position": "Junior Technical Author","salary": "$86,000","start_date": "2009/01/12","office": "San Francisco","extn": "1562"}
-],*/
-});
+    });
 
-$('a.toggle-vis').on('click', function (e) {
-  e.preventDefault();
-  var column = table.column($(this).attr('data-column'));
-  column.visible(!column.visible());
-});
+    // Handle form submission event
+    $('#formValidateInventaires').on('submit', function(e){
 
-table.columns().every(function () {
-  var that = this;
-  $('input', this.footer()).on('keyup change', function () {
-    if (that.search() !== this.value) {
-      that.search(this.value).draw();
-    }
+      var form = this;
+
+      // Encode a set of form elements from all pages as an array of names and values
+      var params = table.$('input,select,textarea, checkbox').serializeArray();
+
+      // Iterate over all form elements
+      $.each(params, function(){
+        // If element doesn't exist in DOM
+        if(!$.contains(document, form[this.name])){
+          // Create a hidden element
+          $(form).append(
+            $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', this.name)
+            .val(this.value)
+          );
+        }
+      });
+    });
+
+    $('a.toggle-vis').on('click', function (e) {
+      e.preventDefault();
+      var column = table.column($(this).attr('data-column'));
+      column.visible(!column.visible());
+    });
+
+    table.columns().every(function () {
+      var that = this;
+      $('input', this.footer()).on('keyup change', function () {
+        if (that.search() !== this.value) {
+          that.search(this.value).draw();
+        }
+      });
+    });
+
+    // Add event listener for opening and closing details
+    $('#inventairesTable tbody').on('click', 'td.details-control', function () {
+      var tr = $(this).closest('tr');
+      var row = table.row( tr );
+
+      if ( row.child.isShown() ) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+      }
+      else {
+        // Open this row
+        row.child( format(row.data()) ).show();
+        tr.addClass('shown');
+      }
+    } );
+
   });
-});
-
-// Add event listener for opening and closing details
-$('#inventairesTable tbody').on('click', 'td.details-control', function () {
-  var tr = $(this).closest('tr');
-  var row = table.row( tr );
-
-  if ( row.child.isShown() ) {
-    // This row is already open - close it
-    row.child.hide();
-    tr.removeClass('shown');
-  }
-  else {
-    // Open this row
-    row.child( format(row.data()) ).show();
-    tr.addClass('shown');
-  }
-} );
-
-});
-
 
 </script>
 

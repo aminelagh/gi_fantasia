@@ -51,7 +51,7 @@
                       <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
                         <option value="null">Choisissez un article</option>
                         @foreach ($articles as $item)
-                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
+                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                         @endforeach
                       </select>
                     </div>
@@ -128,7 +128,7 @@
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
           <h5>Inventaire <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ $data->count() }}</span></h5>
-          <h6>Session: <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ formatDate($session->date_debut) }} -  {{ formatDate($session->date_fin) }}</span></h6>
+          <h6>Session: <span class="badge badge-info badge-pill" title="Nombre d'inventaires"> {{ formatDate2($session->date_debut) }} -  {{ formatDate2($session->date_fin) }}</span></h6>
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
@@ -205,7 +205,7 @@
                     <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
                     <td>{{ $item->code }} - {{ $item->designation }}</td>
                     <td>{{ $item->libelle_zone }}</td>
-                    <td>{{ $item->date }}</td>
+                    <td>{{ formatDate2($item->date) }}</td>
                     <td>{{ $item->longueur }}</td>
                     <td>{{ $item->largeur }}</td>
                     <td>{{ $item->hauteur }} </td>
