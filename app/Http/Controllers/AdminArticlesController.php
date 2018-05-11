@@ -32,23 +32,14 @@ class AdminArticlesController extends Controller
 
     if($request->has('submitFiltre')){
       //  dd($request->all());
-      if($request->id_famille != 'null' ) {
-        $id_famille = $request->id_famille;
-        $where_id_famille = " and a.id_famille = ".$id_famille." ";
-      }
-
-      if($request->id_site != 'null' ) {
-        $id_site = $request->id_site;
-        $where_id_site = " and s.id_site = ".$id_site." ";
-      }
+      if($request->id_famille != 'null' ) {$where_id_famille = " and a.id_famille = ".$request->id_famille." ";}
+      if($request->id_site != 'null' ) {$where_id_site = " and s.id_site = ".$request->id_site." ";}
     }
-
 
     $sites = collect(DB::select("SELECT s.id_site, s.libelle, s.created_at, so.libelle as libelle_societe FROM sites s LEFT JOIN societes so ON s.id_societe=so.id_societe"));
     $familles = collect(DB::select("SELECT f.id_famille, f.libelle, c.libelle as libelle_famille FROM familles f LEFT JOIN categories c on c.id_categorie = f.id_categorie;"));
     $unites = Unite::all();
     $title = "Articles";
-
     $articles = collect(DB::select(
       "SELECT a.id_article, a.id_famille, a.id_unite, a.code, a.designation, a.created_at, f.libelle as libelle_famille,
       u.libelle as libelle_unite, s.libelle as libelle_site, s.id_site, article_site.id_article_site
@@ -59,12 +50,10 @@ class AdminArticlesController extends Controller
       WHERE true " . $where_id_famille . " ".$where_id_site." ;"
     ));
 
-
     $view = view('admin.articles')->with(compact('articles','familles','sites','unites','title'));
 
     if($request->has('submitFiltre')){
       if($request->has('id_famille') && $request->id_famille != "null"){
-        //  dd($request->id_equipement);
         $view->with('selected_id_famille',$request->id_famille);
       }
       if($request->has('id_site') && $request->id_site != "null" ){
@@ -73,16 +62,6 @@ class AdminArticlesController extends Controller
     }
 
     return $view;
-
-
-    //$articles = Throttle::paginate($this->posts_per_page);
-    if($request->ajax()) {
-      return [
-        'articles' => view('admin.moreData.articles')->with(compact('articles'))->render(),
-        'next_page' => $articles->nextPageUrl()
-      ];
-    }
-    //return view('admin.articles')->with(compact('articles','sites','unites','familles'));
   }
 
 
@@ -202,72 +181,70 @@ class AdminArticlesController extends Controller
             LEFT JOIN unites u on u.id_unite=a.id_unite
             LEFT JOIN article_site on article_site.id_article=a.id_article
             LEFT JOIN sites s on s.id_site=article_site.id_site
-            WHERE true " . $where_id_famille . " ".$where_id_site." ;"
+            WHERE true " . $where_id_famille . " ".$where_id_site."
+            ORDER BY a.id_article asc;"
           ));
 
-          $sheet->appendRow(array("id_article","code_article","designation_article","id_famille","Famille","id_unite","unite","date de création"));
+          $sheet->appendRow(array("id_article","code","designation","unite","famille","site"));
           foreach ($articles as $item) {
-            $sheet->appendRow(array( $item->id_article,$item->code,$item->designation,$item->id_famille,$item->libelle_famille,$item->id_unite,$item->libelle_unite,$item->created_at));
+            $sheet->appendRow(array( $item->id_article,$item->code,$item->designation,$item->libelle_unite,$item->libelle_famille,$item->libelle_site));
           }
+        });
+      })->export('xls');
 
-          /*$sheet->appendRow(array("id_article","Code","Designation","id_famille","Famille","id_article_site","id_site","Site","id_unite","Unité","date de création"));
-          foreach ($articles as $item) {
-          $sheet->appendRow(array( $item->id_article,$item->code,$item->designation,$item->id_famille,$item->libelle_famille,$item->id_article_site,$item->id_site,$item->libelle_site,$item->id_unite,$item->libelle_unite,$item->created_at));
-        }*/
-      });
-    })->export('xls');
-
-  }catch(Exception $e){
-    return redirect()->back()->with('alert_danger',"Erreur !<br>Message d'erreur: ".$e->getMessage());
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur !<br>Message d'erreur: ".$e->getMessage());
+    }
   }
-}
 
-public function addArticles(Request $request){
-  $file = $request->file('file');
-  if($file->getClientOriginalExtension() != "xls"){
-    return redirect()->back()->with('alert_warning',"Veuillez importer un fichier excel.");
-  }
-  /*
-  //Display File Name
-  echo 'File Name: '.$file->getClientOriginalName();
-  //Display File Extension
-  echo 'File Extension: '.$file->getClientOriginalExtension();
-  //Display File Real Path
-  echo 'File Real Path: '.$file->getRealPath();
-  //Display File Size
-  echo 'File Size: '.$file->getSize();
-  //Display File Mime Type
-  echo 'File Mime Type: '.$file->getMimeType();*/
+  public function importArticles(Request $request){
+    $file = $request->file('file');
+    if($file->getClientOriginalExtension() != "xls"){
+      return redirect()->back()->with('alert_warning',"Veuillez importer un fichier excel.");
+    }
+    /*
+    //Display File Name
+    echo 'File Name: '.$file->getClientOriginalName();
+    //Display File Extension
+    echo 'File Extension: '.$file->getClientOriginalExtension();
+    //Display File Real Path
+    echo 'File Real Path: '.$file->getRealPath();
+    //Display File Size
+    echo 'File Size: '.$file->getSize();
+    //Display File Mime Type
+    echo 'File Mime Type: '.$file->getMimeType();*/
 
-  //Move Uploaded File
-  $destinationPath = 'uploads';
-  $file->move($destinationPath,$file->getClientOriginalName());
+    //Move Uploaded File
+    $destinationPath = 'uploads';
+    $file->move($destinationPath,$file->getClientOriginalName());
 
-  Excel::load('uploads/'.$file->getClientOriginalName(), function($reader) {
-    //Excel::selectSheetsByIndex(0)->load();
-    //$x = $reader->get(array("id_article","Code","Famille","Site","Designation","Unité","date de creation"));
-    //dump($x);
-  });
-  try{
+    Excel::load('uploads/'.$file->getClientOriginalName(), function($reader) {
+      //Excel::selectSheetsByIndex(0)->load();
+      //$x = $reader->get(array("id_article","Code","Famille","Site","Designation","Unité","date de creation"));
+      //dump($x);
+    });
+    try{
 
-    Excel::load('uploads/'.$file->getClientOriginalName())->chunk(1000000, function($results)
-    {
-      $i = 2;
-      foreach($results as $row){
-        try{
-          if(!is_numeric($row->id_article) || !is_numeric($row->id_famille) || !is_numeric($row->id_unite)){
+      Excel::load('uploads/'.$file->getClientOriginalName())->chunk(1000000, function($results)
+      {
+        $rowHasError = false;
+        $errors = [];
+        $i = 2;
+        foreach($results as $row){
+          try{
+            /*  if(!is_numeric($row->id_article) || !is_numeric($row->id_famille) || !is_numeric($row->id_unite)){
             throw new Exception("Erreur dans la ligne: ".$i);
+          }*/
+          echo "id_article: $row->id_article, code: $row->code, designation: $row->designation, unite: $row->unite, famille: $row->famille, site: $row->site <hr>";
+          $id_unite = Unite::getID($row->unite);
+          $id_famille = Famille::getID($row->famille);
+          $id_site = Site::getID($row->site);
+          if($id_unite == null){
+            $rowHasError = true;
           }
-
-          echo "Article: ".$row->id_article." - ".$row->code_article." - ".$row->designation_article."<br>";
-          echo "Unite: ".$row->id_unite." - ".$row->unite."<br>";
-          echo "Famille: ".$row->id_famille." - ".$row->famille."<hr>";
-
         }catch(Exception $e){
-          return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+          //return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
         }
-
-
 
 
         //$this->saveArticle($row->id_article, $row->id_famille, $row->id_unite, $row->code, $row->designation);

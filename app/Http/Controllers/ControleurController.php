@@ -188,8 +188,8 @@ public function deleteInventaire(Request $request){
 public function updateInventaire(Request $request){
   try{
     $item = Inventaire::find($request->id_inventaire);
-    $item->id_article = Article_site::find($request->id_article_site)->id_article;
-    $item->id_zone = $request->id_zone;
+    //$item->id_article = Article_site::find($request->id_article_site)->id_article;
+    //$item->id_zone = $request->id_zone;
     $item->date = $request->date;
     $item->nombre_palettes = $request->nombre_palettes;
     $item->nombre_pieces = $request->nombre_pieces;

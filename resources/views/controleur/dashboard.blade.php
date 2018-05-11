@@ -86,14 +86,13 @@
                 </div>
               </div>
               <div class="col-sm-2"></div>
-              <div class="col-sm-2"><br>
+              <div class="col-sm-2">
                 <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
               </div>
             </div>
           </form>
         </div>
         {{-- ***************************** /.Filtre ****************************************** --}}
-
 
 
         <div class="breadcrumb">
@@ -265,8 +264,6 @@
       //--------------------
       var selected_id_article_site = document.getElementById("update_id_article_site").value;
 
-      //var id_unite = 0;
-      //var libelle_unite = " ";
       //write unite
       for(var i=0; i<articles.length;i++){
         if(selected_id_article_site == articles[i].id_article_site){
@@ -331,7 +328,7 @@
                   {{-- Article --}}
                   <div class="form-group has-feedback">
                     <label>Article</label>
-                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
                       @foreach ($articles as $item)
                         <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                       @endforeach
@@ -342,7 +339,7 @@
                   {{-- Zone --}}
                   <div class="form-group has-feedback">
                     <label>Zone</label>
-                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" disabled>
                       @foreach ($zones as $item)
                         <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
                       @endforeach
@@ -860,9 +857,9 @@
       row4 = '';
     }
     if(d.valide_par!=null){
-      row4 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
+      row5 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
     }else {
-      row4 = '';
+      row5 = '';
     }
     var row5 = '</table>';
     var data = row1+row2+row3+row4+row5;

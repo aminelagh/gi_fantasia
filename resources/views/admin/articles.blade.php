@@ -106,8 +106,8 @@
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
-                <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
-                <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
+                <li><a href="#" onclick="exportArticlesFunction()">Exporter</a></li>
+                <li><a data-toggle="modal" href="#modalAddArticles">Importer</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -442,7 +442,7 @@
   <!-- **************************** Modal import Articles ***************************************************** -->
   <div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     {{-- Form upload File --}}
-    <form method="POST" action="{{ route('addArticles') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('importArticles') }}" enctype="multipart/form-data">
       @csrf
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -477,14 +477,14 @@
 
 @section('styles')
   <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
-  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <!--
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
+-->
+<link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
+<link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+<link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
 @endsection
 
 @section('scripts')

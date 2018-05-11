@@ -312,13 +312,57 @@
       </div>
       {{-- *********************************** Categories ************************************* --}}
     </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-md-6">
+      {{-- *********************************** Sessions ************************************* --}}
+      <div class="box">
+        <header class="dark">
+          <div class="icons"><i class="fa fa-check"></i></div>
+          <h5>Sessions <span class="badge badge-info badge-pill" title="Nombre de familles"> {{ $sessions->count() }}</span></h5>
+          <!-- .toolbar -->
+          <div class="toolbar">
+            <nav style="padding: 8px;">
+              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+              <ul class="dropdown-menu">
+                <li><a onclick="createNewSessionFunction();">Creer une nouvelle session</a></li>
+                <li><a href="#">print</a></li>
+              </ul>
+              <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+              </div>
+            </nav>
+          </div>
+        </header>
+        <div id="collapse" class="body">
+          <table id="sessionsTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead><tr><th>Session</th><th>Date de création</th><th>Nombre d'inventaires</th></tr></thead>
+            <tbody>
+              @foreach($sessions as $item)
+                <tr align="center">
+                  <td>{{ formatDate2($item->date_debut) }} - {{ formatDate2($item->date_fin) }}</td>
+                  <td>{{ formatDate($item->created_at) }}</td>
+                  <td>{{ $item->nombre_inventaires }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{-- *********************************** Sessions ************************************* --}}
+    </div>
+
 
   </div>
 @endsection
 
 @section('modals')
 
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Users      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD User">
     <form id="formDeleteUser" method="POST" action="{{ route('deleteUser') }}">
@@ -1156,17 +1200,27 @@
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Unites      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sessions      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+  <div class="CRUD Sessions">
+    <form id="formCreateNewSession" method="POST" action="{{ route('createNewSession') }}">
+      @csrf
+    </form>
+    <script>
+    function createNewSessionFunction(){
+      document.getElementById('formCreateNewSession').submit();
+    }
+    </script>
+  </div>
+  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sessions      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection
 
 @section('styles')
   <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
   <link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
   <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.semanticui.min.css') }}">
+  <!--link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.semanticui.min.css') }}"-->
   <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
   <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.foundation.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
   <link rel="stylesheet" href="{{ asset('public/assets/datatables/Buttons/css/buttons.bootstrap.min.css') }}">
 @endsection
 
@@ -1190,9 +1244,9 @@
       [ '5', '10', '25', '50', 'Tout' ]
     ],
     columnDefs: [
-      { targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
-      { targets: 1, visible: true},
-      { targets: 2, visible: true},
+      //{ targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
+      //{ targets: 1, visible: true},
+      //{ targets: 2, visible: true},
     ],
   });
 
@@ -1206,8 +1260,8 @@
       [ '5', '10', '25', '50', 'Tout' ]
     ],
     columnDefs: [
-      { targets:-1, visible: true, orderable: true},
-      { targets: 0, visible: true, type: 'num'},
+    //  { targets:-1, visible: true, orderable: true},
+    //  { targets: 0, visible: true, type: 'num'},
       { targets: 1, visible: true},
     ],
     //order: [[ 0, "asc" ]],
@@ -1223,8 +1277,8 @@
       [ '5', '10', '25', '50', 'Tout' ]
     ],
     columnDefs: [
-      { targets:-1, visible: true, orderable: true, searchable: false},
-      { targets: 0, visible: true, type: "num"},
+      //{ targets:-1, visible: true, orderable: true, searchable: true},
+      //{ targets: 0, visible: true, type: "num"},
       { targets: 1, visible: true},
     ],
     //order: [[ 0, "asc" ]],
@@ -1240,7 +1294,7 @@
       [ '5', '10', '25', '50', 'Tout' ]
     ],
     columnDefs: [
-      { targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
+      //{ targets: 0, width: "1%", type: "num", visible: true, searchable: false, orderable: true},
       { targets: 1, visible: true},
     ],
     //order: [[ 0, "asc" ]],
@@ -1255,11 +1309,6 @@
       [ 5, 10, 25, 50, -1 ],
       [ '5', '10', '25', '50', 'Tout' ]
     ],
-    columnDefs: [
-      { targets:-1, visible: true, orderable: true, searchable: false},
-      { targets: 0, visible: true, type: "num"},
-      { targets: 1, visible: true},
-    ],
     //order: [[ 0, "asc" ]],
   });
 
@@ -1272,10 +1321,20 @@
       [ 5, 10, 25, 50, -1 ],
       [ '5', '10', '25', '50', 'Tout' ]
     ],
+    //order: [[ 0, "asc" ]],
+  });
+
+  $('#sessionsTable').DataTable({
+    order: false,
+    dom: '<lf<t>ip>',
+    lengthMenu: [
+      [ 5, 10, 25, 50, -1 ],
+      [ '5', '10', '25', '50', 'Tout' ]
+    ],
     columnDefs: [
-      { targets:-1, visible: true, orderable: true, searchable: false},
-      { targets: 0, visible: true, type: "num"},
-      { targets: 1, visible: true, type: 'string'},
+      //{ targets:-1, visible: true, orderable: true, searchable: false},
+      //{ targets: 0, visible: true, type: "num"},
+      //{ targets: 1, visible: true, type: 'string'},
     ],
     //order: [[ 0, "asc" ]],
   });

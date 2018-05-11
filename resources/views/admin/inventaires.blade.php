@@ -466,7 +466,7 @@
     @csrf
     <input type="hidden" name="id_inventaire" id="update_id_inventaire">
 
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -478,7 +478,7 @@
               {{-- Article --}}
               <div class="form-group has-feedback">
                 <label>Article</label>
-                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site">
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
                   @foreach ($articles as $item)
                     <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
                   @endforeach
@@ -489,7 +489,7 @@
               {{-- Zone --}}
               <div class="form-group has-feedback">
                 <label>Zone</label>
-                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" required>
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" disabled required>
                   @foreach ($zones as $item)
                     <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
                   @endforeach
@@ -820,9 +820,9 @@
       row4 = '';
     }
     if(d.valide_par!=null){
-      row4 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
+      row5 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
     }else {
-      row4 = '';
+      row5 = '';
     }
     var row5 = '</table>';
     var data = row1+row2+row3+row4+row5;

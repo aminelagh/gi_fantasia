@@ -56,6 +56,12 @@ Route::get('/s',function(){
   dd(Session::all());
 });
 
+Route::get('/a',function(){
+
+  return Famille::getID('famille_6');
+
+});
+
 
 Route::get('/ajaxForm', 'AdminController@ajaxForm')->name('ajaxForm');
 Route::post('/ajaxForm', 'AdminController@ajaxForm')->name('postAjaxForm');
@@ -75,7 +81,7 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/updateArticle', 'AdminArticlesController@updateArticle')->name('updateArticle');
   Route::post('/deleteArticle', 'AdminArticlesController@deleteArticle')->name('deleteArticle');
   Route::post('/exportArticles', 'AdminArticlesController@exportArticles')->name('exportArticles');
-  Route::post('/addArticles', 'AdminArticlesController@addArticles')->name('addArticles');
+  Route::post('/importArticles', 'AdminArticlesController@importArticles')->name('importArticles');
 
   //Inventaire -----------------------------------------------------------------
   Route::get('/inventaires', 'AdminInventairesController@inventaires')->name('inventaires');
@@ -121,6 +127,9 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addUnite', 'AdminUnitesController@addUnite')->name('addUnite');
   Route::post('/updateUnite', 'AdminUnitesController@updateUnite')->name('updateUnite');
   Route::post('/deleteUnite', 'AdminUnitesController@deleteUnite')->name('deleteUnite');
+
+  //Session --------------------------------------------------------------------
+  Route::post('/createNewSession', 'AdminController@createNewSession')->name('createNewSession');
 
 });
 

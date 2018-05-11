@@ -13,7 +13,6 @@ class Session extends Model{
   protected $fillable = ['id_session','date_debut','date_fin','created_at', 'updated_at' ];
 
   public static function getNextID(){
-
     $lastRecord = DB::table('sessions')->orderBy('id_session', 'desc')->first();
 
     $debut = Carbon::createFromFormat('Y-m-d', $lastRecord->date_debut);
@@ -33,5 +32,20 @@ class Session extends Model{
       $item->save();
       return $lastRecord->id_session + 1;
     }
+  }
+
+  public static function splitSession(){
+
+    $now = Carbon::now();
+    $endOfWeek = $now->copy()->endOfWeek();
+
+    $currentSession = Session::find(Session::getNextID());
+    $currentSession->date_fin = $now;
+    $currentSession->save();
+
+    $item = new Session();
+    $item->date_debut = $now;
+    $item->date_fin = $endOfWeek;
+    $item->save();
   }
 }
