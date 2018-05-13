@@ -69,29 +69,13 @@ class AdminArticlesController extends Controller
   //add Article ****************************************************************
   public function addArticle(Request $request){
     try{
-      $articles = Article::where('code',$request->code)->get();
-      foreach($articles as $item){
-        $id_article = $item->id_article;
-        $article_sites = Article_site::where('id_article',$id_article)->get();
-        foreach($article_sites as $as){
-          if($as->id_site == $request->id_site){
-            return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
-          }
-        }
-      }
-      $id_article = Article::getNextID();
-      $item = new Article();
-      $item->id_article = $id_article;
-      $item->id_famille = $request->id_famille;
-      $item->id_unite = $request->id_unite;
-      $item->code = $request->code;
-      $item->designation = $request->designation;
-      $item->save();
 
-      $article_site = new Article_site();
-      $article_site->id_article = $id_article;
-      $article_site->id_site = $request->id_site;
-      $article_site->save();
+      if(Article::addArticle($request->code, $request->designation, $request->id_unite, $request->id_famille, $request->id_site)){
+        return redirect()->back()->with('alert_success',"Article créé");
+      }
+      else{
+        return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
+      }
 
     }catch(Exception $e){
       return redirect()->back()->withInput()->with('alert_danger',"Erreur de création de l'article.<br>Message d'erreur: ".$e->getMessage().".");
@@ -119,29 +103,12 @@ class AdminArticlesController extends Controller
   //update Article *************************************************************
   public function updateArticle(Request $request){
     try{
-
-      $articles = Article::where('code',$request->code)->get();
-      foreach($articles as $item){
-        $id_article = $item->id_article;
-        $article_sites = Article_site::where('id_article',$id_article)->get();
-        foreach($article_sites as $as){
-          if($as->id_site == $request->id_site){
-            return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
-          }
-        }
+      if(Article::updateArticle($request)){
+        return redirect()->back()->with('alert_success',"Article modifié");
       }
-
-      $item = Article::find($request->id_article);
-      $item->id_famille = $request->id_famille;
-      $item->id_unite = $request->id_unite;
-      $item->code = $request->code;
-      $item->designation = $request->designation;
-      $item->save();
-
-      $article_site = Article_site::find($request->id_article_site);
-      $article_site->id_article = $request->id_article;
-      $article_site->id_site = $request->id_site;
-      $article_site->save();
+      else{
+        return redirect()->back()->withInput()->with('alert_warning',"ce code est déjà utilisé pour un autre article dans ce site.");
+      }
 
     }catch(Exception $e){
       return redirect()->back()->with('alert_danger',"Erreur de modification de l'article.<br>Message d'erreur: ".$e->getMessage().".");
@@ -227,77 +194,63 @@ class AdminArticlesController extends Controller
 
       Excel::load('uploads/'.$file->getClientOriginalName())->chunk(1000000, function($results)
       {
-        $rowHasError = false;
+        $hasError = false;
         $errors = [];
         $i = 2;
         foreach($results as $row){
           try{
-            /*  if(!is_numeric($row->id_article) || !is_numeric($row->id_famille) || !is_numeric($row->id_unite)){
-            throw new Exception("Erreur dans la ligne: ".$i);
-          }*/
-          echo "id_article: $row->id_article, code: $row->code, designation: $row->designation, unite: $row->unite, famille: $row->famille, site: $row->site <hr>";
-          $id_unite = Unite::getID($row->unite);
-          $id_famille = Famille::getID($row->famille);
-          $id_site = Site::getID($row->site);
-          if($id_unite == null){
-            $rowHasError = true;
-          }
-        }catch(Exception $e){
-          //return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+            $rowHasError = false;
+            // get IDs
+            $id_unite = Unite::getID($row->unite);
+            $id_famille = Famille::getID($row->famille);
+            $id_site = Site::getID($row->site);
+            //check if items exist
+            if($id_unite == null){$rowHasError = true;  array_push($errors,array("index"=> $i, "errorUnite"=> true ));}
+            if($id_famille == null){$rowHasError = true;  array_push($errors,array("index"=> $i, "errorFamille"=> true ));}
+            if($id_site == null){$rowHasError = true;  array_push($errors,array("index"=> $i, "errorSite"=> true ));}
+
+            if(!$rowHasError){
+              //check if id_article exists
+              if($row->id_article != null && Article::exists($row->id_article)) {
+                //echo "<h3>$row->id_article id not null and exists</h3>";
+                //update Article / site
+
+                $id_article_site = Article_site::where('id_article', $row->id_article)->where('id_site',$id_site)->get()->first()->id_article_site;
+
+                echo "id_article: $row->id_article, code: $row->code, designation: $row->designation, unite: $row->unite, famille: $row->famille, site: $row->site, article_site: $id_article_site<br>";
+
+              /*  if(Article::updateArticle2($row->id_article, $row->code, $row->designation, $id_unite, $id_famille, $id_site, $id_article_site)){
+                }else{
+                  $hasError = true; array_push($errors,array("index"=> $i, "errorArticle"=> true ));
+                }*/
+              }
+              //new article
+              else{
+                /*if(Article::addArticle($row->code, $row->designation, $id_unite, $id_famille, $id_site)){
+                  //no problem adding article and site
+                }else{  $hasError = true; array_push($errors,array("index"=> $i, "errorArticle"=> true ));  }*/
+              }
+            }
+          }catch(Exception $e){ $hasError = true; array_push($errors,array("index"=> $i, "error"=> "Erreur: ".$e->getMessage()." ")); dd($e->getMessage());  }
+          $i++;
         }
-
-
-        //$this->saveArticle($row->id_article, $row->id_famille, $row->id_unite, $row->code, $row->designation);
-        //$this->saveFamille($row->id_famille, $row->famille);
-        //$this->saveUnite($row->id_unite, $row->unite);
-        //$this->saveArticleSite($row->id_article_site, $row->id_article, $row->id_site);
-      }
-    });
-  }catch(Exception $e){
-    //return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+        dump($errors);
+        if($hasError){
+          $errorMessage = "";
+          $errorMessageDanger = "";
+          foreach ($errors as $error) {
+            if(isset($error['errorUnite'])) $errorMessage = $errorMessage + "<li>Ligne: ".$error['index'].". unité n'existe pas.</li>";
+            if(isset($error['errorFamille'])) $errorMessage = $errorMessage + "<li>Ligne: ".$error['index'].". famille n'existe pas.</li>";
+            if(isset($error['errorSite'])) $errorMessage = $errorMessage + "<li>Ligne: ".$error['index'].". site n'existe pas.</li>";
+            if(isset($error['error'])) $errorMessageDanger = $errorMessageDanger + "<li>Ligne: ".$error['index'].". ".$error['error'].".</li>";
+          }
+          return redirec()->back()->with('alert_warning',$errorMessage)->with('alert_danger',$errorMessageDanger);
+        }
+        //else return redirec()->back()->with('alert_success',"Import des articles réussi.");
+      });
+    }catch(Exception $e){
+      //return redirect()->back()->with('alert_danger',"erreur d'importation des articles, veuillez vérifier la validité du document chargé.<br>Message d'erreur: ".$e->getMessage());
+    }
+    //return redirect()->back()->with('alert_success',"Chargement des articles réussi");
   }
-  //return redirect()->back()->with('alert_success',"Chargement des articles réussi");
-}
-
-public static function saveArticle($id_article, $id_famille, $id_unite, $code, $designation){
-  $item = Article::find($id_article);
-  if($item == null){
-    $item = new Article();
-    $item->id_article = $id_article;
-  }
-  $item->id_famille = $id_famille;
-  $item->id_unite = $id_unite;
-  $item->code = $code;
-  $item->designation = $designation;
-  $item->save();
-}
-public static function saveUnite($id_unite, $libelle_unite){
-  $item = Unite::find($id_unite);
-  if($item == null){
-    $item = new Unite();
-    $item->id_unite = $id_unite;
-  }
-  $item->libelle = $libelle_unite;
-  $item->save();
-}
-public static function saveFamille($id_famille, $libelle_famille){
-  $item = Famille::find($id_famille);
-  if($item == null){
-    $item = new Famille();
-    $item->id_famille = $id_famille;
-  }
-  $item->libelle = $libelle_famille;
-  $item->save();
-}
-
-public static function saveArticleSite($id_article_site, $id_article, $id_site){
-  $item = Article_site::find($id_article_site);
-  if($item == null){
-    $item = new Article_site();
-    $item->id_article_site = $id_article_site;
-  }
-  $item->id_article = $id_article;
-  $item->id_site = $id_site;
-  $item->save();
-}
 }

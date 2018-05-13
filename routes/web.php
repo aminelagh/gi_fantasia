@@ -58,7 +58,11 @@ Route::get('/s',function(){
 
 Route::get('/a',function(){
 
-  return Famille::getID('famille_6');
+  $a = Article_site::where('id_article', 1)->where('id_site',3)->get()->first();
+  dd($a);
+
+
+  return Famille::getID('famille_2') == null ? 'null' : 'not null';
 
 });
 
