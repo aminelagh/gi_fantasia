@@ -75,7 +75,7 @@ class CreateTables extends Migration
       $table->increments('id_article');
       $table->integer('id_famille');
       $table->integer('id_unite');
-      $table->string('code',255);
+      $table->string('code',255)->unique();
       $table->string('designation',255);
       $table->timestamps();
       $table->engine = 'InnoDB';

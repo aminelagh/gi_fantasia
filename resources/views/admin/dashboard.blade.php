@@ -69,14 +69,15 @@
         </header>
         <div id="collapse" class="body">
           <table id="sitesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Site</th><th>Societe</th><th>Date de creation</th><th>Outils</th></tr></thead>
+            <thead><tr><th>Site</th><th>Societe</th><th>Date de création</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($sites as $item)
-                <tr align="center">
+                <tr align="center" ondblclick="window.location.href = '{{ route('site',[$item->id_site]) }}';">
                   <td>{{ $item->libelle }}</td>
                   <td>{{ $item->libelle_so }}</td>
                   <td>{{ formatDate($item->created_at) }}</td>
                   <td>
+                    <i class="fa fa-info" title="Details" onclick="window.location.href = '{{ route('site',[$item->id_site]) }}';"></i>
                     <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSite" onclick='updateSiteFunction({{ $item->id_site }},{{ $item->id_societe }}, "{{ $item->libelle }}" );' title="Modifier" ></i>
                     <i class="glyphicon glyphicon-trash" onclick="deleteSiteFunction({{ $item->id_site }},'{{ $item->libelle }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i>
                   </td>
@@ -1260,8 +1261,8 @@
       [ '5', '10', '25', '50', 'Tout' ]
     ],
     columnDefs: [
-    //  { targets:-1, visible: true, orderable: true},
-    //  { targets: 0, visible: true, type: 'num'},
+      //  { targets:-1, visible: true, orderable: true},
+      //  { targets: 0, visible: true, type: 'num'},
       { targets: 1, visible: true},
     ],
     //order: [[ 0, "asc" ]],
@@ -1305,6 +1306,7 @@
     buttons: [
       'copy', 'csv', 'excel', 'pdf', 'print',
     ],
+    order: false,
     lengthMenu: [
       [ 5, 10, 25, 50, -1 ],
       [ '5', '10', '25', '50', 'Tout' ]

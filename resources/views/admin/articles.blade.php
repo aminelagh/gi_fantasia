@@ -13,11 +13,6 @@
           <h5>Création d'un nouvel article</h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a href="#" onclick="printArticles()">export</a></li>
-                <li><a data-toggle="modal" href="#modalAddArticles">Import</a></li>
-              </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
                 <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
@@ -33,104 +28,98 @@
                 @csrf
                 <div class="row">
                   <div class="col-lg-4">
-                    {{-- Site --}}
+                    {{-- Site
                     <div class="form-group has-feedback">
-                      <label>Site</label>
-                      <select  class="form-control" name="id_site" id="id_site">
-                        @foreach ($sites as $item)
-                          <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Famille --}}
-                    <div class="form-group has-feedback">
-                      <label>Famille</label>
-                      <select  class="form-control" name="id_famille" id="id_famille">
-                        @foreach ($familles as $item)
-                          <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Unité --}}
-                    <div class="form-group has-feedback">
-                      <label>Unité</label>
-                      <select  class="form-control" name="id_unite" id="id_unite">
-                        @foreach ($unites as $item)
-                          <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-5">
-                    {{-- Code --}}
-                    <div class="form-group has-feedback">
-                      <label>Code</label>
-                      <input type="text" class="form-control" placeholder="Code" name="code" value="{{ old('code') }}"  id="code" required>
-                    </div>
-                  </div>
-                  <div class="col-md-7">
-                    {{-- Designation --}}
-                    <div class="form-group has-feedback">
-                      <label>Designation</label>
-                      <input type="text" class="form-control" placeholder="Designation" value="{{ old('designation') }}"  id="designation"  name="designation" required>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" align="center">
-                  <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton">
-                </div>
-              </form>
+                    <label>Site</label>
+                    <select  class="form-control" name="id_site" id="id_site">
+                    @foreach ($sites as $item)
+                    <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
+                  @endforeach
+                </select>
+              </div>
+              --}}
+            </div>
+            <div class="col-lg-4">
+              {{-- Famille --}}
+              <div class="form-group has-feedback">
+                <label>Famille</label>
+                <select  class="form-control" name="id_famille" id="id_famille">
+                  @foreach ($familles as $item)
+                    <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              {{-- Unité --}}
+              <div class="form-group has-feedback">
+                <label>Unité</label>
+                <select  class="form-control" name="id_unite" id="id_unite">
+                  @foreach ($unites as $item)
+                    <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
           </div>
-        </div>
+          <div class="row">
+            <div class="col-md-5">
+              {{-- Code --}}
+              <div class="form-group has-feedback">
+                <label>Code</label>
+                <input type="text" class="form-control" placeholder="Code" name="code" value="{{ old('code') }}"  id="code" required>
+              </div>
+            </div>
+            <div class="col-md-7">
+              {{-- Designation --}}
+              <div class="form-group has-feedback">
+                <label>Designation</label>
+                <input type="text" class="form-control" placeholder="Designation" value="{{ old('designation') }}"  id="designation"  name="designation" required>
+              </div>
+            </div>
+          </div>
+          <div class="row" align="center">
+            <input type="submit" class="btn btn-primary" value="Ajouter" id="submitButton">
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
+</div>
+</div>
 
-  <hr>
+<hr>
 
-  <div class="row">
-    <div class="col-md-12">
-      {{-- *********************************** Articles ************************************* --}}
-      <div class="box">
-        <header class="dark">
-          <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $articles->count() }}</span></h5>
-          <div class="toolbar">
-            <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a href="#" onclick="exportArticlesFunction()">Exporter</a></li>
-                <li><a data-toggle="modal" href="#modalAddArticles">Importer</a></li>
-              </ul>
-              <div class="btn-group">
-                <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
-                <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
-                <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
-              </div>
-            </nav>
-          </div>
-        </header>
-        <div id="collapse" class="body">
-          <!--div class="breadcrumb">
-          Afficher/Masquer:
-          <a class="toggle-vis" data-column="0">Code</a> -
-          <a class="toggle-vis" data-column="1">Famille</a> -
-          <a class="toggle-vis" data-column="2">Site</a> -
-          <a class="toggle-vis" data-column="3">Unité</a>
-        </div-->
+<div class="row">
+  <div class="col-md-12">
+    {{-- *********************************** Articles ************************************* --}}
+    <div class="box">
+      <header class="dark">
+        <div class="icons"><i class="fa fa-check"></i></div>
+        <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $articles->count() }}</span></h5>
+        <div class="toolbar">
+          <nav style="padding: 8px;">
+            <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" onclick="exportArticlesFunction()">Exporter</a></li>
+              <li><a data-toggle="modal" href="#modalImportArticles">Importer</a></li>
+            </ul>
+            <div class="btn-group">
+              <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
+              <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
+              <a href="javascript:;" class="btn btn-danger btn-xs close-box" title="Fermer"><i class="fa fa-times"></i></a>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <div id="collapse" class="body">
         <div class="breadcrumb">
           <form id="formFilterArticles" method="POST" action="{{ route('articles') }}">
             @csrf
             <div class="row">
               <div class="col-lg-4">
-                {{-- Site --}}
+                {{-- Site
                 <div class="form-group has-feedback">
                   <label>Site</label>
                   <select  class="form-control" name="id_site" id="filter_id_site">
@@ -140,6 +129,7 @@
                     @endforeach
                   </select>
                 </div>
+                --}}
               </div>
               <div class="col-lg-4">
                 {{-- Famille --}}
@@ -162,22 +152,21 @@
           </form>
         </div>
         <table id="articlesTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-          <thead><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th>Outils</th></tr></thead>
-          <tfoot><tr><th>Code</th><th>Famille</th><th>Site</th><th>Designation</th><th>Unité</th><th></th></tr></tfoot>
+          <thead><tr><th>Code</th><th>Designation</th><th>Famille</th><th>Unité</th><th>Outils</th></tr></thead>
+          <tfoot><tr><th>Code</th><th>Designation</th><th>Famille</th><th>Unité</th><th></th></tr></tfoot>
           <tbody>
             @foreach($articles as $item)
               <tr>
                 <td>{{ $item->code }}</td>
-                <td>{{ $item->libelle_famille }}</td>
-                <td>{{ $item->libelle_site }}</td>
                 <td>{{ $item->designation }}</td>
+                <td>{{ $item->libelle_famille }}</td>
                 <td>{{ $item->libelle_unite }}</td>
                 <td align="center">
-                  <i class="fa fa-plus" data-placement="bottom" data-toggle="modal" data-target="#modalAddArticleToOtherSite" data-original-title="Ajouter l'article dans un autre site" data-toggle="tooltip"
-                  onclick='addArticleToOtherSiteFunction({{ $item->id_article }},{{ $item->id_article_site }},{{ $item->id_famille }},{{ $item->id_site }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Ajouter l'article dans un autre site" ></i>
+                  {{--<i class="fa fa-plus" data-placement="bottom" data-toggle="modal" data-target="#modalAddArticleToOtherSite" data-original-title="Ajouter l'article dans un autre site" data-toggle="tooltip"
+                  onclick='addArticleToOtherSiteFunction({{ $item->id_article }},{{ $item->id_famille }},{{ $item->id_site }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Ajouter l'article dans un autre site" ></i> --}}
                   <i class="fa fa-edit" data-placement="bottom" data-toggle="modal" data-target="#modalUpdateArticle" data-original-title="Modifier" data-toggle="tooltip"
-                  onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},{{ $item->id_famille }},{{ $item->id_site }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
-                  <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},{{ $item->id_article_site }},'{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                  onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_famille }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i>
+                  <i class="glyphicon glyphicon-trash" onclick="deleteArticleFunction({{ $item->id_article }},'{{ $item->code }}','{{ $item->designation }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                 </td>
               </tr>
             @endforeach
@@ -214,17 +203,15 @@
   {{-- ************************** Export To Excel Forms ***************************************** --}}
   <form id="formExportArticles" method="POST" action="{{ route('exportArticles') }}" target="_blank">
     @csrf
-    <input type="hidden" name="id_famille" id="export_id_famille">
-    <input type="hidden" name="id_site" id="export_id_site">
+    <!--input type="hidden" name="id_famille" id="export_id_famille"-->
   </form>
 
   <script>
   function exportArticlesFunction(){
-    let id_site = document.getElementById("filter_id_site").value;
-    let id_famille = document.getElementById("filter_id_famille").value;
+    //let id_famille = document.getElementById("filter_id_famille").value;
 
-    document.getElementById("export_id_site").value = id_site;
-    document.getElementById("export_id_famille").value = id_famille;
+    //document.getElementById("export_id_site").value = id_site;
+    //document.getElementById("export_id_famille").value = id_famille;
     document.getElementById("formExportArticles").submit();
   }
 </script>
@@ -249,12 +236,10 @@
       document.getElementById("formDeleteArticle").submit();
     }
   }
-  function updateArticleFunction(id_article,id_article_site,id_famille, id_site, id_unite, code, designation){
+  function updateArticleFunction(id_article,id_famille, id_unite, code, designation){
     //document.getElementById("formAddArticle").action = "{{ route('updateArticle') }}";
     //document.getElementById("submitButton").value = "Modifier";
     document.getElementById("update_id_article").value = id_article;
-    document.getElementById("update_id_site").value = id_site;
-    document.getElementById("update_id_article_site").value = id_article_site;
     document.getElementById("update_id_famille").value = id_famille;
     document.getElementById("update_id_unite").value = id_unite;
     document.getElementById("update_code").value = code;
@@ -278,7 +263,6 @@
     {{-- Form update article --}}
     <form method="POST" action="{{ route('updateArticle') }}" id="formUpdateArticle">
       @csrf
-      <input type="hidden" name="id_article_site" id="update_id_article_site">
       <input type="hidden" name="id_article" id="update_id_article">
 
       <div class="modal-dialog" role="document">
@@ -292,183 +276,184 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-lg-4">
-                    {{-- Site --}}
+                    {{-- Site
                     <div class="form-group has-feedback">
-                      <label>Site</label>
-                      <select  class="form-control" name="id_site" id="update_id_site">
-                        @foreach ($sites as $item)
-                          <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Famille --}}
-                    <div class="form-group has-feedback">
-                      <label>Famille</label>
-                      <select  class="form-control" name="id_famille" id="update_id_famille">
-                        @foreach ($familles as $item)
-                          <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Unité --}}
-                    <div class="form-group has-feedback">
-                      <label>Unité</label>
-                      <select  class="form-control" name="id_unite" id="update_id_unite">
-                        @foreach ($unites as $item)
-                          <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-5">
-                    {{-- Code --}}
-                    <div class="form-group has-feedback">
-                      <label>Code</label>
-                      <input type="text" class="form-control" placeholder="Code" name="code" id="update_code" required>
-                    </div>
-                  </div>
-                  <div class="col-md-7">
-                    {{-- Designation --}}
-                    <div class="form-group has-feedback">
-                      <label>Designation</label>
-                      <input type="text" class="form-control" placeholder="Designation" id="update_designation"  name="designation" required>
-                    </div>
-                  </div>
-                </div>
-
+                    <label>Site</label>
+                    <select  class="form-control" name="id_site" id="update_id_site">
+                    @foreach ($sites as $item)
+                    <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
+                  @endforeach
+                </select>
+              </div>
+              --}}
+            </div>
+            <div class="col-lg-4">
+              {{-- Famille --}}
+              <div class="form-group has-feedback">
+                <label>Famille</label>
+                <select  class="form-control" name="id_famille" id="update_id_famille">
+                  @foreach ($familles as $item)
+                    <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              {{-- Unité --}}
+              <div class="form-group has-feedback">
+                <label>Unité</label>
+                <select  class="form-control" name="id_unite" id="update_id_unite">
+                  @foreach ($unites as $item)
+                    <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Modifier</button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <!-- **************************** Modal update Article ***************************************************** -->
-  <div class="modal fade" id="modalAddArticleToOtherSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    {{-- Form add Article To Other Site  --}}
-    <form method="POST" action="{{ route('addArticle') }}" id="formAddArticleToOtherSite">
-      @csrf
-      <input type="hidden" name="id_article_site" id="update_2_id_article_site">
-      <input type="hidden" name="id_article" id="update_2_id_article">
-
-      <input type="hidden" name="id_famille" id="update_2_id_famille_2">
-      <input type="hidden" name="id_unite" id="update_2_id_unite_2">
-
-
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Ajout de l'article dans un autre site</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="row">
-                  <div class="col-lg-4">
-                    {{-- Site --}}
-                    <div class="form-group has-feedback">
-                      <label>Site</label>
-                      <select  class="form-control" name="id_site" id="update_2_id_site">
-                        @foreach ($sites as $item)
-                          <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Famille --}}
-                    <div class="form-group has-feedback">
-                      <label>Famille</label>
-                      <select  class="form-control" id="update_2_id_famille" disabled>
-                        @foreach ($familles as $item)
-                          <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    {{-- Unité --}}
-                    <div class="form-group has-feedback">
-                      <label>Unité</label>
-                      <select  class="form-control" id="update_2_id_unite" disabled>
-                        @foreach ($unites as $item)
-                          <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-5">
-                    {{-- Code --}}
-                    <div class="form-group has-feedback">
-                      <label>Code</label>
-                      <input type="text" class="form-control" placeholder="Code" name="code" id="update_2_code" readonly>
-                    </div>
-                  </div>
-                  <div class="col-md-7">
-                    {{-- Designation --}}
-                    <div class="form-group has-feedback">
-                      <label>Designation</label>
-                      <input type="text" class="form-control" placeholder="Designation" id="update_2_designation"  name="designation" readonly>
-                    </div>
-                  </div>
-                </div>
-
+          <div class="row">
+            <div class="col-md-5">
+              {{-- Code --}}
+              <div class="form-group has-feedback">
+                <label>Code</label>
+                <input type="text" class="form-control" placeholder="Code" name="code" id="update_code" required>
+              </div>
+            </div>
+            <div class="col-md-7">
+              {{-- Designation --}}
+              <div class="form-group has-feedback">
+                <label>Designation</label>
+                <input type="text" class="form-control" placeholder="Designation" id="update_designation"  name="designation" required>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-          </div>
+
         </div>
       </div>
-    </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Modifier</button>
+    </div>
   </div>
+</div>
+</form>
+</div>
 
-  <!-- **************************** Modal import Articles ***************************************************** -->
-  <div class="modal fade" id="modalAddArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    {{-- Form upload File --}}
-    <form method="POST" action="{{ route('importArticles') }}" enctype="multipart/form-data">
-      @csrf
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Chargement des articles</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-7">
-                {{-- Libelle --}}
-                <div class="form-group has-feedback">
-                  <label>Fichier</label>
-                  <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
+<!-- **************************** Modal update Article ***************************************************** -->
+<div class="modal fade" id="modalAddArticleToOtherSite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{-- Form add Article To Other Site  --}}
+  <form method="POST" action="{{ route('addArticle') }}" id="formAddArticleToOtherSite">
+    @csrf
+    <input type="hidden" name="id_article_site" id="update_2_id_article_site">
+    <input type="hidden" name="id_article" id="update_2_id_article">
+
+    <input type="hidden" name="id_famille" id="update_2_id_famille_2">
+    <input type="hidden" name="id_unite" id="update_2_id_unite_2">
+
+
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Ajout de l'article dans un autre site</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-lg-4">
+                  {{-- Site --}}
+                  <div class="form-group has-feedback">
+                    <label>Site</label>
+                    <select  class="form-control" name="id_site" id="update_2_id_site">
+                      @foreach ($sites as $item)
+                        <option value="{{ $item->id_site }}">{{ $item->libelle }} ({{ $item->libelle_societe }})</option>
+                      @endforeach
+                    </select>
+                  </div>
                 </div>
+                <div class="col-lg-4">
+                  {{-- Famille --}}
+                  <div class="form-group has-feedback">
+                    <label>Famille</label>
+                    <select  class="form-control" id="update_2_id_famille" disabled>
+                      @foreach ($familles as $item)
+                        <option value="{{ $item->id_famille }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  {{-- Unité --}}
+                  <div class="form-group has-feedback">
+                    <label>Unité</label>
+                    <select  class="form-control" id="update_2_id_unite" disabled>
+                      @foreach ($unites as $item)
+                        <option value="{{ $item->id_unite }}">{{ $item->libelle }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5">
+                  {{-- Code --}}
+                  <div class="form-group has-feedback">
+                    <label>Code</label>
+                    <input type="text" class="form-control" placeholder="Code" name="code" id="update_2_code" readonly>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  {{-- Designation --}}
+                  <div class="form-group has-feedback">
+                    <label>Designation</label>
+                    <input type="text" class="form-control" placeholder="Designation" id="update_2_designation"  name="designation" readonly>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- **************************** Modal import Articles ***************************************************** -->
+<div class="modal fade" id="modalImportArticles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{-- Form upload File --}}
+  <form method="POST" action="{{ route('importArticles') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Chargement des articles</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-7">
+              {{-- Libelle --}}
+              <div class="form-group has-feedback">
+                <label>Fichier</label>
+                <input type="file" class="form-control" placeholder="Votre Fichier" name="file" required>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Ajouter</button>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>
 
 </div>
 {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Articles      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
@@ -531,13 +516,13 @@
       //"autoWidth": true,
       info: false,
       stateSave: false,
+      order: false,
       columnDefs: [
-        { targets: 0, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
-        { targets: 1, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
-        { targets: 2, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 0, width: "", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 1, width: "", type: "string", visible: true, searchable: true, orderable: true},
+        { targets: 2, width: "", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: true, orderable: true},
-        { targets: 4, width: "10%", type: "string", visible: true, searchable: true, orderable: true},
-        { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: false},
+        { targets: 4, width: "05%", type: "string", visible: true, searchable: false, orderable: false},
       ],
     });
 
@@ -556,27 +541,6 @@
       });
     });
 
-  });
-
-  $('#articlesTablea').DataTable({
-    dom: '<lf<Bt>ip>',
-    buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print',
-    ],
-    lengthMenu: [
-      [ 5, 10, 25, 50, -1 ],
-      [ '5', '10', '25', '50', 'Tout' ]
-    ],
-    columnDefs: [
-      //{ targets:-1, width: "04%", visible: true, orderable: true, searchable: false},
-      { targets: 0, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 1, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 2, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 3, /*width: "10%",*/ type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 4, width: "10%", type: "string", visible: true, searchable: false, orderable: true},
-      { targets: 5, width: "05%", type: "string", visible: true, searchable: false, orderable: true},
-    ],
-    //order: [[ 0, "asc" ]],
   });
 
   $('a.toggle-vis').on('click', function (e) {

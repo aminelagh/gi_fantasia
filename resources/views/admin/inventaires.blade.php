@@ -14,11 +14,6 @@
           <h5>Création d'un nouvel inventaire</h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
-                <li><a data-toggle="modal" href="#modalAddInventaires">Import</a></li>
-              </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
                 <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
@@ -214,11 +209,11 @@
                   </select>
                 </div>
               </div>
-              <div class="col-sm-2"></div>
-              <div class="col-sm-2"><br>
-                <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
-              </div>
             </div>
+            <div class="row" align="center">
+              <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+            </div>
+
           </form>
         </div>
         {{-- ***************************** /.Filtre ****************************************** --}}
@@ -309,29 +304,11 @@
 
         </div>
       </div>
-      {{-- *********************************** Articles ************************************* --}}
+      {{-- *********************************** inventaires ************************************* --}}
     </div>
   </div>
 
   <hr>
-  <div class="row">
-    <div class="col-md-12">
-      {{-- *********************************** Zones ************************************* --}
-
-      <table class="articlesHere endless-pagination" data-next-page="{{ $articles->nextPageUrl() }}" border="1" cellspacing="0">
-      <thead>  <tr><th>id</th><th>ip</th><th>type</th><th>created_at</th></tr></thead>
-      @foreach($articles as $post)
-      <tr><td>{{ $post->id }}</td><td>{{ $post->ip }}</td><td>{{ $post->type }}</td><td>{{ $post->created_at }}</td></tr>
-    @endforeach
-    {{-- {!! $posts->render() !!} --}
-    <tfoot><tr><th colspan="4">    <button class="btn btn-default" onclick="loadMore()">LoadMore</button></th></tr></tfoot>
-  </table>
-
-  {{-- *********************************** articles ************************************* --}}
-</div>
-</div>
-
-
 @endsection
 
 
@@ -341,17 +318,20 @@
   {{-- ************************** Export To Excel Forms ***************************************** --}}
   <form id="formExportInventaires" method="POST" action="{{ route('exportInventaires') }}" target="_blank">
     @csrf
-    <input type="hidden" name="id_article_site" id="export_id_article">
+    <input type="hidden" name="id_session" id="export_id_session">
+    <input type="hidden" name="id_site" id="export_id_site">
     <input type="hidden" name="id_zone" id="export_id_zone">
+    <input type="hidden" name="code" id="export_code">
   </form>
 
   <script>
   function exportInventairesFunction(){
-    let id_article_site = document.getElementById("filter_id_article_site").value;
-    let id_zone = document.getElementById("filter_id_zone").value;
 
-    document.getElementById("export_id_article").value = id_article_site;
-    document.getElementById("export_id_zone").value = id_zone;
+    document.getElementById("export_id_session").value = document.getElementById("filter_id_session").value;
+    document.getElementById("export_id_site").value = document.getElementById("filter_id_site").value;
+    document.getElementById("export_id_zone").value = document.getElementById("filter_id_zone").value;
+    document.getElementById("export_code").value = document.getElementById("filter_code").value;
+
     document.getElementById("formExportInventaires").submit();
   }
 </script>
@@ -564,15 +544,9 @@
 @endsection
 
 @section('styles')
-  <!--link rel="stylesheet" href="assets/datatables/dataTables/css/jquery.dataTables.min.css"-->
   <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
 @endsection
 
 @section('scripts')

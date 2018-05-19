@@ -48,7 +48,6 @@ $user = Sentinel::registerAndActivate($credentials);
 $role = Sentinel::findRoleBySlug('admin');
 $role->users()->attach($user);*/
 
-
 return view('welcome');
 });
 
@@ -87,6 +86,16 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/exportArticles', 'AdminArticlesController@exportArticles')->name('exportArticles');
   Route::post('/importArticles', 'AdminArticlesController@importArticles')->name('importArticles');
 
+  //Article_site ---------------------------------------------------------------
+  Route::any('/site/{id_site}', 'AdminSitesController@site')->name('site');
+  Route::post('/deleteArticleSite', 'AdminSitesController@deleteArticleSite')->name('deleteArticleSite');
+  Route::post('/exportArticleSites', 'AdminSitesController@exportArticleSites')->name('exportArticleSites');
+
+  //Site -----------------------------------------------------------------------
+  Route::post('/addSite', 'AdminSitesController@addSite')->name('addSite');
+  Route::post('/updateSite', 'AdminSitesController@updateSite')->name('updateSite');
+  Route::post('/deleteSite', 'AdminSitesController@deleteSite')->name('deleteSite');
+
   //Inventaire -----------------------------------------------------------------
   Route::get('/inventaires', 'AdminInventairesController@inventaires')->name('inventaires');
   Route::post('/inventaires', 'AdminInventairesController@inventaires')->name('inventaires');
@@ -116,11 +125,6 @@ Route::group(['middleware' => 'admin'], function () {
   Route::post('/addSociete', 'AdminSocietesController@addSociete')->name('addSociete');
   Route::post('/updateSociete', 'AdminSocietesController@updateSociete')->name('updateSociete');
   Route::post('/deleteSociete', 'AdminSocietesController@deleteSociete')->name('deleteSociete');
-
-  //Site -----------------------------------------------------------------------
-  Route::post('/addSite', 'AdminSitesController@addSite')->name('addSite');
-  Route::post('/updateSite', 'AdminSitesController@updateSite')->name('updateSite');
-  Route::post('/deleteSite', 'AdminSitesController@deleteSite')->name('deleteSite');
 
   //Zone -----------------------------------------------------------------------
   Route::post('/addZone', 'AdminZonesController@addZone')->name('addZone');
