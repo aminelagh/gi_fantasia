@@ -25,11 +25,10 @@
         <div id="div-2" class="body">
           <div class="row">
             <div class="col-md-12">
-              {{-- *********************** Form AddInventaire ********************************  --}}
               <form id="formAddInventaire" method="POST" action="{{ route('addInventaire') }}">
                 @csrf
                 <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     {{-- Catégorie --}}
                     <div class="form-group has-feedback">
                       <label>Catégorie</label>
@@ -41,41 +40,33 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     {{-- Famille --}}
                     <div class="form-group has-feedback">
                       <label>Famille</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_famille" id="id_famille" required></select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    {{-- Site --}}
-                    <div class="form-group has-feedback">
-                      <label>Site</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_site" id="id_site" required>
-                        @foreach ($sites as $item)
-                          <option value="{{ $item->id_site }}">{{ $item->libelle }}</option>
-                        @endforeach
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_famille" id="id_famille" required>
+
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     {{-- Article --}}
                     <div class="form-group has-feedback">
                       <label>Article</label>
-                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site"></select>
+                      <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
+                      </select>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     {{-- Zone --}}
                     <div class="form-group has-feedback">
                       <label>Zone</label>
                       <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="id_zone" required></select>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
                     {{-- Date --}}
                     <div class="form-group has-feedback">
                       <label>Date</label>
@@ -211,333 +202,351 @@
                       @foreach ($filtreArticles as $item)
                         <option value="{{ $item->code }}" {{ isset($selected_code) && $selected_code == $item->code ? 'selected' : ''  }}>{{ $item->code }}</option>
                       @endforeach
-                    </select>
-                  </div>
+                      {{--@foreach ($articles as $item)
+                      <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                    @endforeach
+                    --}}
+                  </select>
                 </div>
               </div>
-              <div class="row" align="center">
-                <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
-              </div>
+            </div>
+            <div class="row" align="center">
+              <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
+            </div>
 
-            </form>
-          </div>
-          {{-- ***************************** /.Filtre ****************************************** --}}
+          </form>
+        </div>
+        {{-- ***************************** /.Filtre ****************************************** --}}
 
-          <div class="breadcrumb">
-            Afficher/Masquer:
-            <a class="toggle-vis" data-column="1">Article</a> -
-            <a class="toggle-vis" data-column="2">Zone</a> -
-            <a class="toggle-vis" data-column="3">Date</a> -
-            <a class="toggle-vis" data-column="9">Quantité</a>
-          </div>
+        <div class="breadcrumb">
+          Afficher/Masquer:
+          <a class="toggle-vis" data-column="1">Article</a> -
+          <a class="toggle-vis" data-column="2">Zone</a> -
+          <a class="toggle-vis" data-column="3">Date</a> -
+          <a class="toggle-vis" data-column="9">Quantité</a>
+        </div>
 
-          <script>
-          function submitValidate(){
-            document.getElementById("validateForm_filter_code").value = document.getElementById("filter_code").value;
-            document.getElementById("validateForm_filter_id_zone").value = document.getElementById("filter_id_zone").value;
-            document.getElementById("validateForm_filter_id_site").value = document.getElementById("filter_id_site").value;
-            document.getElementById("validateForm_filter_id_session").value = document.getElementById("filter_id_session").value;
-          }
-          </script>
 
-          <!-- ********************* Form / Table Validate inventaires ******************************************* -->
-          <form name="formValidateInventaires" id="formValidateInventaires" method="POST" action="{{ route('inventaires') }}">
-            @csrf
-            <input type="hidden" name="code" id="validateForm_filter_code">
-            <input type="hidden" name="id_zone" id="validateForm_filter_id_zone">
-            <input type="hidden" name="id_site" id="validateForm_filter_id_site">
-            <input type="hidden" name="id_session" id="validateForm_filter_id_session">
+        <script>
+        function submitValidate(){
+          document.getElementById("validateForm_filter_code").value = document.getElementById("filter_code").value;
+          document.getElementById("validateForm_filter_id_zone").value = document.getElementById("filter_id_zone").value;
+          document.getElementById("validateForm_filter_id_site").value = document.getElementById("filter_id_site").value;
+          document.getElementById("validateForm_filter_id_session").value = document.getElementById("filter_id_session").value;
+        }
+        </script>
 
-            <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
-              <thead>
-                <tr>
-                  <th></th><th>Article</th><th>Zone</th><th>Date</th>
-                  <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
-                  <th>Créé par</th><th>le</th>
-                  <th>Modifié par</th><th>le</th>
-                  <th>validé par</th><th>le</th>
-                  <th>Valide</th>
-                  <th>Outils</th>
-                </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th></th><th>Article</th><th>Zone</th><th>Date</th>
-                  <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
-                  <th>Créé par</th><th>le</th>
-                  <th>Modifié par</th><th>le</th>
-                  <th>validé par</th><th>le</th>
-                  <td onclick="submitValidate();" align="center"><input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires"></td>
-                  <th></th>
-                </tr>
-              </tfoot>
-              <tbody>
-                @if(isset($data) && $data != NULL )
-                  @foreach($data as $item)
 
-                    <tr>
-                      <input type="hidden" name="id_inventaire[{{ $loop->iteration }}]" value="{{ $item->id_inventaire }}">
+        <!-- ********************* Form / Table ******************************************* -->
+        <form name="formValidateInventaires" id="formValidateInventaires" method="POST" action="{{ route('inventaires') }}">
+          @csrf
+          <input type="hidden" name="code" id="validateForm_filter_code">
+          <input type="hidden" name="id_zone" id="validateForm_filter_id_zone">
+          <input type="hidden" name="id_site" id="validateForm_filter_id_site">
+          <input type="hidden" name="id_session" id="validateForm_filter_id_session">
 
-                      <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
-                      <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ formatDate2($item->date) }}</td>
-                      <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
-                      <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
-                      <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                      <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
-                      <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
-                      <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+          <table id="inventairesTable" class="table table-hover table-striped table-bordered" style="width:100%">
+            <thead>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <th>Valide</th>
+                <th>Outils</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th><th>Article</th><th>Zone</th><th>Date</th>
+                <th>Longueur</th><th>Largeur</th><th>Hauteur</th><th>palettes</th><th>Pieces</th><th>Quantité</th>
+                <th>Créé par</th><th>le</th>
+                <th>Modifié par</th><th>le</th>
+                <th>validé par</th><th>le</th>
+                <td onclick="submitValidate();" align="center"><input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires"></td>
+                <th></th>
+              </tr>
+            </tfoot>
+            <tbody>
+              @if(isset($data) && $data != NULL )
+                @foreach($data as $item)
+
+                  <tr>
+                    <input type="hidden" name="id_inventaire[{{ $loop->iteration }}]" value="{{ $item->id_inventaire }}">
+
+                    <td><img src="{{ asset('public/assets/datatables/plus.png') }}" height="20px" /></td>
+                    <td>{{ $item->code }} - {{ $item->designation }}</td><td>{{ $item->libelle_zone }}</td><td>{{ formatDate2($item->date) }}</td>
+                    <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
+                    <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
+                    <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
+                    <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
+                    <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
+                    <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                    <td align="center">
+                      <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
+                        value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
+                      </td>
                       <td align="center">
-                        <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
-                          value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
-                        </td>
-                        <td align="center">
-                          <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
-                          onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
-                          {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                          <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
-                        </td>
-                      </tr>
-                    @endforeach
-                  @endif
-                </tbody>
+                        <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
+                        onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
+                        {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
+                        <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                      </td>
+                    </tr>
+                  @endforeach
+                @endif
+              </tbody>
 
-              </table>
-            </form>
-            <!-- ********************* /.Form / Table ******************************************* -->
+            </table>
+          </form>
+          <!-- ********************* /.Form / Table ******************************************* -->
 
+        </div>
+      </div>
+      {{-- *********************************** inventaires ************************************* --}}
+    </div>
+  </div>
+
+  <hr>
+@endsection
+
+
+@section('modals')
+
+  {{-- ****************************************************************************************** --}}
+  {{-- ************************** Export To Excel Forms ***************************************** --}}
+  <form id="formExportInventaires" method="POST" action="{{ route('exportInventaires') }}" target="_blank">
+    @csrf
+    <input type="hidden" name="id_session" id="export_id_session">
+    <input type="hidden" name="id_site" id="export_id_site">
+    <input type="hidden" name="id_zone" id="export_id_zone">
+    <input type="hidden" name="code" id="export_code">
+  </form>
+
+  <script>
+  function exportInventairesFunction(){
+
+    document.getElementById("export_id_session").value = document.getElementById("filter_id_session").value;
+    document.getElementById("export_id_site").value = document.getElementById("filter_id_site").value;
+    document.getElementById("export_id_zone").value = document.getElementById("filter_id_zone").value;
+    document.getElementById("export_code").value = document.getElementById("filter_code").value;
+
+    document.getElementById("formExportInventaires").submit();
+  }
+</script>
+{{-- ************************** Export To Excel Forms ***************************************** --}}
+{{-- ****************************************************************************************** --}}
+
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Inventaires      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="CRUD Inventaires">
+  <form id="formDeleteInventaire" method="POST" action="{{ route('deleteInventaire') }}">
+    @csrf
+    <input type="hidden" id="delete_id_inventaire" name="id_inventaire" />
+  </form>
+  <script>
+  function deleteInventaireFunction(id_inventaire,code,designation,date){
+    var go = confirm('Vos êtes sur le point d\'effacer l\'inventaire: "'+code+' - '+designation+' '+date+'".\n voulez-vous continuer?');
+    if(go){
+      document.getElementById("delete_id_inventaire").value = id_inventaire;
+      document.getElementById("formDeleteInventaire").submit();
+    }
+  }
+
+  function updateInventaireFuntion(id_inventaire,id_article_site, id_zone, date, nombre_palettes, nombre_pieces, longueur, largeur, hauteur){
+
+    document.getElementById("update_id_inventaire").value = id_inventaire;
+    document.getElementById("update_id_article_site").value = id_article_site;
+    $('.show-tick').selectpicker('refresh');
+    document.getElementById("update_id_zone").value = id_zone;
+    $('.show-tick').selectpicker('refresh');
+    document.getElementById("update_date").value = date;
+
+    document.getElementById("update_nombre_palettes").value = nombre_palettes;
+    document.getElementById("update_nombre_pieces").value = nombre_pieces;
+
+    document.getElementById("update_longueur").value = longueur;
+    document.getElementById("update_largeur").value = largeur;
+    document.getElementById("update_hauteur").value = hauteur;
+    $('.show-tick').selectpicker('refresh');
+    update_calculateTotal();
+  }
+
+  function update_calculateTotal(){
+    document.getElementById("update_largeur").readOnly = false;
+    document.getElementById("update_longueur").readOnly = false;
+    document.getElementById("update_hauteur").readOnly = false;
+    //get unite
+    var articles = [];
+    @foreach ($articles as $item)
+    var article = {
+      id_article_site: {{ $item->id_article_site }},
+      id_unite: {{ $item->id_unite }},
+      libelle_unite: "{{ $item->libelle_unite }}"
+    };
+    articles.push(article);
+    @endforeach
+    //--------------------
+    var selected_id_article_site = document.getElementById("update_id_article_site").value;
+
+    //var id_unite = 0;
+    //var libelle_unite = " ";
+    //write unite
+    for(var i=0; i<articles.length;i++){
+      if(selected_id_article_site == articles[i].id_article_site){
+
+        var id_unite = articles[i].id_unite;
+        var libelle_unite = articles[i].libelle_unite;
+
+        var palettes = document.getElementById("update_nombre_palettes").value;
+        var pieces = document.getElementById("update_nombre_pieces").value;
+
+        var largeur = document.getElementById("update_largeur").value;
+        var longueur = document.getElementById("update_longueur").value;
+        var hauteur = document.getElementById("update_hauteur").value;
+
+        if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
+          document.getElementById("update_largeur").value = 1;  document.getElementById("update_largeur").readOnly = true;
+          document.getElementById("update_longueur").value = 1; document.getElementById("update_longueur").readOnly = true;
+          document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M2"){
+          document.getElementById("update_largeur").readOnly = false;
+          document.getElementById("update_longueur").readOnly = false;
+          document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
+        }
+        else if( libelle_unite=="M3"){
+          document.getElementById("update_largeur").readOnly = false;
+          document.getElementById("update_longueur").readOnly = false;
+          document.getElementById("update_hauteur").readOnly = false;
+        }
+        var total = 0;
+        var dimm = largeur * longueur * hauteur;
+        if(palettes == 0){
+          total = pieces * dimm;
+        }else{
+          total = pieces * palettes * dimm;
+        }
+        document.getElementById("update_total").value = total + " "+articles[i].libelle_unite;
+        break;
+      }
+    }
+    //document.getElementById("total").value = total;
+  }
+
+  </script>
+</div>
+
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+<div class="modal fade lg" id="modalUpdateInventaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{-- Form upload File --}}
+  <form method="POST" action="{{ route('updateInventaire') }}">
+    @csrf
+    <input type="hidden" name="id_inventaire" id="update_id_inventaire">
+
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Modification de l'inventaire</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              {{-- Article --}}
+              <div class="form-group has-feedback">
+                <label>Article</label>
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
+                  @foreach ($articles as $item)
+                    <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Zone --}}
+              <div class="form-group has-feedback">
+                <label>Zone</label>
+                <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" disabled required>
+                  @foreach ($zones as $item)
+                    <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Date --}}
+              <div class="form-group has-feedback">
+                <label>Date</label>
+                <input type="date" class="form-control" placeholder="Date" name="date" id="update_date" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              {{-- Nombre de palettes --}}
+              <div class="form-group has-feedback">
+                <label>Nombre de palettes</label>
+                <input type="number" class="form-control" placeholder="palettes" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_nombre_palettes"  name="nombre_palettes" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              {{-- Nombre de pieces --}}
+              <div class="form-group has-feedback">
+                <label>Nombre de pieces</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();"  id="update_nombre_pieces"  name="nombre_pieces" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              {{-- Largeur --}}
+              <div class="form-group has-feedback">
+                <label>Largeur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_largeur"  name="largeur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Longueur  --}}
+              <div class="form-group has-feedback">
+                <label>Longueur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_longueur"  name="longueur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Hauteur --}}
+              <div class="form-group has-feedback">
+                <label>Hauteur</label>
+                <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_hauteur"  name="hauteur" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              {{-- Total --}}
+              <div class="form-group has-feedback">
+                <label>Total</label>
+                <input type="text" class="form-control" value=""  id="update_total"  name="total" readonly>
+              </div>
+            </div>
           </div>
         </div>
-        {{-- ***********************************  Form / Table Validate inventaires ************************************* --}}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Modifier</button>
+        </div>
       </div>
     </div>
+  </form>
+</div>
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+{{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+@endsection
 
-    <hr>
-  @endsection
-
-
-  @section('modals')
-
-    {{-- ************************** Export To Excel Forms ***************************************** --}}
-    <form id="formExportInventaires" method="POST" action="{{ route('exportInventaires') }}" target="_blank">
-      @csrf
-      <input type="hidden" name="id_session" id="export_id_session">
-      <input type="hidden" name="id_site" id="export_id_site">
-      <input type="hidden" name="id_zone" id="export_id_zone">
-      <input type="hidden" name="code" id="export_code">
-    </form>
-
-    <script>
-    function exportInventairesFunction(){
-      document.getElementById("export_id_session").value = document.getElementById("filter_id_session").value;
-      document.getElementById("export_id_site").value = document.getElementById("filter_id_site").value;
-      document.getElementById("export_id_zone").value = document.getElementById("filter_id_zone").value;
-      document.getElementById("export_code").value = document.getElementById("filter_code").value;
-      document.getElementById("formExportInventaires").submit();
-    }
-  </script>
-  {{-- ************************** Export To Excel Forms ***************************************** --}}
-
-
-  <div class="CRUD Inventaires">
-    <form id="formDeleteInventaire" method="POST" action="{{ route('deleteInventaire') }}">
-      @csrf
-      <input type="hidden" id="delete_id_inventaire" name="id_inventaire" />
-    </form>
-
-    <script>
-    function deleteInventaireFunction(id_inventaire,code,designation,date){
-      var go = confirm('Vos êtes sur le point d\'effacer l\'inventaire: "'+code+' - '+designation+' '+date+'".\n voulez-vous continuer?');
-      if(go){
-        document.getElementById("delete_id_inventaire").value = id_inventaire;
-        document.getElementById("formDeleteInventaire").submit();
-      }
-    }
-
-    function updateInventaireFuntion(id_inventaire,id_article_site, id_zone, date, nombre_palettes, nombre_pieces, longueur, largeur, hauteur){
-
-      document.getElementById("update_id_inventaire").value = id_inventaire;
-      document.getElementById("update_id_article_site").value = id_article_site;
-      $('.show-tick').selectpicker('refresh');
-      document.getElementById("update_id_zone").value = id_zone;
-      $('.show-tick').selectpicker('refresh');
-      document.getElementById("update_date").value = date;
-
-      document.getElementById("update_nombre_palettes").value = nombre_palettes;
-      document.getElementById("update_nombre_pieces").value = nombre_pieces;
-
-      document.getElementById("update_longueur").value = longueur;
-      document.getElementById("update_largeur").value = largeur;
-      document.getElementById("update_hauteur").value = hauteur;
-      $('.show-tick').selectpicker('refresh');
-      update_calculateTotal();
-    }
-
-    function update_calculateTotal(){
-      document.getElementById("update_largeur").readOnly = false;
-      document.getElementById("update_longueur").readOnly = false;
-      document.getElementById("update_hauteur").readOnly = false;
-      //get unite
-      var articles = [];
-      @foreach ($article_sites as $item)
-      var article = {
-        id_article_site: {{ $item->id_article_site }},
-        id_unite: {{ $item->id_unite }},
-        libelle_unite: "{{ $item->libelle_unite }}"
-      };
-      articles.push(article);
-      @endforeach
-      //--------------------
-      var selected_id_article_site = document.getElementById("update_id_article_site").value;
-
-      //var id_unite = 0;
-      //var libelle_unite = " ";
-      //write unite
-      for(var i=0; i<articles.length;i++){
-        if(selected_id_article_site == articles[i].id_article_site){
-
-          var id_unite = articles[i].id_unite;
-          var libelle_unite = articles[i].libelle_unite;
-
-          var palettes = document.getElementById("update_nombre_palettes").value;
-          var pieces = document.getElementById("update_nombre_pieces").value;
-
-          var largeur = document.getElementById("update_largeur").value;
-          var longueur = document.getElementById("update_longueur").value;
-          var hauteur = document.getElementById("update_hauteur").value;
-
-          if( libelle_unite=="KG" || libelle_unite=="UN" || libelle_unite=="MI"){
-            document.getElementById("update_largeur").value = 1;  document.getElementById("update_largeur").readOnly = true;
-            document.getElementById("update_longueur").value = 1; document.getElementById("update_longueur").readOnly = true;
-            document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
-          }
-          else if( libelle_unite=="M2"){
-            document.getElementById("update_largeur").readOnly = false;
-            document.getElementById("update_longueur").readOnly = false;
-            document.getElementById("update_hauteur").value = 1;  document.getElementById("update_hauteur").readOnly = true;
-          }
-          else if( libelle_unite=="M3"){
-            document.getElementById("update_largeur").readOnly = false;
-            document.getElementById("update_longueur").readOnly = false;
-            document.getElementById("update_hauteur").readOnly = false;
-          }
-          var total = 0;
-          var dimm = largeur * longueur * hauteur;
-          if(palettes == 0){
-            total = pieces * dimm;
-          }else{
-            total = pieces * palettes * dimm;
-          }
-          document.getElementById("update_total").value = total + " "+articles[i].libelle_unite;
-          break;
-        }
-      }
-      //document.getElementById("total").value = total;
-    }
-
-    </script>
-  </div>
-
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Modal Update inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
-  <div class="modal fade lg" id="modalUpdateInventaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    {{-- Form upload File --}}
-    <form method="POST" action="{{ route('updateInventaire') }}">
-      @csrf
-      <input type="hidden" name="id_inventaire" id="update_id_inventaire">
-
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Modification de l'inventaire</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-4">
-                {{-- Article --}}
-                <div class="form-group has-feedback">
-                  <label>Article</label>
-                  <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
-                    @foreach ($article_sites as $item)
-                      <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-4">
-                {{-- Zone --}}
-                <div class="form-group has-feedback">
-                  <label>Zone</label>
-                  <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" disabled required>
-                    @foreach ($zones as $item)
-                      <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-4">
-                {{-- Date --}}
-                <div class="form-group has-feedback">
-                  <label>Date</label>
-                  <input type="date" class="form-control" placeholder="Date" name="date" id="update_date" required>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                {{-- Nombre de palettes --}}
-                <div class="form-group has-feedback">
-                  <label>Nombre de palettes</label>
-                  <input type="number" class="form-control" placeholder="palettes" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_nombre_palettes"  name="nombre_palettes" required>
-                </div>
-              </div>
-              <div class="col-md-4">
-                {{-- Nombre de pieces --}}
-                <div class="form-group has-feedback">
-                  <label>Nombre de pieces</label>
-                  <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();"  id="update_nombre_pieces"  name="nombre_pieces" required>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3">
-                {{-- Largeur --}}
-                <div class="form-group has-feedback">
-                  <label>Largeur</label>
-                  <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_largeur"  name="largeur" required>
-                </div>
-              </div>
-              <div class="col-md-3">
-                {{-- Longueur  --}}
-                <div class="form-group has-feedback">
-                  <label>Longueur</label>
-                  <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_longueur"  name="longueur" required>
-                </div>
-              </div>
-              <div class="col-md-3">
-                {{-- Hauteur --}}
-                <div class="form-group has-feedback">
-                  <label>Hauteur</label>
-                  <input type="number" class="form-control" placeholder="pieces" onkeyup="update_calculateTotal();" onclick="update_calculateTotal();" min="1" id="update_hauteur"  name="hauteur" required>
-                </div>
-              </div>
-              <div class="col-md-3">
-                {{-- Total --}}
-                <div class="form-group has-feedback">
-                  <label>Total</label>
-                  <input type="text" class="form-control" value=""  id="update_total"  name="total" readonly>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Modifier</button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-  {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Modal Update inventaire      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
+@section('styles')
+  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
+  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
 @endsection
 
 @section('scripts')
@@ -548,19 +557,11 @@
   <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
 
   <script>
-  $('#update_id_article_site').on('changed.bs.select', function (e) {
-    update_calculateTotal();
-  });
-
   $('#id_categorie').on('changed.bs.select', function (e) {
     populateFamille();
   });
 
   $('#id_famille').on('changed.bs.select', function (e) {
-    populateArticle();
-    calculateTotal();
-  });
-  $('#id_site').on('changed.bs.select', function (e) {
     populateArticle();
     calculateTotal();
   });
@@ -575,6 +576,9 @@
     document.getElementById("hauteur").disabled = false;
   });
 
+  $('#update_id_article_site').on('changed.bs.select', function (e) {
+    update_calculateTotal();
+  });
 
   //add options to familles according to the selected categorie
   function populateFamille(){
@@ -616,11 +620,10 @@
 
   //add options to articles according to the selected famille
   function populateArticle(){
-    var selected_id_site = document.getElementById("id_site").value;
     var selected_id_famille = document.getElementById("id_famille").value;
     //liste des articles
-    var article_sites = [];
-    @foreach ($article_sites as $item)
+    var articles = [];
+    @foreach ($articles as $item)
     var article = {
       id_article_site: {{ $item->id_article_site }},
       id_article: {{ $item->id_article }},
@@ -632,14 +635,14 @@
       code: "{{ $item->code }}",
       designation: "{{ $item->designation }}"
     };
-    article_sites.push(article);
+    articles.push(article);
     @endforeach
     //--------------------
     //create list of chosen articles
-    var myArticle_sites = [];
-    for(var i = 0 ; i<article_sites.length ; i++){
-      if( article_sites[i].id_famille == selected_id_famille && article_sites[i].id_site == selected_id_site){
-        myArticle_sites.push(article_sites[i]);
+    var myArticles = [];
+    for(var i = 0 ; i<articles.length ; i++){
+      if( articles[i].id_famille == selected_id_famille){
+        myArticles.push(articles[i]);
       }
     }
     //--------------------
@@ -650,10 +653,10 @@
     newOption.innerHTML = "Choisissez un article";
     list_article.options.add(newOption);
     //fill the select option list with article
-    for(var i=0;i<myArticle_sites.length;i++){
+    for(var i=0;i<myArticles.length;i++){
       var newOption = document.createElement("option");
-      newOption.value = myArticle_sites[i].id_article_site;
-      newOption.innerHTML = myArticle_sites[i].code+" - "+myArticle_sites[i].designation+" ";
+      newOption.value = myArticles[i].id_article_site;
+      newOption.innerHTML = myArticles[i].code+" - "+myArticles[i].designation+" ("+myArticles[i].libelle_site+")";
       list_article.options.add(newOption);
       $('.show-tick').selectpicker('refresh');
     }
@@ -677,7 +680,7 @@
     //--------------------
     //liste des articles
     var articles = [];
-    @foreach ($article_sites as $item)
+    @foreach ($articles as $item)
     var article = {
       id_article_site: {{ $item->id_article_site }},
       id_article: {{ $item->id_article }},
@@ -724,7 +727,7 @@
     document.getElementById("hauteur").readOnly = false;
     //get unite
     var articles = [];
-    @foreach ($article_sites as $item)
+    @foreach ($articles as $item)
     var article = {
       id_article_site: {{ $item->id_article_site }},
       id_unite: {{ $item->id_unite }},
@@ -779,7 +782,6 @@
     }
     //document.getElementById("total").value = total;
   }
-
 
   //extra info on every table row
   function format ( d ) {
@@ -860,18 +862,24 @@
       ],
     });
 
-    // Handle form submission event (enable the entire table to be submitted)
+    // Handle form submission event
     $('#formValidateInventaires').on('submit', function(e){
+
       var form = this;
+
       // Encode a set of form elements from all pages as an array of names and values
       var params = table.$('input,select,textarea, checkbox').serializeArray();
+
       // Iterate over all form elements
       $.each(params, function(){
         // If element doesn't exist in DOM
         if(!$.contains(document, form[this.name])){
           // Create a hidden element
           $(form).append(
-            $('<input>').attr('type', 'hidden').attr('name', this.name)      .val(this.value)
+            $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', this.name)
+            .val(this.value)
           );
         }
       });
@@ -896,11 +904,14 @@
     $('#inventairesTable tbody').on('click', 'td.details-control', function () {
       var tr = $(this).closest('tr');
       var row = table.row( tr );
+
       if ( row.child.isShown() ) {
+        // This row is already open - close it
         row.child.hide();
         tr.removeClass('shown');
       }
       else {
+        // Open this row
         row.child( format(row.data()) ).show();
         tr.addClass('shown');
       }
@@ -909,9 +920,6 @@
   });
 
 </script>
-@endsection
-@section('styles')
-  <link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
-  <!--link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css"-->
+
+
 @endsection

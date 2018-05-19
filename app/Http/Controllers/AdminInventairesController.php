@@ -74,8 +74,8 @@ class AdminInventairesController extends Controller
         us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
         us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
         FROM inventaires i
-        LEFT JOIN articles a ON i.id_article=a.id_article
         LEFT JOIN article_site ars ON ars.id_article=i.id_article AND ars.id_site=(select id_site from zones where zones.id_zone=i.id_zone)
+        LEFT JOIN articles a ON i.id_article=a.id_article
         LEFT JOIN sites s ON s.id_site=ars.id_site
         LEFT JOIN zones z ON i.id_zone=z.id_zone
         LEFT JOIN unites u ON u.id_unite=a.id_unite
@@ -90,20 +90,46 @@ class AdminInventairesController extends Controller
     }
     //-----------------------------------------
 
+    $data = collect(DB::select(
+      "SELECT i.*, sa.id_article_site, sa.id_article, sa.id_site,
+      a.code, a.designation, a.id_famille, a.id_unite,
+      z.libelle as libelle_zone, u.libelle as libelle_unite, f.libelle as libelle_famille,
+      us1.nom as created_by_nom, us1.prenom as created_by_prenom,
+      us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
+      us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
+      FROM inventaires i
+      LEFT JOIN zones z ON z.id_zone=i.id_zone
+      LEFT JOIN article_site sa ON sa.id_article_site=i.id_article_site
+      LEFT JOIN articles a ON a.id_article=sa.id_article
+      LEFT JOIN familles f on f.id_famille=a.id_famille
+      LEFT JOIN unites u on u.id_unite=a.id_unite
+      LEFT JOIN users us1 ON us1.id=i.created_by
+      LEFT JOIN users us2 ON us2.id=i.updated_by
+      LEFT JOIN users us3 ON us3.id=i.validated_by
+      ORDER BY i.created_at asc;
+      "
+    ));
+    foreach ($data as $item) {
+      dump($item);
+    }
+    dd($data);
+
     //get data for forms --------------------
-    $articles = collect(DB::select(
+    $article_sites = collect(DB::select(
       "SELECT sa.*,
       a.code , a.designation, a.id_famille, a.id_unite,
       u.libelle as libelle_unite,
       s.libelle as libelle_site,
       so.libelle as libelle_societe,
       f.libelle as libelle_famille
-      FROM article_site sa LEFT JOIN articles a on a.id_article=sa.id_article
+      FROM article_site sa
+      LEFT JOIN articles a on a.id_article=sa.id_article
       LEFT JOIN sites s on s.id_site=sa.id_site
       LEFT JOIN societes so on so.id_societe=s.id_societe
       LEFT JOIN unites u on u.id_unite=a.id_unite
       LEFT JOIN familles f on f.id_famille=a.id_famille
-      ORDER BY a.code asc;"
+      LEFT JOIN categories c ON c.id_categorie=f.id_categorie
+      ORDER BY a.id_article asc;"
     ));
     $filtreArticles = collect(DB::select(
       "SELECT DISTINCT code from articles a;"
@@ -122,7 +148,7 @@ class AdminInventairesController extends Controller
     //----------------------------------------
 
     //the returned view
-    $view = view('admin.inventaires')->with(compact('data','articles','zones','categories','familles','categories','sessions','sites','filtreArticles'));
+    $view = view('admin.inventaires')->with(compact('data','article_sites','zones','categories','familles','categories','sessions','sites','filtreArticles'));
 
     //if filter return selected_items
     if($request->has('submitFiltre')){
@@ -162,7 +188,7 @@ class AdminInventairesController extends Controller
   public function addInventaire(Request $request){
     try{
       $item = new Inventaire();
-      $item->id_article = Article_site::find($request->id_article_site)->id_article;
+      $item->id_article_site = $request->id_article_site;
       $item->id_session = Sessions::getNextID();
       $item->id_zone = $request->id_zone;
       $item->date = $request->date;
