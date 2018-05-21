@@ -329,8 +329,7 @@
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
-                <li><a onclick="createNewSessionFunction();">Creer une nouvelle session</a></li>
-                <li><a href="#">print</a></li>
+                <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddSessions">Ajouter une nouvelle session</a></li>
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -342,13 +341,17 @@
         </header>
         <div id="collapse" class="body">
           <table id="sessionsTable" class="display table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-            <thead><tr><th>Session</th><th>Date de création</th><th>Nombre d'inventaires</th></tr></thead>
+            <thead><tr><th>Session</th><th>Date de création</th><th>Nombre d'inventaires</th><th>Outils</th></tr></thead>
             <tbody>
               @foreach($sessions as $item)
                 <tr align="center">
                   <td>{{ formatDate2($item->date_debut) }} - {{ formatDate2($item->date_fin) }}</td>
                   <td>{{ formatDate($item->created_at) }}</td>
                   <td>{{ $item->nombre_inventaires }}</td>
+                  <td>
+                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSessions" onclick='updateSessionsFunction({{ $item->id_session }},"{{ $item->date_debut }}","{{ $item->date_fin }}" );' title="Modifier" ></i>
+                    <!--i class="glyphicon glyphicon-trash" onclick="deleteSessionsFunction({{ $item->id_session }},'{{ formatDate2($item->date_debut) }}','{{ formatDate2($item->date_fin) }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i-->
+                  </td>
                 </tr>
               @endforeach
             </tbody>
@@ -1203,14 +1206,108 @@
 
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sessions      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
   <div class="CRUD Sessions">
-    <form id="formCreateNewSession" method="POST" action="{{ route('createNewSession') }}">
+    <form id="formDeleteSessions" method="POST" action="{{ route('deleteSessions') }}">
       @csrf
+      <input type="hidden" id="delete_id_sessions" name="id_session" />
     </form>
     <script>
-    function createNewSessionFunction(){
-      document.getElementById('formCreateNewSession').submit();
+    function deleteSessionsFunction(id_session, date_debut, date_fin){
+      var go = confirm('Vos êtes sur le point d\'effacer la session: "'+libelle+'".\n voulez-vous continuer?');
+      if(go){
+        document.getElementById("delete_id_sessions").value = id_categorie;
+        document.getElementById("formDeleteSessions").submit();
+      }
+    }
+    function updateSessionsFunction(id_session, date_debut, date_fin){
+      document.getElementById("update_id_session").value = id_session;
+      document.getElementById("update_date_debut").value = date_debut;
+      document.getElementById("update_date_fin").value = date_fin;
     }
     </script>
+
+    {{-- *****************************    Add Sessions    ********************************************** --}}
+    <div class="modal fade" id="modalAddSessions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add User --}}
+      <form method="POST" action="{{ route('addSessions') }}">
+        @csrf
+
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Création d'une nouvelle session</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  {{-- date_debut --}}
+                  <div class="form-group has-feedback">
+                    <label>Date début</label>
+                    <input type="date" class="form-control" placeholder="Début" name="date_debut" id="date_debut" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  {{-- date_fin --}}
+                  <div class="form-group has-feedback">
+                    <label>Date fin</label>
+                    <input type="date" class="form-control" placeholder="Fin" name="date_fin" id="date_fin" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    {{-- *****************************    update Sessions    ********************************************** --}}
+    <div class="modal fade" id="modalUpdateSessions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      {{-- Form add User --}}
+      <form method="POST" action="{{ route('updateSessions') }}">
+        @csrf
+        <input type="hidden" name="id_session" id="update_id_session">
+
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Modification de la session</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  {{-- date_debut --}}
+                  <div class="form-group has-feedback">
+                    <label>Date début</label>
+                    <input type="date" class="form-control" placeholder="Début" name="date_debut" id="update_date_debut" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  {{-- date_fin --}}
+                  <div class="form-group has-feedback">
+                    <label>Date fin</label>
+                    <input type="date" class="form-control" placeholder="Fin" name="date_fin" id="update_date_fin" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+
   </div>
   {{--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       Sessions      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  --}}
 @endsection

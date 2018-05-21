@@ -14,6 +14,29 @@ class Session extends Model{
 
   public static function getNextID(){
     $lastRecord = DB::table('sessions')->orderBy('id_session', 'desc')->first();
+    $date = Carbon::today();
+    $debut = Carbon::createFromFormat('Y-m-d', $lastRecord->date_debut);
+    $fin = Carbon::createFromFormat('Y-m-d', $lastRecord->date_fin);
+    if($date->gt($debut) && $date->lte($fin)){
+      return $lastRecord->id_session;
+    }
+    else{
+      $now = Carbon::now();
+      $debut = $now->copy();
+      $now->addDays(10);
+      $fin = $now->copy();
+
+      $item = new Session();
+      $item->date_debut = $debut;
+      $item->date_fin = $fin;
+      $item->save();
+
+      return DB::table('sessions')->orderBy('id_session', 'desc')->first()->id_session;
+    }
+  }
+
+  public static function getNextID2(){
+    $lastRecord = DB::table('sessions')->orderBy('id_session', 'desc')->first();
 
     $debut = Carbon::createFromFormat('Y-m-d', $lastRecord->date_debut);
     $fin = Carbon::createFromFormat('Y-m-d', $lastRecord->date_fin);

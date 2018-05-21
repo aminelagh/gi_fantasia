@@ -57,6 +57,70 @@ class AdminController extends Controller
     return redirect()->back()->with('alert_success',"Création de session réussie");
   }
 
+
+
+
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //add Session *************************************************************
+  public function addSessions(Request $request){
+    try{
+      if( $request->date_debut >  $request->date_fin)
+      return redirect()->back()->withInput()->with('alert_warning',"La date fin est inférieur la date de début");
+
+      $item = new Sessions();
+      $item->date_debut = $request->date_debut;
+      $item->date_fin = $request->date_fin;
+      $item->save();
+
+    }catch(Exception $e){
+      return redirect()->back()->withInput()->with('alert_danger',"Erreur de création de la session.<br>Message d'erreur: ".$e->getMessage().".");
+    }
+    return redirect()->back()->with('alert_success',"Session créée");
+  }
+  //Delete Session *************************************************************
+  public function deleteSessions(Request $request){
+    try{
+      if( $request->date_debut >  $request->date_fin)
+      return redirect()->back()->withInput()->with('alert_warning',"La date fin est inférieur la date de début");
+
+      $item = Sessions::find($request->id_session);
+      //$item->delete();
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur de suppression de la session.<br>Message d'erreur: ".$e->getMessage().".");
+    }
+    return redirect()->back()->with('alert_success',"Session supprimée");
+  }
+  //update Session *************************************************************
+  public function updateSessions(Request $request){
+    try{
+      if( $request->date_debut >  $request->date_fin)
+      return redirect()->back()->withInput()->with('alert_warning',"La date fin est inférieur la date de début");
+
+      $item = Sessions::find($request->id_session);
+      $item->date_debut = $request->date_debut;
+      $item->date_fin = $request->date_fin;
+      $item->save();
+
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur de modification de la session.<br>Message d'erreur: ".$e->getMessage().".");
+    }
+    return redirect()->back()->with('alert_success',"Session modifiée");
+  }
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  //updating Session variable after updating the current user's Profil
+  public static function updateSession(){
+    try{
+      $user = User::find(Session::get('id_user'));
+      Session::put('login', $user->login);
+      Session::put('nom', $user->nom);
+      Session::put('prenom', $user->prenom);
+    }catch(Exception $e){
+      return redirect()->back()->with('alert_danger',"Erreur de mise a jour de votre session.<br>Message d'erreur: ".$e->getMessage());
+    }
+  }
+
+
   public function ajaxForm(Request $request){
     //$articles = Throttle::paginate($this->posts_per_page);
 
@@ -81,18 +145,5 @@ class AdminController extends Controller
   }
   else
   return view('ajaxForm');
-}
-
-
-//updating Session variable after updating the current user's Profil
-public static function updateSession(){
-  try{
-    $user = User::find(Session::get('id_user'));
-    Session::put('login', $user->login);
-    Session::put('nom', $user->nom);
-    Session::put('prenom', $user->prenom);
-  }catch(Exception $e){
-    return redirect()->back()->with('alert_danger',"Erreur de mise a jour de votre session.<br>Message d'erreur: ".$e->getMessage());
-  }
 }
 }

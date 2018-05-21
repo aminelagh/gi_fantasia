@@ -283,9 +283,9 @@
                       <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
                       <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
                       <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                      <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
-                      <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
-                      <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                      <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ formatDateTime($item->created_at) }}</td>
+                      <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ formatDateTime($item->updated_at) }}</td>
+                      <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ formatDateTime($item->validated_at) }}</td>
                       <td align="center">
                         <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
                           value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
@@ -294,7 +294,7 @@
                           <i class="fa fa-edit" data-placement="bottom" data-original-title="Modifier et valider" data-target="#modalUpdateInventaire" data-toggle="modal"
                           onclick='updateInventaireFuntion({{ $item->id_inventaire }},{{ $item->id_article_site }},{{ $item->id_zone }},"{{ $item->date }}",{{ $item->nombre_palettes }},{{ $item->nombre_pieces }},{{ $item->longueur }},{{ $item->largeur }},{{ $item->hauteur }} );' title="Modifier et valider" ></i>
                           {{--<i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateArticle" onclick='updateArticleFunction({{ $item->id_article }},{{ $item->id_categorie }},{{ $item->id_zone }},{{ $item->id_unite }},"{{ $item->code }}","{{ $item->designation }}" );' title="Modifier" ></i> --}}
-                          <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ $item->date }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
+                          <i class="glyphicon glyphicon-trash" onclick="deleteInventaireFunction({{ $item->id_inventaire }},'{{ $item->code }}','{{ $item->designation }}','{{ formatDate2($item->date) }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip"></i>
                         </td>
                       </tr>
                     @endforeach

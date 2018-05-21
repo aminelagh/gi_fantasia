@@ -60,10 +60,10 @@ class AdminInventairesController extends Controller
       if($request->id_session != 'null')       {$whereSession = " AND i.id_session = ".$request->id_session." ";}
       if($request->id_site != 'null')          {$whereSite = " AND i.id_zone in (select id_zone from zones where id_site = ".$request->id_site.") ";}
       if($request->id_zone != 'null')          {$whereZone = " AND z.id_zone = ".$request->id_zone." ";}
-      if($request->code != 'null')             {$whereArticle = " AND i.id_article in (SELECT id_article FROM articles WHERE code like '".$request->code."') ";}
+      if($request->code != 'null')             {$whereArticle = " AND a.id_article in (SELECT id_article FROM articles WHERE code like '".$request->code."') ";}
 
       //inventaires query
-      $data = collect(DB::select(
+      /*$data = collect(DB::select(
         "SELECT i.id_inventaire, i.id_article, i.id_zone, i.nombre_palettes, i.nombre_pieces,i.longueur, i.largeur, i.hauteur, i.date,
         i.created_at, i.created_by, i.updated_at, i.updated_by, i.validated_at, i.validated_by,
         a.code, a.designation, a.id_unite,
@@ -83,6 +83,25 @@ class AdminInventairesController extends Controller
         LEFT JOIN users us2 ON us2.id=i.updated_by
         LEFT JOIN users us3 ON us3.id=i.validated_by
         WHERE TRUE " . $whereSession . " " . $whereSite . " " . $whereZone . " " . $whereArticle . " ;"
+      ));*/
+      $data = collect(DB::select(
+        "SELECT i.*, sa.id_article_site, sa.id_article, sa.id_site,
+        a.id_article, a.code, a.designation, a.id_famille, a.id_unite,
+        z.libelle as libelle_zone, u.libelle as libelle_unite, f.libelle as libelle_famille,
+        us1.nom as created_by_nom, us1.prenom as created_by_prenom,
+        us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
+        us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
+        FROM inventaires i
+        LEFT JOIN zones z ON z.id_zone=i.id_zone
+        LEFT JOIN article_site sa ON sa.id_article_site=i.id_article_site
+        LEFT JOIN articles a ON a.id_article=sa.id_article
+        LEFT JOIN familles f on f.id_famille=a.id_famille
+        LEFT JOIN unites u on u.id_unite=a.id_unite
+        LEFT JOIN users us1 ON us1.id=i.created_by
+        LEFT JOIN users us2 ON us2.id=i.updated_by
+        LEFT JOIN users us3 ON us3.id=i.validated_by
+        WHERE TRUE " . $whereSession . " " . $whereSite . " " . $whereZone . " " . $whereArticle . "
+        ORDER BY i.created_at asc;"
       ));
     }
     else{
@@ -90,29 +109,9 @@ class AdminInventairesController extends Controller
     }
     //-----------------------------------------
 
-    $data = collect(DB::select(
-      "SELECT i.*, sa.id_article_site, sa.id_article, sa.id_site,
-      a.code, a.designation, a.id_famille, a.id_unite,
-      z.libelle as libelle_zone, u.libelle as libelle_unite, f.libelle as libelle_famille,
-      us1.nom as created_by_nom, us1.prenom as created_by_prenom,
-      us2.nom as updated_by_nom, us2.prenom as updated_by_prenom,
-      us3.nom as validated_by_nom, us3.prenom as validated_by_prenom
-      FROM inventaires i
-      LEFT JOIN zones z ON z.id_zone=i.id_zone
-      LEFT JOIN article_site sa ON sa.id_article_site=i.id_article_site
-      LEFT JOIN articles a ON a.id_article=sa.id_article
-      LEFT JOIN familles f on f.id_famille=a.id_famille
-      LEFT JOIN unites u on u.id_unite=a.id_unite
-      LEFT JOIN users us1 ON us1.id=i.created_by
-      LEFT JOIN users us2 ON us2.id=i.updated_by
-      LEFT JOIN users us3 ON us3.id=i.validated_by
-      ORDER BY i.created_at asc;
-      "
-    ));
-    foreach ($data as $item) {
-      dump($item);
-    }
-    dd($data);
+
+    //foreach ($data as $item) dump($item);
+    //dd($data);
 
     //get data for forms --------------------
     $article_sites = collect(DB::select(
@@ -187,25 +186,7 @@ class AdminInventairesController extends Controller
   //add Inventaire *************************************************************
   public function addInventaire(Request $request){
     try{
-      $item = new Inventaire();
-      $item->id_article_site = $request->id_article_site;
-      $item->id_session = Sessions::getNextID();
-      $item->id_zone = $request->id_zone;
-      $item->date = $request->date;
-      $item->nombre_palettes = $request->nombre_palettes;
-      $item->nombre_pieces = $request->nombre_pieces;
-
-      $item->hauteur = $request->hauteur;
-      $item->largeur = $request->largeur;
-      $item->longueur = $request->longueur;
-      $item->created_by = $request->session()->get('id_user');
-      $item->updated_by = null;
-      $item->validated_by = null;
-      //$item->created_at = null;
-      //$item->updated_at = null;
-      $item->validated_at = null;
-      $item->save();
-
+      Inventaire::addInventaire($request->id_article_site,Sessions::getNextID(),$request->id_zone,$request->date, $request->nombre_palettes,$request->nombre_pieces,$request->longueur,$request->largeur,$request->hauteur,$request->session()->get('id_user'),null,null, null,null,null);
     }catch(Exception $e){
       return redirect()->back()->withInput()->with('alert_danger',"Erreur de création de l'inventaire.<br>Message d'erreur: ".$e->getMessage().".");
     }
@@ -224,10 +205,8 @@ class AdminInventairesController extends Controller
   //update Article *************************************************************
   public function updateInventaire(Request $request){
     try{
-      //dd($request->all());
-
       $item = Inventaire::find($request->id_inventaire);
-      //$item->id_article = Article_site::find($request->id_article_site)->id_article;
+      //$item->id_article_site = $request->id_article_site;
       //$item->id_zone = $request->id_zone;
       $item->date = $request->date;
       $item->nombre_palettes = $request->nombre_palettes;

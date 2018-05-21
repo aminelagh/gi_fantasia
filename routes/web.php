@@ -57,11 +57,10 @@ Route::get('/s',function(){
 
 Route::get('/a',function(){
 
-  $a = Article_site::where('id_article', 1)->where('id_site',3)->get()->first();
-  dd($a);
+  return Sessions::getNextID();
 
 
-  return Famille::getID('famille_2') == null ? 'null' : 'not null';
+
 
 });
 
@@ -76,6 +75,11 @@ Route::post('/ajaxForm', 'AdminController@ajaxForm')->name('postAjaxForm');
 Route::group(['middleware' => 'admin'], function () {
   Route::get('/admin', 'AdminController@home')->name('admin');
   //Route::get('/more', 'AdminController@more')->name('more');
+
+  //sessions -------------------------------------------------------------------
+  Route::post('/addSessions', 'AdminController@addSessions')->name('addSessions');
+  Route::post('/updateSessions', 'AdminController@updateSessions')->name('updateSessions');
+  Route::post('/deleteSessions', 'AdminController@deleteSessions')->name('deleteSessions');
 
   //articles -------------------------------------------------------------------
   Route::get('/articles', 'AdminArticlesController@articles')->name('articles');
