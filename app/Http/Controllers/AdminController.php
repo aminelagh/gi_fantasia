@@ -58,8 +58,6 @@ class AdminController extends Controller
   }
 
 
-
-
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //add Session *************************************************************
   public function addSessions(Request $request){

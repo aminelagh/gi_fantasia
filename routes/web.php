@@ -18,37 +18,7 @@ use Carbon\Carbon;
 
 
 Route::get('/', function () {
-  /*
-  $lastRecord = DB::table('sessions')->orderBy('id_session', 'desc')->first();
-  dump($lastRecord);
-
-  $debut = Carbon::createFromFormat('Y-m-d', $lastRecord->date_debut);
-  $fin = Carbon::createFromFormat('Y-m-d', $lastRecord->date_fin);
-  $date = Carbon::now();
-
-  dump($debut->dayOfWeek );
-  dump($date->dayOfWeek );
-  dump($fin->dayOfWeek );
-
-  $now = Carbon::now();
-  $startOfWeek = $now->copy()->startOfWeek();
-  $endOfWeek = $now->copy()->endOfWeek();*/
-
-  //return $result;
-
-  /*$credentials = [
-  'login'    => 'admin',
-  'password' => '123456',
-  'nom' => 'Laghlabi',
-  'prenom' => 'Amine',
-];
-
-$user = Sentinel::registerAndActivate($credentials);
-
-$role = Sentinel::findRoleBySlug('admin');
-$role->users()->attach($user);*/
-
-return view('welcome');
+  return view('welcome');
 });
 
 Route::get('/s',function(){
@@ -56,11 +26,7 @@ Route::get('/s',function(){
 });
 
 Route::get('/a',function(){
-
-  return Sessions::getNextID();
-
-
-
+  //return Sessions::getNextID();
 
 });
 

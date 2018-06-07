@@ -7,39 +7,39 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--Mobile first-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" sizes="16x16" href="public/gi_logo.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('public/gi_logo.png') }}">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>{{ $title or 'Inventaire' }}</title>
 
   <meta name="author" content="Amine Laghlabi">
 
   <meta name="msapplication-TileColor" content="#5bc0de" />
-  <meta name="msapplication-TileImage" content="public/assets/img/metis-tile.png" />
+  <meta name="msapplication-TileImage" content="{{ asset('public/assets/img/metis-tile.png') }}" />
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="public/assets/lib/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/lib/bootstrap/css/bootstrap.css') }}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   <!-- Metis core stylesheet -->
-  <link rel="stylesheet" href="public/assets/css/main.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/css/main.css') }}">
   <!-- metisMenu stylesheet -->
-  <link rel="stylesheet" href="public/assets/lib/metismenu/metisMenu.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/lib/metismenu/metisMenu.css') }}">
   <!-- onoffcanvas stylesheet -->
-  <link rel="stylesheet" href="public/assets/lib/onoffcanvas/onoffcanvas.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/lib/onoffcanvas/onoffcanvas.css') }}">
   <!-- animate.css stylesheet -->
-  <link rel="stylesheet" href="public/assets/lib/animate.css/animate.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/lib/animate.css/animate.css') }}">
   <!-- Switcher -->
-  <link rel="stylesheet" href="public/assets/css/style-switcher.css">
-  <link rel="stylesheet/less" type="text/css" href="public/assets/less/theme.less">
-  <script src="public/assets/less/less.js"></script>
+  <link rel="stylesheet" href="{{ asset('public/assets/css/style-switcher.css') }}">
+  <link rel="stylesheet/less" type="text/css" href="{{ asset('public/assets/less/theme.less') }}">
+  <script src="{{ asset('public/assets/less/less.js') }}"></script>
   <!-- Toastr -->
-  <link href="public/css/lib/toastr/toastr.min.css" rel="stylesheet">
-  <script src="public/assets/less/less.js"></script>
+  <link href="{{ asset('public/css/lib/toastr/toastr.min.css') }}" rel="stylesheet">
+  <script src="{{ asset('public/assets/less/less.js') }}"></script>
   <style>
   td.details-control {background: url('public/assets/datatables/plus.png') no-repeat center center;cursor: pointer;}
   tr.shown td.details-control {background: url('public/assets/datatables/plus.png') no-repeat center center;}
 </style>
 <!-- Bootstrap-Select -->
-<link rel="stylesheet" href="public/bootstrap-select/bootstrap-select.min.css">
+<link rel="stylesheet" href="{{ asset('public/bootstrap-select/bootstrap-select.min.css') }}">
 @yield('styles')
 
 <!--For Development Only. Not required -->
@@ -71,7 +71,6 @@ less = {
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{{ route('ouvrier') }}" class="navbar-brand"><img src="public/assets/img/logo.png" alt="Ouvrier"></a>
           </header>
 
 
@@ -228,26 +227,26 @@ less = {
 
 
   <!--jQuery -->
-  <script src="public/assets/lib/jquery/jquery.js"></script>
+  <script src="{{ asset('public/assets/lib/jquery/jquery.js') }}"></script>
   <!--Bootstrap -->
-  <script src="public/assets/lib/bootstrap/js/bootstrap.js"></script>
+  <script src="{{ asset('public/assets/lib/bootstrap/js/bootstrap.js') }}"></script>
   <!-- MetisMenu -->
-  <script src="public/assets/lib/metismenu/metisMenu.js"></script>
+  <script src="{{ asset('public/assets/lib/metismenu/metisMenu.js') }}"></script>
   <!-- onoffcanvas -->
-  <script src="public/assets/lib/onoffcanvas/onoffcanvas.js"></script>
+  <script src="{{ asset('public/assets/lib/onoffcanvas/onoffcanvas.js') }}"></script>
   <!-- Screenfull -->
-  <script src="public/assets/lib/screenfull/screenfull.js"></script>
+  <script src="{{ asset('public/assets/lib/screenfull/screenfull.js') }}"></script>
   <!-- Metis core scripts -->
-  <script src="public/assets/js/core.js"></script>
+  <script src="{{ asset('public/assets/js/core.js') }}"></script>
   <!-- Metis demo scripts -->
-  <script src="public/assets/js/app.js"></script>
+  <script src="{{ asset('public/assets/js/app.js') }}"></script>
   <!-- switcher -->
-  <script src="public/assets/js/style-switcher.js"></script>
+  <script src="{{ asset('public/assets/js/style-switcher.js') }}') }}"></script>
   <!--Toastr -->
-  <script src="public/js/lib/toastr/toastr.min.js"></script>
-  <script src="public/js/lib/toastr/toastr.init.js"></script>
+  <script src="{{ asset('public/js/lib/toastr/toastr.min.js') }}"></script>
+  <script src="{{ asset('public/js/lib/toastr/toastr.init.js') }}"></script>
   <!-- Bootstrap-Select -->
-  <script src="public/bootstrap-select/bootstrap-select.min.js"></script>
+  <script src="{{ asset('public/bootstrap-select/bootstrap-select.min.js') }}"></script>
 
   <script>
   var options = {

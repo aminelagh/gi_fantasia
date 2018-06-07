@@ -541,11 +541,11 @@
 @endsection
 
 @section('scripts')
-  <script src="public/assets/datatables/datatables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
+  <script src="{{ asset('public/assets/datatables/datatables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.semanticui.min.js') }}"></script>
 
   <script>
   $('#update_id_article_site').on('changed.bs.select', function (e) {
@@ -796,8 +796,8 @@
     }else {
       row5 = '';
     }
-    var row5 = '</table>';
-    var data = row1+row2+row3+row4+row5;
+    var row6 = '</table>';
+    var data = row1+row2+row3+row4+row5+row6;
     return data;
   }
 

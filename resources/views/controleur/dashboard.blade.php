@@ -18,7 +18,7 @@
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
                 <li><a data-toggle="modal" data-original-title="Help" data-placement="bottom" class="btn btn-default btn-sm" href="#modalAddInventaire">Ajouter inventaire</a></li>
-                <li><a href="#" onclick="exportInventairesFunction()">export</a></li>
+                <!--li><a href="#" onclick="exportInventairesFunction()">export</a></li-->
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -78,15 +78,11 @@
                       @foreach ($filtreArticles as $item)
                         <option value="{{ $item->code }}" {{ isset($selected_code) && $selected_code == $item->code ? 'selected' : ''  }}>{{ $item->code }}</option>
                       @endforeach
-                      {{--@foreach ($articles as $item)
-                      <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
-                    @endforeach
-                    --}}
-                  </select>
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-2"></div>
-              <div class="col-sm-2">
+              <div class="row" align="center">
                 <input type="submit" class="btn btn-primary" value="Filter" name="submitFiltre">
               </div>
             </div>
@@ -157,9 +153,9 @@
                     <td>{{ $item->longueur }}</td><td>{{ $item->largeur }}</td><td>{{ $item->hauteur }}</td>
                     <td>{{ $item->nombre_palettes }} </td><td>{{ $item->nombre_pieces }} </td>
                     <td>{{ $item->longueur * $item->largeur * $item->hauteur * $item->nombre_palettes * $item->nombre_pieces }} {{ $item->libelle_unite }}</td>
-                    <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ $item->created_at }}</td>
-                    <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ $item->updated_at }}</td>
-                    <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ $item->validated_at }}</td>
+                    <td>{{ $item->created_by_nom }} {{ $item->created_by_prenom }}</td><td>{{ formatDateTime($item->created_at) }}</td>
+                    <td>{{ $item->updated_by_nom }} {{ $item->updated_by_prenom }}</td><td>{{ formatDateTime($item->updated_at) }}</td>
+                    <td>{{ $item->validated_by_nom }} {{ $item->validated_by_prenom }}</td><td>{{ formatDateTime($item->validated_at) }}</td>
                     <td align="center">
                       <label class="switch"><input type="checkbox" name="valide[{{ $item->id_inventaire }}]"
                         value="isValide" {{ $item->validated_by != null ? "checked title=Valide" : "title=non-valide" }}><span class="slider round"></span></label>
@@ -176,9 +172,6 @@
               </tbody>
 
             </table>
-            <div class="row" align="center">
-              <input type="submit" class="btn btn-primary" value="Valider" name="submitValidate" form="formValidateInventaires" >
-            </div>
           </form>
 
         </div>
@@ -196,17 +189,10 @@
   {{-- ************************** Export To Excel Forms ***************************************** --}}
   <form id="formExportInventaires" method="POST" action="{{ route('c.exportInventaires') }}" target="_blank">
     @csrf
-    <input type="hidden" name="id_article_site" id="export_id_article">
-    <input type="hidden" name="id_zone" id="export_id_zone">
   </form>
 
   <script>
   function exportInventairesFunction(){
-    let id_article_site = document.getElementById("filter_id_article_site").value;
-    let id_zone = document.getElementById("filter_id_zone").value;
-
-    document.getElementById("export_id_article").value = id_article_site;
-    document.getElementById("export_id_zone").value = id_zone;
     document.getElementById("formExportInventaires").submit();
   }
   </script>
@@ -330,7 +316,7 @@
                     <label>Article</label>
                     <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
                       @foreach ($articles as $item)
-                        <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                        <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -341,7 +327,7 @@
                     <label>Zone</label>
                     <select class="form-control selectpicker show-tick" data-live-search="true" name="id_zone" id="update_id_zone" disabled>
                       @foreach ($zones as $item)
-                        <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }} ({{ $item->libelle_site }})</option>
+                        <option value="{{ $item->id_zone }}">{{ $item->libelle_zone }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -861,8 +847,8 @@
     }else {
       row5 = '';
     }
-    var row5 = '</table>';
-    var data = row1+row2+row3+row4+row5;
+    var row6 = '</table>';
+    var data = row1+row2+row3+row4+row5+row6;
     return data;
   }
 

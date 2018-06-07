@@ -80,7 +80,6 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{{ route('admin') }}" class="navbar-brand"><img src="{{ asset('public/assets/img/logo.png') }}" alt="Admin"></a>
           </header>
 
 

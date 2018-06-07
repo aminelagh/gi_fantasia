@@ -466,18 +466,18 @@
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.foundation.min.css">
   <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.semanticui.min.css">
 -->
-<link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-<link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-<link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+<link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+<link rel="stylesheet" href="{{ asset('public/assets/datatables/Buttons/css/buttons.bootstrap.min.css') }}">
 @endsection
 
 @section('scripts')
-  <script src="public/assets/datatables/datatables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
+  <script src="{{ asset('public/assets/datatables/datatables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.semanticui.min.js') }}"></script>
 
   <script>
 
@@ -516,7 +516,7 @@
       //"autoWidth": true,
       info: false,
       stateSave: false,
-      order: false,
+      order: [[0, 'asc']],
       columnDefs: [
         { targets: 0, width: "", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 1, width: "", type: "string", visible: true, searchable: true, orderable: true},

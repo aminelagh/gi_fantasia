@@ -349,8 +349,10 @@
                   <td>{{ formatDate($item->created_at) }}</td>
                   <td>{{ $item->nombre_inventaires }}</td>
                   <td>
-                    <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSessions" onclick='updateSessionsFunction({{ $item->id_session }},"{{ $item->date_debut }}","{{ $item->date_fin }}" );' title="Modifier" ></i>
-                    <!--i class="glyphicon glyphicon-trash" onclick="deleteSessionsFunction({{ $item->id_session }},'{{ formatDate2($item->date_debut) }}','{{ formatDate2($item->date_fin) }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i-->
+                    @if($loop->last)
+                      <i class="fa fa-edit" data-toggle="modal" data-target="#modalUpdateSessions" onclick='updateSessionsFunction({{ $item->id_session }},"{{ $item->date_debut }}","{{ $item->date_fin }}" );' title="Modifier" ></i>
+                      <!--i class="glyphicon glyphicon-trash" onclick="deleteSessionsFunction({{ $item->id_session }},'{{ formatDate2($item->date_debut) }}','{{ formatDate2($item->date_fin) }}');" data-placement="bottom" data-original-title="Supprimer" data-toggle="tooltip" ></i-->
+                    @endif
                   </td>
                 </tr>
               @endforeach

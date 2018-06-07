@@ -78,7 +78,6 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{{ route('controleur') }}" class="navbar-brand"><img src="{{ asset('public/assets/img/logo.png') }}" alt="Controleur"></a>
           </header>
 
 

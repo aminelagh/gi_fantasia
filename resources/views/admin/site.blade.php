@@ -12,14 +12,14 @@
       <div class="box">
         <header class="dark">
           <div class="icons"><i class="fa fa-check"></i></div>
-          <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $articles->count() }}</span></h5>
+          <h5>Articles <span class="badge badge-info badge-pill" title="Nombre d'articles"> {{ $article_sites->count() }}</span></h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
               <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
               <ul class="dropdown-menu">
                 <li><a data-toggle="modal" href="#modalAddArticles">Ajouter des articles</a></li>
                 <li><a href="#" onclick="exportArticleSitesFunction()">Exporter</a></li>
-                <li><a data-toggle="modal" href="#modalImportArticles">Importer</a></li>
+                <!--li><a data-toggle="modal" href="#modalImportArticles">Importer</a></li-->
               </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
@@ -159,18 +159,18 @@
 
 
 @section('styles')
-  <link rel="stylesheet" href="public/assets/datatables/datatables.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css">
-  <link rel="stylesheet" href="public/assets/datatables/Buttons/css/buttons.bootstrap.min.css">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/datatables.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/dataTables/css/dataTables.jqueryui.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/assets/datatables/Buttons/css/buttons.bootstrap.min.css') }}">
 @endsection
 
 @section('scripts')
   <script src="{{ asset('public/assets/datatables/datatables.min.js') }}"></script>
-  <script src="public/assets/datatables/dataTables/js/jquery.dataTables.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js"></script>
-  <script src="public/assets/datatables/dataTables/js/dataTables.semanticui.min.js"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.jqueryui.min.js') }}"></script>
+  <script src="{{ asset('public/assets/datatables/dataTables/js/dataTables.semanticui.min.js') }}"></script>
 
   <script>
 
@@ -194,7 +194,8 @@
       //"autoWidth": true,
       info: false,
       stateSave: false,
-      //order: false,
+      order: [[ 0, "asc" ]],
+      //ordering: true,
       columnDefs: [
         { targets: 0, width: "", type: "string", visible: true, searchable: true, orderable: true},
         { targets: 1, width: "", type: "string", visible: true, searchable: true, orderable: true},
@@ -266,8 +267,6 @@
     });
 
   });
-
-
   </script>
 
 

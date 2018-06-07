@@ -25,11 +25,6 @@
           <h5>Création d'un nouvel inventaire</h5>
           <div class="toolbar">
             <nav style="padding: 8px;">
-              <a href="#" class="btn btn-info btn-xs" data-toggle="dropdown" title="Options"><i class="fa fa-bars"></i></a>
-              <ul class="dropdown-menu">
-                <li><a href="#" onclick="exportArticlesFunction()">export</a></li>
-                <li><a data-toggle="modal" href="#modalAddInventaires">Import</a></li>
-              </ul>
               <div class="btn-group">
                 <a href="javascript:;" class="btn btn-default btn-xs collapse-box" title="Réduire"><i class="fa fa-minus"></i></a>
                 <a href="javascript:;" class="btn btn-default btn-xs full-box" title="Pein écran"><i class="fa fa-expand"></i></a>
@@ -51,7 +46,7 @@
                       <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="id_article_site">
                         <option value="null">Choisissez un article</option>
                         @foreach ($articles as $item)
-                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                          <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -155,10 +150,10 @@
                   {{-- Article --}}
                   <div class="form-group has-feedback">
                     <label>Article</label>
-                    <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="filter_id_article_site">
+                    <select class="form-control selectpicker show-tick" data-live-search="true" name="code" id="filter_code">
                       <option value="null">Tous les articles</option>
-                      @foreach ($articles as $item)
-                        <option value="{{ $item->id_article_site }}" {{ isset($selected_id_article_site) && $selected_id_article_site == $item->id_article_site ? 'selected' : ''  }}>{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                      @foreach ($filtreArticles as $item)
+                        <option value="{{ $item->code }}" {{ isset($selected_code) && $selected_code == $item->code ? 'selected' : ''  }}>{{ $item->code }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -243,17 +238,10 @@
     {{-- ************************** Export To Excel Forms ***************************************** --}}
     <form id="formExportInventaires" method="POST" action="{{ route('o.exportInventaires') }}" target="_blank">
       @csrf
-      <input type="hidden" name="id_article_site" id="export_id_article">
-      <input type="hidden" name="id_zone" id="export_id_zone">
     </form>
 
     <script>
     function exportInventairesFunction(){
-      let id_article_site = document.getElementById("filter_id_article_site").value;
-      let id_zone = document.getElementById("filter_id_zone").value;
-
-      document.getElementById("export_id_article").value = id_article_site;
-      document.getElementById("export_id_zone").value = id_zone;
       document.getElementById("formExportInventaires").submit();
     }
   </script>
@@ -374,18 +362,18 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 {{-- Article --}}
                 <div class="form-group has-feedback">
                   <label>Article</label>
-                  <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site">
+                  <select class="form-control selectpicker show-tick" data-live-search="true" name="id_article_site" id="update_id_article_site" disabled>
                     @foreach ($articles as $item)
-                      <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }} ({{ $item->libelle_site }})</option>
+                      <option value="{{ $item->id_article_site }}">{{ $item->code }} - {{ $item->designation }}</option>
                     @endforeach
                   </select>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 {{-- Date --}}
                 <div class="form-group has-feedback">
                   <label>Date</label>
@@ -394,7 +382,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4 col-md-offset-2">
                 {{-- Nombre de palettes --}}
                 <div class="form-group has-feedback">
                   <label>Nombre de palettes</label>
@@ -549,13 +537,22 @@
 
   //extra info on every table row
   function format ( d ) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">'+
-    '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>'+
-    '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>'+
-    '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>'+
-    '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>'+
-    '</table>';
+    var row1 = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">';
+    var row2 = '<tr><td>Quantié: <b>'+d.quantite+'</b><td>Palettes: <b>'+d.nombre_palettes+'</b></td><td>Pieces:  <b>'+d.nombre_pieces+'</b></td><td>Longueur:  <b>'+d.longueur+'</b></td><td>Largeur:  <b>'+d.largeur+'</b></td><td>hauteur:  <b>'+d.hauteur+'</b></td></tr>';
+    var row3 = '<tr><td>Créé par: <b>'+d.cree_par+'</b> le <b>'+d.cree_le+'</b></td></tr>';
+    if(d.modifie_par!=null){
+      row4 = '<tr><td>Modifié par: <b>'+d.modifie_par+'</b> le <b>'+d.modifie_le+'</b></td></tr>';
+    }else {
+      row4 = '';
+    }
+    if(d.valide_par!=null){
+      row5 = '<tr><td>Validé par: <b>'+d.valide_par+'</b> le <b>'+d.valide_le+'</b></td></tr>';
+    }else {
+      row5 = '';
+    }
+    var row6 = '</table>';
+    var data = row1+row2+row3+row4+row5+row6;
+    return data;
   }
 
   $(document).ready(function () {
